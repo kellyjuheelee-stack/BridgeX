@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>수출 가능성 진단 — BridgeX</title>
+<meta name="description" content="회사와 제품 정보를 입력하면 EU 규제, 카탈로그, 바이어 Follow-up, 협상 준비도 기준으로 유럽 수출 가능성을 진단합니다.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #0066cc; --blue-focus: #0071e3; --ink: #1d1d1f; --muted: #6e6e73;
+    --parchment: #f5f5f7; --white: #fff; --hairline: #e0e0e0; --danger: #d64545;
+    --shadow-card: 0 2px 20px rgba(0,0,0,0.06);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--parchment); color: var(--ink);
+    font-family: 'Inter','Noto Sans KR',sans-serif; -webkit-font-smoothing: antialiased;
+    word-break: keep-all;
+  }
+  ::selection { background: var(--blue-focus); color: #fff; }
+  a { color: inherit; text-decoration: none; }
+  h1,h2,h3,p { margin: 0; }
+
+  /* nav */
+  nav {
+    position: sticky; top: 0; z-index: 50; height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 clamp(20px,5vw,40px);
+    background: rgba(250,248,244,0.85); backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+  }
+  .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+  .logo span { color: var(--blue); }
+  .nav-back { font-size: 14px; font-weight: 600; color: var(--muted); }
+  .nav-back:hover { color: var(--ink); }
+
+  .page { max-width: 720px; margin: 0 auto; padding: clamp(28px,5vw,48px) clamp(16px,4vw,24px) 80px; }
+
+  /* intro */
+  .intro { text-align: center; margin-bottom: 32px; }
+  .intro h1 { font-size: clamp(26px,4vw,36px); font-weight: 800; letter-spacing: -0.8px; line-height: 1.2; margin-bottom: 14px; text-wrap: balance; }
+  .intro p { font-size: 15px; line-height: 1.7; color: var(--muted); max-width: 540px; margin: 0 auto; }
+
+  /* stepper */
+  .stepper { display: flex; gap: 8px; margin-bottom: 28px; }
+  .stepper .seg { flex: 1; text-align: center; }
+  .stepper .bar { height: 4px; border-radius: 999px; background: var(--hairline); transition: background .3s; }
+  .stepper .seg.done .bar, .stepper .seg.active .bar { background: var(--blue-focus); }
+  .stepper .lbl { margin-top: 8px; font-size: 12px; font-weight: 600; color: var(--muted); }
+  .stepper .seg.active .lbl { color: var(--blue); }
+  .stepper .seg.done .lbl { color: var(--ink); }
+
+  /* card */
+  .card { background: var(--white); border-radius: 20px; padding: clamp(24px,4vw,40px); box-shadow: var(--shadow-card); }
+  .step-title { font-size: 20px; font-weight: 800; letter-spacing: -0.4px; margin-bottom: 4px; }
+  .step-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+  .prefill-note { font-size: 13px; font-weight: 600; color: var(--blue); background: rgba(0,102,204,0.07); border-radius: 10px; padding: 10px 14px; margin-bottom: 20px; }
+
+  /* fields */
+  .field { margin-bottom: 20px; }
+  .field > label { display: block; font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .field .req { color: var(--blue); margin-left: 3px; }
+  .field .hint { font-weight: 500; color: var(--muted); font-size: 12px; margin-left: 6px; }
+  .field-note { font-size: 12.5px; line-height: 1.6; color: var(--muted); background: rgba(0,102,204,0.05); border-left: 3px solid rgba(0,102,204,0.4); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; }
+  input[type=text], input[type=email], input[type=tel], input[type=url], select {
+    width: 100%; height: 46px; padding: 0 14px; font-size: 15px; font-family: inherit; color: var(--ink);
+    background: var(--white); border: 1px solid var(--hairline); border-radius: 11px; outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  select { appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%236e6e73' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; cursor: pointer; }
+  input:focus, select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,102,204,0.12); }
+  .field.invalid input, .field.invalid select { border-color: var(--danger); }
+  .err { display: none; color: var(--danger); font-size: 12px; margin-top: 6px; font-weight: 500; }
+  .field.invalid .err { display: block; }
+
+  /* chips (multi-select) */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font-size: 13px; font-weight: 600; color: var(--ink); font-family: inherit;
+    background: var(--parchment); border: 1px solid transparent; border-radius: 999px;
+    padding: 9px 15px; cursor: pointer; transition: all .15s; user-select: none;
+  }
+  .chip:hover { border-color: rgba(0,102,204,0.35); }
+  .chip.on { background: rgba(0,102,204,0.1); border-color: var(--blue); color: var(--blue); }
+
+  /* file upload */
+  .filezone { border: 1.5px dashed var(--hairline); border-radius: 14px; padding: 22px; text-align: center; cursor: pointer; transition: border-color .15s, background .15s; }
+  .filezone:hover { border-color: var(--blue); background: rgba(0,102,204,0.03); }
+  .filezone .fz-title { font-size: 14px; font-weight: 700; }
+  .filezone .fz-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .filelist { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .fileitem { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--parchment); border-radius: 10px; font-size: 13px; }
+  .fileitem .fi-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+  .fileitem .fi-x { color: var(--muted); cursor: pointer; font-weight: 700; padding: 0 4px; }
+  .fileitem .fi-x:hover { color: var(--danger); }
+
+  /* summary (step 4) */
+  .summary-group { margin-bottom: 20px; }
+  .summary-group h4 { font-size: 13px; font-weight: 800; color: var(--blue); letter-spacing: 0.3px; margin: 0 0 10px; }
+  .summary-row { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 14px; }
+  .summary-row .sk { flex: 0 0 40%; color: var(--muted); font-weight: 600; }
+  .summary-row .sv { flex: 1; color: var(--ink); }
+  .summary-row .sv.empty { color: #b0b0b5; }
+
+  /* nav buttons */
+  .actions { display: flex; gap: 12px; margin-top: 28px; }
+  .btn { height: 50px; padding: 0 26px; border-radius: 999px; font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer; border: none; transition: transform .15s, box-shadow .15s, background .15s; }
+  .btn-primary { background: var(--blue-focus); color: #fff; box-shadow: 0 6px 20px rgba(0,102,204,0.28); flex: 1; }
+  .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,102,204,0.36); }
+  .btn-primary:disabled { opacity: .55; cursor: default; }
+  .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--hairline); }
+  .btn-ghost:hover { color: var(--ink); border-color: var(--muted); }
+
+  /* completion */
+  .done-box { text-align: center; padding: 20px 0; }
+  .done-icon { width: 64px; height: 64px; border-radius: 999px; background: rgba(0,102,204,0.1); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 20px; }
+  .done-box h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 12px; }
+  .done-box p { font-size: 15px; line-height: 1.7; color: var(--muted); }
+  .done-box .ref { margin-top: 16px; font-size: 12px; color: #b0b0b5; }
+
+  .loading { text-align: center; padding: 60px 0; color: var(--muted); font-size: 14px; }
+
+  /* result */
+  .result-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--blue); margin-bottom: 18px; }
+  .score-hero { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; margin-bottom: 28px; }
+  .score-ring { width: 128px; height: 128px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+  .score-inner { width: 100px; height: 100px; border-radius: 50%; background: var(--white); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .score-num { font-size: 38px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
+  .score-den { font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 2px; }
+  .score-side { flex: 1; min-width: 220px; }
+  .score-level { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+  .score-summary { font-size: 14px; line-height: 1.65; color: var(--ink); margin: 0; }
+  .dims { display: flex; flex-direction: column; gap: 16px; margin-bottom: 26px; }
+  .dim-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+  .dim-label { font-size: 14px; font-weight: 700; }
+  .dim-score { font-size: 15px; font-weight: 800; }
+  .dim-track { height: 8px; border-radius: 999px; background: #ececef; overflow: hidden; }
+  .dim-fill { height: 100%; border-radius: 999px; transition: width .6s ease; }
+  .dim-comment { font-size: 12.5px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+  .next-box { background: var(--parchment); border-radius: 14px; padding: 20px 22px; margin-bottom: 24px; }
+  .next-box h4 { font-size: 14px; font-weight: 800; margin: 0 0 12px; }
+  .next-box ul { margin: 0; padding-left: 18px; }
+  .next-box li { font-size: 14px; line-height: 1.7; color: var(--ink); }
+  .hook { background: linear-gradient(135deg, #0a1830, #14284a); border-radius: 18px; padding: 30px 26px; color: #fff; }
+  .hook h3 { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; margin: 0 0 12px; }
+  .hook p { font-size: 14.5px; line-height: 1.7; color: rgba(255,255,255,0.85); margin: 0 0 20px; }
+  .hook .btn-primary { box-shadow: 0 6px 22px rgba(0,113,227,0.45); }
+  .hook-note { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 12px; text-align: center; }
+  .hook .done-icon { background: rgba(255,255,255,0.15); color: #fff; }
+  .rs-input { width: 100%; height: 48px; padding: 0 14px; font-size: 15px; font-family: inherit; border: none; border-radius: 11px; outline: none; margin-bottom: 12px; }
+  .rs-err { color: #ffb4b4; font-size: 13px; font-weight: 600; margin-bottom: 10px; min-height: 16px; }
+
+  /* print report */
+  .print-only { display: none; }
+  .print-head .ph-brand { font-size: 20px; font-weight: 800; }
+  .print-head .ph-brand span { color: var(--blue); }
+  .print-head .ph-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .print-foot { font-size: 11px; color: var(--muted); }
+  @media print {
+    nav, #stepper, #loading, .no-print { display: none !important; }
+    body { background: #fff; }
+    .page { padding: 0; max-width: 100%; }
+    .card { box-shadow: none; padding: 0; }
+    .intro { display: none; }
+    .print-only { display: block !important; }
+    .print-head { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 20px; }
+    .print-foot { border-top: 1px solid var(--hairline); padding-top: 10px; margin-top: 24px; }
+    .score-ring, .dim-fill, .score-num, .dim-score, .score-level { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  @media (max-width: 560px) { .stepper .lbl { font-size: 11px; } }
+</style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="logo">Bridge<span>X</span></a>
+    <a href="index.html" class="nav-back">← 홈으로</a>
+  </nav>
+
+  <div class="page">
+    <div class="intro">
+      <h1>우리 브랜드의 유럽 수출 가능성을<br>진단해보세요.</h1>
+    </div>
+
+    <div class="stepper" id="stepper"></div>
+
+    <div class="card" id="card">
+      <div class="loading" id="loading">불러오는 중…</div>
+      <div id="stepBody" style="display:none;"></div>
+      <div class="actions" id="actions" style="display:none;">
+        <button class="btn btn-ghost" id="btnPrev" type="button">이전</button>
+        <button class="btn btn-primary" id="btnNext" type="button">다음</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ── 설정: 배포 시 백엔드 주소로 변경 ──
+  const API_BASE = (location.protocol === 'file:' || ['localhost','127.0.0.1'].includes(location.hostname))
+    ? 'http://localhost:4000' : '';
+
+  const STEP_LABELS = ['기본 정보', '제품 정보', '수출 목표', '진단하기'];
+
+  const SCHEMA = [
+    { step: 1, title: '기본 정보', sub: '상담과 진단 결과 안내를 위한 정보입니다.', fields: [
+      { key:'contactName', label:'담당자명', type:'text', required:true },
+      { key:'companyName', label:'회사명', type:'text', required:true },
+      { key:'position', label:'직책', type:'text', required:false, placeholder:'예: 대표' },
+      { key:'email', label:'이메일 주소', type:'email', required:true, placeholder:'hello@brand.com' },
+      { key:'phone', label:'전화번호', type:'tel', required:true, placeholder:'010-1234-5678' },
+      { key:'homepageUrl', label:'홈페이지', type:'url', required:false, placeholder:'https://' },
+      { key:'smartStoreUrl', label:'스마트스토어', type:'url', required:false, placeholder:'https://' },
+      { key:'instagramUrl', label:'인스타그램', type:'url', required:false, placeholder:'https://instagram.com/...' },
+      { key:'annualRevenueRange', label:'회사 매출 규모', type:'select', optionsKey:'annualRevenueRanges', required:false },
+    ]},
+    { step: 2, title: '제품 정보', sub: '진단 대상 제품을 특정합니다.', fields: [
+      { key:'productName', label:'대표 제품명', type:'text', required:true },
+      { key:'productCategory', label:'제품 카테고리', type:'select', optionsKey:'productCategories', required:true },
+      { key:'productFiles', label:'제품 사진 또는 카탈로그', type:'file', required:false, hint:'jpg, png, pdf, xlsx, docx / 개당 10MB' },
+      { key:'hasInci', label:'주요 성분 / INCI 보유 여부', type:'select', optionsKey:'hasInci', required:true },
+      { key:'volumeAndPriceRange', label:'용량 / 가격대', type:'text', required:false, placeholder:'예: 50ml / 소비자가 32,000원' },
+      { key:'isSellingInKorea', label:'국내 판매 여부', type:'select', optionsKey:'isSellingInKorea', required:true },
+      { key:'monthlySalesOrBestSeller', label:'월 판매량 또는 베스트셀러 여부', type:'text', required:false },
+      { key:'certifications', label:'인증 보유 여부', type:'chips', optionsKey:'certifications', required:true, hint:'복수 선택' },
+      { key:'euComplianceReadiness', label:'EU 규제 준비 현황', type:'chips', optionsKey:'euComplianceReadiness', required:false, hint:'해당되는 항목 모두 선택', note:'EU 판매에는 책임자(RP) 지정 · CPNP 사전 등록 · 제품정보파일(PIF) · 안전성보고서(CPSR) · 전성분 적합성 · 라벨링이 필수입니다. 준비된 항목을 선택해주세요.' },
+      { key:'packagingReadiness', label:'포장재 규제(EU PPWR) 준비 현황', type:'chips', optionsKey:'packagingReadiness', required:false, hint:'해당되는 항목 모두 선택', note:'2026년 8월 시행되는 EU 포장·포장폐기물 규정(PPWR)은 적합성 선언서(DoC)·기술문서·재활용성을 요구하며, 미비 시 통관이 제한될 수 있습니다.' },
+    ]},
+    { step: 3, title: '수출 목표 및 현재 상태', sub: '목표 시장과 현재 상황을 파악합니다.', fields: [
+      { key:'targetCountries', label:'목표 국가', type:'chips', optionsKey:'targetCountries', required:true, hint:'복수 선택' },
+      { key:'preferredChannels', label:'희망 유통 채널', type:'chips', optionsKey:'preferredChannels', required:false, hint:'복수 선택' },
+      { key:'exportExperience', label:'해외 수출 경험', type:'select', optionsKey:'exportExperience', required:true },
+      { key:'tradeFairExperience', label:'박람회 참가 경험', type:'select', optionsKey:'tradeFairExperience', required:false },
+      { key:'hasExistingBuyer', label:'현재 만난 바이어가 있는지', type:'select', optionsKey:'hasExistingBuyer', required:true },
+      { key:'painPoints', label:'가장 어려운 부분', type:'chips', optionsKey:'painPoints', required:true, hint:'복수 선택' },
+    ]},
+  ];
+  const ALL_FIELDS = SCHEMA.flatMap(s => s.fields);
+
+  const state = { step: 1, data: {}, files: [], options: {}, submitting: false };
+
+  const $ = (id) => document.getElementById(id);
+
+  async function init() {
+    try {
+      const res = await fetch(API_BASE + '/api/export-diagnosis/options');
+      const json = await res.json();
+      state.options = json.data;
+    } catch (e) {
+      $('loading').innerHTML = '옵션을 불러오지 못했습니다. 백엔드 서버(4000)가 실행 중인지 확인해주세요.';
+      return;
+    }
+    // 로그인 회원이면 기본 정보(이름·회사·이메일·전화) 자동 채우기
+    await prefillFromMember();
+
+    $('loading').style.display = 'none';
+    $('stepBody').style.display = 'block';
+    $('actions').style.display = 'flex';
+    renderStepper();
+    renderStep();
+    $('btnPrev').onclick = onPrev;
+    $('btnNext').onclick = onNext;
+  }
+
+  async function prefillFromMember() {
+    let token = null;
+    try { token = localStorage.getItem('bridgex_member_token'); } catch (e) {}
+    if (!token) return;
+    try {
+      const res = await fetch(API_BASE + '/api/members/me', { headers: { Authorization: 'Bearer ' + token } });
+      if (!res.ok) return;
+      const json = await res.json();
+      if (!json.success || !json.data) return;
+      const m = json.data;
+      const map = { contactName: m.name, companyName: m.companyName, email: m.email, phone: m.phone };
+      Object.keys(map).forEach((k) => { if (map[k] && !state.data[k]) state.data[k] = map[k]; });
+      state.prefilled = true;
+    } catch (e) { /* 비로그인/오류 시 조용히 무시 */ }
+  }
+
+  function renderStepper() {
+    $('stepper').innerHTML = STEP_LABELS.map((lbl, i) => {
+      const n = i + 1;
+      const cls = n < state.step ? 'done' : n === state.step ? 'active' : '';
+      return `<div class="seg ${cls}"><div class="bar"></div><div class="lbl">${n}. ${lbl}</div></div>`;
+    }).join('');
+  }
+
+  function renderStep() {
+    const body = $('stepBody');
+    if (state.step === 4) { renderSummary(); }
+    else {
+      const s = SCHEMA[state.step - 1];
+      const note = (state.step === 1 && state.prefilled)
+        ? `<div class="prefill-note">✓ 로그인 정보로 기본 항목을 채웠어요. 필요하면 수정하세요.</div>` : '';
+      body.innerHTML = `<div class="step-title">${s.title}</div><div class="step-sub">${s.sub}</div>` + note +
+        s.fields.map(fieldHtml).join('');
+      s.fields.forEach(wireField);
+    }
+    $('btnPrev').style.visibility = state.step === 1 ? 'hidden' : 'visible';
+    $('btnNext').textContent = state.step === 4 ? '수출 가능성 진단하기' : '다음';
+    renderStepper();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function fieldHtml(f) {
+    const req = f.required ? '<span class="req">*</span>' : '';
+    const hint = f.hint ? `<span class="hint">${f.hint}</span>` : '';
+    let control = '';
+    if (f.type === 'select') {
+      const opts = (state.options[f.optionsKey] || []);
+      const cur = state.data[f.key] || '';
+      control = `<select data-key="${f.key}"><option value="">선택하세요</option>` +
+        opts.map(o => `<option value="${esc(o)}" ${o===cur?'selected':''}>${esc(o)}</option>`).join('') + `</select>`;
+    } else if (f.type === 'chips') {
+      const opts = (state.options[f.optionsKey] || []);
+      const sel = state.data[f.key] || [];
+      control = `<div class="chips" data-key="${f.key}">` +
+        opts.map(o => `<button type="button" class="chip ${sel.includes(o)?'on':''}" data-val="${esc(o)}">${esc(o)}</button>`).join('') + `</div>`;
+    } else if (f.type === 'file') {
+      control = `<div class="filezone" data-key="${f.key}">
+          <input type="file" multiple accept=".jpg,.jpeg,.png,.pdf,.xlsx,.docx" style="display:none">
+          <div class="fz-title">파일 선택 또는 드래그</div>
+          <div class="fz-sub">${f.hint||''}</div>
+        </div><div class="filelist" data-list></div>`;
+    } else {
+      const cur = state.data[f.key] || '';
+      control = `<input type="${f.type}" data-key="${f.key}" value="${esc(cur)}" placeholder="${f.placeholder||''}">`;
+    }
+    const note = f.note ? `<div class="field-note">${f.note}</div>` : '';
+    return `<div class="field" data-field="${f.key}"><label>${f.label}${req}${hint}</label>${note}${control}<div class="err"></div></div>`;
+  }
+
+  function wireField(f) {
+    const wrap = document.querySelector(`[data-field="${f.key}"]`);
+    if (f.type === 'select' || f.type === 'text' || f.type === 'email' || f.type === 'tel' || f.type === 'url') {
+      const el = wrap.querySelector('[data-key]');
+      el.addEventListener('input', () => { state.data[f.key] = el.value; clearError(wrap); });
+      el.addEventListener('change', () => { state.data[f.key] = el.value; });
+    } else if (f.type === 'chips') {
+      if (!state.data[f.key]) state.data[f.key] = [];
+      wrap.querySelectorAll('.chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const v = chip.dataset.val;
+          const arr = state.data[f.key];
+          const i = arr.indexOf(v);
+          if (i >= 0) { arr.splice(i, 1); chip.classList.remove('on'); }
+          else { arr.push(v); chip.classList.add('on'); }
+          clearError(wrap);
+        });
+      });
+    } else if (f.type === 'file') {
+      const zone = wrap.querySelector('.filezone');
+      const input = zone.querySelector('input[type=file]');
+      const list = wrap.querySelector('[data-list]');
+      zone.addEventListener('click', () => input.click());
+      zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.style.borderColor = 'var(--blue)'; });
+      zone.addEventListener('dragleave', () => { zone.style.borderColor = ''; });
+      zone.addEventListener('drop', (e) => { e.preventDefault(); zone.style.borderColor = ''; handleFiles(e.dataTransfer.files, list); });
+      input.addEventListener('change', () => handleFiles(input.files, list));
+      renderFiles(list);
+    }
+  }
+
+  async function handleFiles(fileList, listEl) {
+    for (const file of fileList) {
+      const fd = new FormData();
+      fd.append('file', file);
+      try {
+        const res = await fetch(API_BASE + '/api/export-diagnosis/upload', { method: 'POST', body: fd });
+        const json = await res.json();
+        if (json.success) state.files.push(json.data);
+        else alert(json.message || '업로드 실패');
+      } catch (e) { alert('업로드 중 오류: ' + e.message); }
+    }
+    state.data.productFiles = state.files;
+    renderFiles(listEl);
+  }
+
+  function renderFiles(listEl) {
+    listEl.innerHTML = state.files.map((f, i) =>
+      `<div class="fileitem"><span>📎</span><span class="fi-name">${esc(f.fileName)}</span><span class="fi-x" data-i="${i}">✕</span></div>`
+    ).join('');
+    listEl.querySelectorAll('.fi-x').forEach(x => x.addEventListener('click', () => {
+      state.files.splice(+x.dataset.i, 1); state.data.productFiles = state.files; renderFiles(listEl);
+    }));
+  }
+
+  function renderSummary() {
+    const grp = (title, fields) => {
+      const rows = fields.map(f => {
+        let v = state.data[f.key];
+        if (f.key === 'productFiles') v = state.files.map(x => x.fileName);
+        const disp = Array.isArray(v) ? (v.length ? v.join(', ') : '') : (v || '');
+        return `<div class="summary-row"><div class="sk">${f.label}</div><div class="sv ${disp?'':'empty'}">${disp?esc(disp):'미입력'}</div></div>`;
+      }).join('');
+      return `<div class="summary-group"><h4>${title}</h4>${rows}</div>`;
+    };
+    $('stepBody').innerHTML = `<div class="step-title">입력 내용 확인</div><div class="step-sub">아래 내용으로 진단을 요청합니다.</div>` +
+      grp('기본 정보', SCHEMA[0].fields) + grp('제품 정보', SCHEMA[1].fields) + grp('수출 목표', SCHEMA[2].fields);
+  }
+
+  function validateStep(step) {
+    if (step === 4) return true;
+    const s = SCHEMA[step - 1];
+    let ok = true;
+    for (const f of s.fields) {
+      const wrap = document.querySelector(`[data-field="${f.key}"]`);
+      let bad = false, msg = '필수 입력입니다.';
+      if (f.required) {
+        const v = state.data[f.key];
+        if (f.type === 'chips') { if (!Array.isArray(v) || v.length === 0) { bad = true; msg = '최소 1개 이상 선택해주세요.'; } }
+        else if (!v || !String(v).trim()) bad = true;
+      }
+      if (!bad && f.type === 'email' && state.data[f.key] && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.data[f.key].trim())) { bad = true; msg = '이메일 형식이 올바르지 않습니다.'; }
+      if (!bad && f.type === 'tel' && state.data[f.key] && !/^0\d{1,2}-?\d{3,4}-?\d{4}$/.test(state.data[f.key].trim().replace(/\s/g,''))) { bad = true; msg = '전화번호 형식이 올바르지 않습니다. (예: 010-1234-5678)'; }
+      if (bad) { setError(wrap, msg); ok = false; } else clearError(wrap);
+    }
+    return ok;
+  }
+
+  function setError(wrap, msg) { if (!wrap) return; wrap.classList.add('invalid'); const e = wrap.querySelector('.err'); if (e) e.textContent = msg; }
+  function clearError(wrap) { if (wrap) wrap.classList.remove('invalid'); }
+
+  function onPrev() { if (state.step > 1) { state.step--; renderStep(); } }
+
+  async function onNext() {
+    if (!validateStep(state.step)) return;
+    if (state.step < 4) { state.step++; renderStep(); return; }
+    await submit();
+  }
+
+  async function submit() {
+    if (state.submitting) return;
+    state.submitting = true;
+    $('btnNext').disabled = true; $('btnNext').textContent = '제출 중…';
+    try {
+      const headers = { 'Content-Type': 'application/json' };
+      let mt = null; try { mt = localStorage.getItem('bridgex_member_token'); } catch (e) {}
+      if (mt) headers['Authorization'] = 'Bearer ' + mt; // 로그인 회원이면 계정에 연결
+      const res = await fetch(API_BASE + '/api/export-diagnosis', {
+        method: 'POST', headers,
+        body: JSON.stringify({ ...state.data, productFiles: state.files }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        const firstErr = json.errors && json.errors[0] ? `\n- ${json.errors.map(e=>e.message).join('\n- ')}` : '';
+        throw new Error((json.message || '제출에 실패했습니다.') + firstErr);
+      }
+      if (json.data && json.data.diagnosisResult) showResult(json.data);
+      else showDone();
+    } catch (e) {
+      alert(e.message);
+      $('btnNext').disabled = false; $('btnNext').textContent = '수출 가능성 진단하기';
+      state.submitting = false;
+    }
+  }
+
+  const SCORE_COLOR = (s) => s >= 75 ? '#2e9e6b' : s >= 55 ? '#0071e3' : '#d68e2e';
+
+  function getMemberToken() { try { return localStorage.getItem('bridgex_member_token'); } catch (e) { return null; } }
+  function todayStr() { const d = new Date(); return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0'); }
+
+  function showResult(data) {
+    $('actions').style.display = 'none';
+    $('stepper').style.display = 'none';
+    const r = data.diagnosisResult;
+    const isMember = !!getMemberToken();
+    const company = state.data.companyName || '브랜드';
+    const bars = Object.values(r.sections).map(s => `
+      <div class="dim">
+        <div class="dim-top"><span class="dim-label">${esc(s.label)}</span><span class="dim-score" style="color:${SCORE_COLOR(s.score)}">${s.score}</span></div>
+        <div class="dim-track"><div class="dim-fill" style="width:${s.score}%;background:${SCORE_COLOR(s.score)}"></div></div>
+        <div class="dim-comment">${esc(s.comment)}</div>
+      </div>`).join('');
+    const actions = r.nextActions.map(a => `<li>${esc(a)}</li>`).join('');
+
+    // 회원이면 상담 훅, 비회원이면 회원가입 유도 훅
+    const hook = isMember ? `
+        <div class="hook no-print">
+          <h3>여기서 멈추면 결과도 멈춥니다.</h3>
+          <p>${esc(r.consultingNeed.pitch)}</p>
+          <button class="btn btn-primary" id="consultBtn" style="width:100%;">무료 상담 신청하기 →</button>
+          <div class="hook-note">진단 점수 낮은 영역부터 전문가가 바이어 매칭·계약까지 함께 실행합니다.</div>
+        </div>` : `
+        <div class="hook no-print">
+          <h3>이 결과를 내 페이지에 저장하세요.</h3>
+          <p>비밀번호만 설정하면 회원가입 완료. 진단 결과가 계정에 저장되고, 전문가 상담·바이어 매칭으로 이어집니다.</p>
+          <input id="rsPassword" type="password" class="rs-input" placeholder="비밀번호 (8자 이상)">
+          <div class="rs-err" id="rsErr"></div>
+          <button class="btn btn-primary" id="rsBtn" style="width:100%;">회원가입하고 결과 저장 →</button>
+          <div class="hook-note">이미 입력한 이름·회사·이메일(${esc(state.data.email||'')})로 자동 가입됩니다.</div>
+        </div>`;
+
+    $('stepBody').innerHTML = `
+      <div class="result">
+        <div class="print-only print-head">
+          <div class="ph-brand">Bridge<span>X</span> · 수출 가능성 진단 리포트</div>
+          <div class="ph-sub">${esc(company)} · ${todayStr()}</div>
+        </div>
+        <div class="result-eyebrow no-print">수출 가능성 진단 결과 (기본)</div>
+        <div class="score-hero">
+          <div class="score-ring" style="background:conic-gradient(${SCORE_COLOR(r.overallScore)} ${r.overallScore*3.6}deg, #ececef 0deg)">
+            <div class="score-inner"><span class="score-num">${r.overallScore}</span><span class="score-den">/100</span></div>
+          </div>
+          <div class="score-side">
+            <div class="score-level" style="color:${SCORE_COLOR(r.overallScore)}">${esc(r.readinessLevel)}</div>
+            <p class="score-summary">${esc(r.summary)}</p>
+          </div>
+        </div>
+
+        <div class="dims">${bars}</div>
+
+        <div class="next-box">
+          <h4>지금 필요한 다음 단계</h4>
+          <ul>${actions}</ul>
+        </div>
+
+        <div class="no-print" style="margin-bottom:20px;">
+          <button class="btn btn-ghost" id="pdfBtn" style="width:100%;">📄 진단 결과 PDF로 저장</button>
+        </div>
+
+        ${hook}
+
+        <div class="print-only print-foot">본 리포트는 입력 정보 기반 자동 기초 진단이며, 정식 EU 규제 적합성 판단은 전문가 검토가 필요합니다. © 2026 BridgeX</div>
+      </div>`;
+
+    document.getElementById('pdfBtn').addEventListener('click', () => window.print());
+    if (isMember) document.getElementById('consultBtn').addEventListener('click', () => requestConsult(data.id));
+    else wireResultSignup(data);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // 비회원 결과 화면에서 자동 유도 회원가입 (흐름 2)
+  function wireResultSignup(data) {
+    const btn = document.getElementById('rsBtn'), err = document.getElementById('rsErr'), pw = document.getElementById('rsPassword');
+    btn.addEventListener('click', async () => {
+      err.textContent = '';
+      const password = pw.value;
+      if (!password || password.length < 8) { err.textContent = '비밀번호는 8자 이상이어야 합니다.'; return; }
+      btn.disabled = true; btn.textContent = '가입 중…';
+      try {
+        const res = await fetch(API_BASE + '/api/members', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: state.data.contactName, companyName: state.data.companyName,
+            email: state.data.email, phone: state.data.phone,
+            password, diagnosisId: data.id,
+          }),
+        });
+        const json = await res.json();
+        if (!res.ok || !json.success) throw new Error(json.message || '회원가입에 실패했습니다.');
+        try { localStorage.setItem('bridgex_member_token', json.data.token); } catch (e) {}
+        location.href = 'mypage.html';
+      } catch (e) {
+        err.textContent = e.message; btn.disabled = false; btn.textContent = '회원가입하고 결과 저장 →';
+      }
+    });
+  }
+
+  async function requestConsult(id) {
+    const btn = document.getElementById('consultBtn');
+    btn.disabled = true; btn.textContent = '신청 중…';
+    try {
+      const res = await fetch(API_BASE + '/api/export-diagnosis/' + id + '/request-consultation', { method: 'POST' });
+      const json = await res.json();
+      if (!res.ok || !json.success) throw new Error(json.message || '신청에 실패했습니다.');
+      document.querySelector('.hook').innerHTML = `
+        <div class="done-icon" style="margin:0 auto 16px;">✓</div>
+        <h3 style="text-align:center;">상담 신청이 접수되었습니다.</h3>
+        <p style="text-align:center;">담당 전문가가 1영업일 내 연락드려, 바이어 매칭·규제 대응·계약까지 함께 설계합니다.</p>
+        <div style="text-align:center;margin-top:20px;"><a href="index.html" class="btn btn-ghost" style="display:inline-flex;flex:0;text-decoration:none;">홈으로</a></div>`;
+    } catch (e) {
+      alert(e.message); btn.disabled = false; btn.textContent = '무료 상담 신청하기 →';
+    }
+  }
+
+  function showDone() {
+    $('actions').style.display = 'none';
+    $('stepper').style.display = 'none';
+    $('stepBody').innerHTML = `<div class="done-box">
+      <div class="done-icon">✓</div>
+      <h2>수출 가능성 진단 요청이 접수되었습니다.</h2>
+      <div class="actions" style="justify-content:center; margin-top:28px;">
+        <a href="index.html" class="btn btn-ghost" style="display:inline-flex;align-items:center;flex:0;text-decoration:none;">홈으로 돌아가기</a>
+      </div>
+    </div>`;
+  }
+
+  function esc(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  init();
+</script>
+</body>
+</html>

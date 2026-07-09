@@ -1,0 +1,104 @@
+/* ============================================================
+   Apple Design System — Typography Tokens
+   Display = SF Pro Display (≥19px headlines).
+   Text    = SF Pro Text (body, UI < 20px).
+   Substitute: Inter (Google Fonts) off-system. See @font-face.
+   Ladder: 300 / 400 / 600 / 700 — weight 500 is deliberately absent.
+   ============================================================ */
+
+:root {
+  /* ---- Families ---------------------------------------- */
+  /* On Apple platforms system-ui resolves to the real SF Pro.
+     Inter is the off-system substitute (loaded via fonts.css). */
+  --font-display: "SF Pro Display", system-ui, -apple-system,
+    BlinkMacSystemFont, "Inter", sans-serif;
+  --font-text: "SF Pro Text", system-ui, -apple-system,
+    BlinkMacSystemFont, "Inter", sans-serif;
+
+  /* ---- Weights (no 500) -------------------------------- */
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* ---- Type ramp: size / line-height / tracking -------- */
+  /* hero-display — 56 / 1.07 / -0.28px — hero headline */
+  --type-hero-size: 56px;
+  --type-hero-line: 1.07;
+  --type-hero-track: -0.28px;
+
+  /* display-lg — 40 / 1.10 / 0 — tile headlines */
+  --type-display-lg-size: 40px;
+  --type-display-lg-line: 1.10;
+  --type-display-lg-track: 0px;
+
+  /* display-md — 34 / 1.47 / -0.374px — section heads */
+  --type-display-md-size: 34px;
+  --type-display-md-line: 1.47;
+  --type-display-md-track: -0.374px;
+
+  /* lead — 28 / 1.14 / 0.196px — product tile subcopy */
+  --type-lead-size: 28px;
+  --type-lead-line: 1.14;
+  --type-lead-track: 0.196px;
+
+  /* lead-airy — 24 / 1.5 / 0 / weight 300 — airy leads */
+  --type-lead-airy-size: 24px;
+  --type-lead-airy-line: 1.5;
+  --type-lead-airy-track: 0px;
+
+  /* tagline — 21 / 1.19 / 0.231px / 600 — sub-tile tagline */
+  --type-tagline-size: 21px;
+  --type-tagline-line: 1.19;
+  --type-tagline-track: 0.231px;
+
+  /* body-strong — 17 / 1.24 / -0.374px / 600 */
+  --type-body-strong-size: 17px;
+  --type-body-strong-line: 1.24;
+  --type-body-strong-track: -0.374px;
+
+  /* body — 17 / 1.47 / -0.374px / 400 — default paragraph */
+  --type-body-size: 17px;
+  --type-body-line: 1.47;
+  --type-body-track: -0.374px;
+
+  /* dense-link — 17 / 2.41 / 0 — footer/store link lists */
+  --type-dense-link-size: 17px;
+  --type-dense-link-line: 2.41;
+  --type-dense-link-track: 0px;
+
+  /* caption — 14 / 1.43 / -0.224px — captions, button text */
+  --type-caption-size: 14px;
+  --type-caption-line: 1.43;
+  --type-caption-track: -0.224px;
+
+  /* caption-strong — 14 / 1.29 / -0.224px / 600 */
+  --type-caption-strong-size: 14px;
+  --type-caption-strong-line: 1.29;
+  --type-caption-strong-track: -0.224px;
+
+  /* button-large — 18 / 1.0 / 0 / weight 300 — store hero CTA */
+  --type-button-large-size: 18px;
+  --type-button-large-line: 1.0;
+  --type-button-large-track: 0px;
+
+  /* button-utility — 14 / 1.29 / -0.224px — nav/utility labels */
+  --type-button-utility-size: 14px;
+  --type-button-utility-line: 1.29;
+  --type-button-utility-track: -0.224px;
+
+  /* fine-print — 12 / 1.0 / -0.12px — footer body, fine print */
+  --type-fine-print-size: 12px;
+  --type-fine-print-line: 1.0;
+  --type-fine-print-track: -0.12px;
+
+  /* micro-legal — 10 / 1.3 / -0.08px — micro disclaimers */
+  --type-micro-legal-size: 10px;
+  --type-micro-legal-line: 1.3;
+  --type-micro-legal-track: -0.08px;
+
+  /* nav-link — 12 / 1.0 / -0.12px — global nav items */
+  --type-nav-link-size: 12px;
+  --type-nav-link-line: 1.0;
+  --type-nav-link-track: -0.12px;
+}

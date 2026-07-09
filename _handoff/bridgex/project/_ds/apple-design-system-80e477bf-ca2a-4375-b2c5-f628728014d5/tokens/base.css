@@ -1,0 +1,108 @@
+/* ============================================================
+   Apple Design System — Base & Utility Classes
+   Maps the raw tokens into ready-to-use type & surface classes.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font-text);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  letter-spacing: var(--type-body-track);
+  color: var(--color-ink);
+  background: var(--color-canvas);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---- Type ramp utility classes ------------------------- */
+.t-hero {
+  font-family: var(--font-display);
+  font-size: var(--type-hero-size);
+  line-height: var(--type-hero-line);
+  letter-spacing: var(--type-hero-track);
+  font-weight: var(--weight-semibold);
+}
+.t-display-lg {
+  font-family: var(--font-display);
+  font-size: var(--type-display-lg-size);
+  line-height: var(--type-display-lg-line);
+  letter-spacing: var(--type-display-lg-track);
+  font-weight: var(--weight-semibold);
+}
+.t-display-md {
+  font-family: var(--font-display);
+  font-size: var(--type-display-md-size);
+  line-height: var(--type-display-md-line);
+  letter-spacing: var(--type-display-md-track);
+  font-weight: var(--weight-semibold);
+}
+.t-lead {
+  font-family: var(--font-display);
+  font-size: var(--type-lead-size);
+  line-height: var(--type-lead-line);
+  letter-spacing: var(--type-lead-track);
+  font-weight: var(--weight-regular);
+}
+.t-lead-airy {
+  font-family: var(--font-display);
+  font-size: var(--type-lead-airy-size);
+  line-height: var(--type-lead-airy-line);
+  letter-spacing: var(--type-lead-airy-track);
+  font-weight: var(--weight-light);
+}
+.t-tagline {
+  font-family: var(--font-display);
+  font-size: var(--type-tagline-size);
+  line-height: var(--type-tagline-line);
+  letter-spacing: var(--type-tagline-track);
+  font-weight: var(--weight-semibold);
+}
+.t-body-strong {
+  font-family: var(--font-text);
+  font-size: var(--type-body-strong-size);
+  line-height: var(--type-body-strong-line);
+  letter-spacing: var(--type-body-strong-track);
+  font-weight: var(--weight-semibold);
+}
+.t-body {
+  font-family: var(--font-text);
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+  letter-spacing: var(--type-body-track);
+  font-weight: var(--weight-regular);
+}
+.t-caption {
+  font-family: var(--font-text);
+  font-size: var(--type-caption-size);
+  line-height: var(--type-caption-line);
+  letter-spacing: var(--type-caption-track);
+  font-weight: var(--weight-regular);
+}
+.t-caption-strong {
+  font-family: var(--font-text);
+  font-size: var(--type-caption-strong-size);
+  line-height: var(--type-caption-strong-line);
+  letter-spacing: var(--type-caption-strong-track);
+  font-weight: var(--weight-semibold);
+}
+.t-fine-print {
+  font-family: var(--font-text);
+  font-size: var(--type-fine-print-size);
+  line-height: var(--type-fine-print-line);
+  letter-spacing: var(--type-fine-print-track);
+  font-weight: var(--weight-regular);
+}
+
+/* ---- Surface helpers ----------------------------------- */
+.surface-light { background: var(--color-canvas); color: var(--color-ink); }
+.surface-parchment { background: var(--color-canvas-parchment); color: var(--color-ink); }
+.surface-dark { background: var(--color-surface-tile-1); color: var(--color-body-on-dark); }
+.surface-dark-2 { background: var(--color-surface-tile-2); color: var(--color-body-on-dark); }
+.surface-dark-3 { background: var(--color-surface-tile-3); color: var(--color-body-on-dark); }
+.surface-black { background: var(--color-surface-black); color: var(--color-body-on-dark); }
+
+a { color: var(--color-primary); text-decoration: none; }
+.on-dark a { color: var(--color-primary-on-dark); }

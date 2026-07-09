@@ -1,0 +1,13 @@
+# tooling / scratch
+.claude/
+.superpowers/
+
+# node (backend/.gitignore also covers these)
+node_modules/
+
+# design handoff archive (kept on disk, not in repo)
+*.zip
+
+# OS
+.DS_Store
+Thumbs.db

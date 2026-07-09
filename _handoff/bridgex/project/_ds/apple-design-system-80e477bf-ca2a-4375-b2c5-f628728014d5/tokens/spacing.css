@@ -1,0 +1,29 @@
+/* ============================================================
+   Apple Design System — Spacing Tokens
+   Base unit 8px. Structural layout snaps to 8/12/16/20/24.
+   Sub-base (4,5,6,7) for tight typographic adjustment.
+   ============================================================ */
+
+:root {
+  --space-xxs: 4px;     /* tight typographic gap */
+  --space-xs: 8px;      /* base unit */
+  --space-sm: 12px;     /* structural */
+  --space-md: 17px;     /* body rhythm */
+  --space-lg: 24px;     /* card padding, gutters */
+  --space-xl: 32px;     /* */
+  --space-xxl: 48px;    /* tightened section padding */
+  --space-section: 80px;/* product-tile vertical padding */
+
+  /* ---- Layout containers ------------------------------- */
+  --container-text: 980px;   /* text-heavy sections */
+  --container-grid: 1440px;  /* product grids, content lock */
+  --gutter-card: 20px;       /* between utility-grid cards */
+
+  /* ---- Semantic ---------------------------------------- */
+  --pad-card: var(--space-lg);
+  --pad-section: var(--space-section);
+  --pad-button-y: 11px;
+  --pad-button-x: 22px;
+  --pad-button-utility-y: 8px;
+  --pad-button-utility-x: 15px;
+}

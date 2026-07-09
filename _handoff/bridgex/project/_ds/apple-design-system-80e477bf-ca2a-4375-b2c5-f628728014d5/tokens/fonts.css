@@ -1,0 +1,22 @@
+/* ============================================================
+   Apple Design System — Fonts
+   --------------------------------------------------------------
+   SF Pro Display / SF Pro Text are Apple proprietary system fonts.
+   On macOS / iOS / Safari the `system-ui` / `-apple-system` entries
+   in --font-display / --font-text resolve to the REAL SF Pro — no
+   webfont needed.
+
+   For non-Apple platforms we load INTER (the closest open-source
+   substitute, per the brand spec) as the fallback webface. Tune:
+     • letter-spacing nudged -0.01em at display sizes (done in ramp)
+     • body line-height tightened ~0.03 vs SF Pro
+     • font-feature-settings "ss03" approximates SF Pro's rounded "a"
+   ============================================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap");
+
+/* Inter's taller x-height + wider default tracking is corrected
+   wherever Inter is the resolved face. */
+body {
+  font-feature-settings: "ss03", "cv05";
+}

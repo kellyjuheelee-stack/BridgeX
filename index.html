@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BridgeX — 화장품 해외 수출, 이제 BridgeX가 끝냅니다.</title>
+<meta name="description" content="AI가 실행을, 전문가가 협상을. 예산 없는 1인 K뷰티 브랜드가 3개월 안에 첫 계약 테이블에 앉게 하는 Human+AI 하이브리드 수출 대행 플랫폼.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #0066cc;
+    --blue-focus: #0071e3;
+    --ink: #1d1d1f;
+    --muted: #6e6e73;
+    --parchment: #f5f5f7;
+    --white: #ffffff;
+    --shadow-card: 0 2px 20px rgba(0,0,0,0.06);
+    --pad-x: clamp(20px, 5vw, 56px);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+  body {
+    margin: 0;
+    background: var(--white);
+    color: var(--ink);
+    font-family: 'Inter', 'Noto Sans KR', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    word-break: keep-all;
+  }
+  ::selection { background: var(--blue-focus); color: #fff; }
+  input:focus-visible, a:focus-visible, button:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+  h1, h2, h3, p { margin: 0; }
+  a { text-decoration: none; }
+
+  @keyframes bx-pulse { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
+
+  .wrap { max-width: 1120px; margin: 0 auto; }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: 68px; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 var(--pad-x);
+    background: rgba(250,248,244,0.82);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid rgba(0,0,0,0);
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+  .nav-logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: var(--ink); }
+  .nav-logo span, .foot-logo span { color: var(--blue); }
+  .nav-cta {
+    display: inline-flex; align-items: center; height: 40px; padding: 0 20px;
+    border-radius: 999px; background: var(--blue-focus); color: #fff;
+    font-size: 14px; font-weight: 600; font-family: inherit;
+    border: none; cursor: pointer;
+    box-shadow: 0 2px 12px rgba(0,102,204,0.28);
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,102,204,0.4); }
+
+  /* signup modal */
+  .signup-overlay { position: fixed; inset: 0; z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; background: rgba(10,15,30,0.45); }
+  .signup-overlay.open { display: flex; }
+  .signup-card { background: #fff; border-radius: 22px; width: 100%; max-width: 420px; padding: 34px 30px; box-shadow: 0 30px 80px rgba(0,0,0,0.25); position: relative; }
+  .signup-card .sc-x { position: absolute; top: 18px; right: 20px; font-size: 22px; color: #9e9ea3; cursor: pointer; line-height: 1; }
+  .signup-card h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: #1d1d1f; margin: 0 0 6px; }
+  .signup-card .sc-sub { font-size: 14px; color: #6e6e73; margin: 0 0 22px; }
+  .signup-card label { display: block; font-size: 13px; font-weight: 700; color: #1d1d1f; margin: 14px 0 6px; }
+  .signup-card input { width: 100%; height: 46px; padding: 0 14px; font-size: 15px; font-family: inherit; color: #1d1d1f; border: 1px solid #e0e0e0; border-radius: 11px; outline: none; transition: border-color .15s, box-shadow .15s; }
+  .signup-card input:focus { border-color: #0066cc; box-shadow: 0 0 0 3px rgba(0,102,204,0.12); }
+  .signup-card .sc-btn { width: 100%; height: 50px; margin-top: 22px; border: none; border-radius: 999px; background: #0071e3; color: #fff; font-size: 16px; font-weight: 600; font-family: inherit; cursor: pointer; box-shadow: 0 6px 20px rgba(0,102,204,0.3); transition: transform .15s, box-shadow .15s; }
+  .signup-card .sc-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,102,204,0.38); }
+  .signup-card .sc-btn:disabled { opacity: .55; cursor: default; }
+  .signup-card .sc-err { color: #d64545; font-size: 13px; font-weight: 600; margin-top: 12px; min-height: 16px; }
+  .signup-done { text-align: center; padding: 12px 0; }
+  .signup-done .sd-ico { width: 60px; height: 60px; border-radius: 999px; background: rgba(0,102,204,0.1); color: #0066cc; font-size: 30px; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
+  .signup-done h2 { margin-bottom: 8px; }
+  .signup-done p { font-size: 14px; color: #6e6e73; line-height: 1.6; margin: 0 0 20px; }
+  .sc-switch { text-align: center; font-size: 13px; color: #6e6e73; margin-top: 16px; }
+  .sc-switch span { color: #0066cc; font-weight: 700; cursor: pointer; }
+  .nav-link-btn { font-size: 14px; font-weight: 600; color: var(--ink); cursor: pointer; background: none; border: none; font-family: inherit; padding: 0; }
+  .nav-link-btn:hover { color: var(--blue); }
+
+  /* ===== HERO ===== */
+  .hero {
+    position: relative; text-align: center;
+    max-width: 1120px; margin: 0 auto;
+    padding: clamp(128px,16vh,168px) var(--pad-x) clamp(64px,9vh,104px);
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 15px; border-radius: 999px;
+    background: var(--parchment); border: 1px solid rgba(0,102,204,0.28);
+    font-size: 13px; font-weight: 600; color: var(--blue); letter-spacing: 0.2px;
+    margin-bottom: 28px;
+  }
+  .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue-focus); animation: bx-pulse 2.4s ease-in-out infinite; }
+  .hero h1 {
+    font-size: clamp(34px,6vw,60px); line-height: 1.12; letter-spacing: -1.2px;
+    font-weight: 800; margin-bottom: 24px; text-wrap: balance;
+  }
+  .hero h1 span { color: var(--blue); }
+  .hero-sub { font-size: clamp(17px,2.2vw,21px); line-height: 1.7; color: var(--ink); font-weight: 500; max-width: 620px; margin: 0 auto 40px; }
+  .btn-lg {
+    display: inline-flex; align-items: center; justify-content: center;
+    height: 54px; padding: 0 34px; border-radius: 999px;
+    background: var(--blue-focus); color: #fff; font-size: 17px; font-weight: 600;
+    font-family: inherit; border: none; cursor: pointer;
+    box-shadow: 0 6px 22px rgba(0,102,204,0.32);
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .btn-lg:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,102,204,0.42); }
+  .hero-cta-row { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-bottom: 64px; }
+  .stats { display: flex; flex-wrap: wrap; gap: clamp(20px,5vw,56px); justify-content: center; }
+  .stat { text-align: center; }
+  .stat-num { font-size: clamp(30px,5vw,42px); font-weight: 800; color: var(--blue); letter-spacing: -1px; }
+  .stat-label { font-size: 14px; color: var(--muted); margin-top: 4px; font-weight: 500; }
+  .stats { align-items: center; }
+  .stat { min-width: 96px; }
+  .stat-div { width: 1px; height: 56px; align-self: center; background: rgba(0,0,0,0.1); }
+
+  /* ===== SECTIONS ===== */
+  section { padding: clamp(72px,10vh,112px) var(--pad-x); }
+  .alt { background: var(--parchment); }
+  .sec-head { text-align: center; max-width: 680px; margin: 0 auto 56px; }
+  .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+  .eyebrow.gray { color: var(--muted); }
+  .eyebrow.blue { color: var(--blue); }
+  .sec-title { font-size: clamp(28px,4.5vw,40px); line-height: 1.22; letter-spacing: -0.8px; font-weight: 800; text-wrap: balance; }
+
+  /* card grids */
+  .grid { display: grid; gap: 20px; }
+  .grid-3 { grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); }
+  .grid-6 { grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); }
+  .card {
+    background: var(--white); border-radius: 16px; padding: 28px;
+    box-shadow: var(--shadow-card);
+    transition: transform .22s ease, box-shadow .22s ease;
+  }
+  .card.lift:hover { transform: translateY(-4px); box-shadow: 0 14px 34px rgba(0,0,0,0.12); }
+  .card h3 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 8px; }
+  .card p { font-size: 15px; line-height: 1.6; color: var(--muted); }
+
+  /* problem */
+  .pain-ico { width: 44px; height: 44px; border-radius: 12px; background: var(--parchment); display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+
+  /* how */
+  .how-legend { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; }
+  .legend-item { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--muted); }
+  .legend-sw { width: 12px; height: 12px; border-radius: 4px; }
+  .step { padding: 26px; }
+  .step-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .step-n { font-size: 13px; font-weight: 800; color: var(--blue-focus); letter-spacing: 0.5px; }
+  .tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.3px; padding: 5px 11px; border-radius: 999px; }
+  .tag-ai { background: rgba(0,113,227,0.16); color: var(--blue); }
+  .tag-human { background: rgba(20,24,36,0.08); color: var(--ink); }
+  .step h3 { margin-bottom: 6px; }
+  .step p { font-size: 15px; line-height: 1.55; color: var(--muted); }
+
+  /* comparison */
+  .cmp-wrap { max-width: 900px; margin: 0 auto; }
+  .cmp { background: var(--white); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-card); }
+  .cmp-row { display: grid; grid-template-columns: 1fr 1.3fr 1.3fr; }
+  .cmp-row + .cmp-row { border-top: 1px solid rgba(0,0,0,0.06); }
+  .cmp-head .c-label { }
+  .cmp-head .c-solo { background: var(--parchment); color: var(--muted); font-weight: 700; }
+  .cmp-head .c-bx { background: rgba(0,102,204,0.08); color: var(--blue); font-weight: 700; }
+  .cmp-row > div { padding: 16px 18px; font-size: 14px; line-height: 1.45; text-align: center; }
+  .cmp-row .c-label { padding: 16px 20px; text-align: left; font-weight: 700; color: var(--ink); background: var(--white); }
+  .cmp-body .c-solo { color: var(--muted); }
+  .cmp-body .c-bx { color: var(--ink); font-weight: 600; }
+
+  /* before / after */
+  .ba-wrap { max-width: 1000px; margin: 0 auto; }
+  .ba-row { display: flex; flex-wrap: wrap; align-items: stretch; gap: 20px; justify-content: center; }
+  .ba-card { flex: 1 1 300px; background: var(--white); border-radius: 20px; padding: 32px; }
+  .ba-before { border: 1px solid rgba(0,0,0,0.2); box-shadow: 0 2px 20px rgba(0,0,0,0.05); }
+  .ba-after { border: 1.5px solid rgba(0,102,204,0.32); box-shadow: 0 8px 30px rgba(0,102,204,0.1); }
+  .ba-label { font-size: 13px; font-weight: 700; margin-bottom: 20px; letter-spacing: 0.5px; }
+  .ba-before .ba-label { color: var(--muted); }
+  .ba-after .ba-label { color: var(--blue); }
+  .ba-list { display: flex; flex-direction: column; gap: 16px; }
+  .ba-item { display: flex; gap: 12px; align-items: flex-start; }
+  .ba-mark { flex: 0 0 auto; font-weight: 700; margin-top: 1px; }
+  .ba-before .ba-mark { color: var(--muted); }
+  .ba-after .ba-mark { color: var(--blue); }
+  .ba-item span.txt { font-size: 16px; line-height: 1.5; color: var(--ink); }
+  .ba-after .ba-item span.txt { font-weight: 500; }
+  .ba-arrow { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; color: var(--blue-focus); font-size: 34px; font-weight: 300; }
+
+  /* values */
+  .val { border-radius: 18px; padding: 32px; }
+  .val-n { font-size: 13px; font-weight: 800; color: var(--blue-focus); margin-bottom: 14px; }
+  .val h3 { font-size: 20px; font-weight: 700; letter-spacing: -0.4px; margin-bottom: 10px; }
+  .val p { font-size: 15px; line-height: 1.6; color: var(--muted); margin-bottom: 18px; }
+  .val-proof { display: flex; gap: 8px; align-items: center; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.07); }
+  .proof-tag { font-size: 11px; font-weight: 700; color: var(--blue); background: rgba(0,102,204,0.08); padding: 3px 8px; border-radius: 6px; }
+  .proof-txt { font-size: 13px; color: var(--ink); font-weight: 500; }
+
+  /* deal video banner */
+  .deal-video {
+    position: relative;
+    margin-top: clamp(36px, 5vw, 56px);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 34px rgba(0,0,0,0.14);
+  }
+  .deal-video video {
+    display: block;
+    width: 100%;
+    height: clamp(260px, 42vh, 440px);
+    object-fit: cover;
+  }
+  .deal-video .overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: center;
+    padding: clamp(28px, 6vw, 64px);
+    background: linear-gradient(90deg, rgba(10,20,40,0.78) 0%, rgba(10,20,40,0.42) 52%, rgba(10,20,40,0.08) 100%);
+  }
+  .deal-video .cap { max-width: 560px; }
+  .deal-video .cap-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #9ec9ff; margin-bottom: 12px; }
+  .deal-video .cap h3 { font-size: clamp(22px, 3vw, 32px); line-height: 1.32; font-weight: 800; letter-spacing: -0.5px; color: #fff; text-wrap: balance; }
+  .goal-line .ch { display: inline-block; white-space: pre; opacity: 0; transform: translateY(14px); }
+  .goal-line.play .ch { animation: chPop .5s cubic-bezier(.22,.61,.36,1) forwards; animation-delay: var(--d, 0s); }
+  @keyframes chPop {
+    0%   { opacity: 0; transform: translateY(14px) scale(.92); color: #fff; }
+    55%  { opacity: 1; transform: translateY(-3px) scale(1.12); color: #9ec9ff; text-shadow: 0 4px 18px rgba(41,151,255,0.55); }
+    100% { opacity: 1; transform: translateY(0) scale(1); color: #fff; text-shadow: none; }
+  }
+
+  /* cta */
+  .cta-card {
+    max-width: 640px; margin: 0 auto; text-align: center;
+    background: var(--white); border-radius: 28px;
+    padding: clamp(40px,6vw,64px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,102,204,0.14);
+  }
+  .cta-card h2 { font-size: clamp(28px,4.5vw,40px); line-height: 1.2; letter-spacing: -0.8px; font-weight: 800; margin-bottom: 14px; text-wrap: balance; }
+  .cta-form { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 20px; }
+  .cta-done { font-size: 15px; font-weight: 600; color: var(--blue); margin-bottom: 12px; }
+  .cta-note { font-size: 13px; color: var(--muted); }
+
+  /* footer */
+  footer { background: var(--parchment); padding: 40px var(--pad-x); border-top: 1px solid rgba(0,0,0,0.07); }
+  .foot-in { max-width: 1120px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; }
+  .foot-logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--ink); }
+  .foot-copy { font-size: 13px; color: var(--muted); }
+
+  /* fade-up */
+  [data-fade] { opacity: 0; transform: translateY(24px); }
+  [data-fade].in { opacity: 1; transform: none; }
+
+  /* responsive */
+  @media (max-width: 720px) {
+    .cmp-row { grid-template-columns: 0.9fr 1fr 1fr; }
+    .ba-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body id="top">
+
+  <!-- ===== NAV ===== -->
+  <nav id="nav">
+    <a href="#top" class="nav-logo">Bridge<span>X</span></a>
+    <div class="nav-actions" id="navActions" style="display:flex;align-items:center;gap:18px;"></div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <header class="hero">
+    <div class="badge" data-fade><span class="dot"></span> AI + Human 하이브리드 수출 대행</div>
+    <h1 data-fade>화장품 해외 수출,<br>이제 <span>BridgeX</span>가 끝냅니다.</h1>
+    <p class="hero-sub" data-fade>대표님은 제품에만 집중하십시오.</p>
+    <div class="hero-cta-row" data-fade>
+      <a href="diagnose.html" class="btn-lg">우리 브랜드 수출 가능성 진단하기 →</a>
+    </div>
+    <div class="stats" data-fade>
+      <div class="stat"><div class="stat-num">3개월</div><div class="stat-label">첫 계약 테이블까지</div></div>
+      <div class="stat-div"></div>
+      <div class="stat"><div class="stat-num">30분</div><div class="stat-label">무료 상담 한 번이면 시작</div></div>
+      <div class="stat-div"></div>
+      <div class="stat"><div class="stat-num">100%</div><div class="stat-label">K뷰티 수출 특화</div></div>
+    </div>
+  </header>
+
+  <!-- ===== PROBLEM ===== -->
+  <section class="alt">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow gray" data-fade>THE PROBLEM</div>
+        <h2 class="sec-title" data-fade>바이어를 만나도<br>계약까지 못 가는 이유</h2>
+      </div>
+      <div class="grid grid-3">
+        <div class="card lift" data-fade>
+          <div class="pain-ico">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6e6e73" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="m3 6 9 7 9-7"/></svg>
+          </div>
+          <h3>답장이 오지 않는다</h3>
+          <p>이메일 10통, 긍정 답변 0건.<br>번역은 되는데 바이어가 안 움직입니다.</p>
+        </div>
+        <div class="card lift" data-fade>
+          <div class="pain-ico">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6e6e73" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7A8.38 8.38 0 0 1 4 11.5 8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/></svg>
+          </div>
+          <h3>답이 와도 막막하다</h3>
+          <p>후속 대응·협상 노하우가 없어 대화가 계약으로 이어지지 않습니다.</p>
+        </div>
+        <div class="card lift" data-fade>
+          <div class="pain-ico">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6e6e73" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5c0-1.1 1.1-2 2.5-2s2.5.9 2.5 2-1.1 2-2.5 2-2.5.9-2.5 2 1.1 2 2.5 2 2.5-.9 2.5-2"/></svg>
+          </div>
+          <h3>컨설팅은 너무 비싸다</h3>
+          <p>예산 없는 1인 브랜드가 감당할 실행 파트너가 없습니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <section id="how">
+    <div class="wrap">
+      <div class="sec-head" style="margin-bottom:24px;">
+        <div class="eyebrow blue" data-fade>HOW IT WORKS</div>
+        <h2 class="sec-title" data-fade>AI가 실행을, 전문가가 협상을.</h2>
+      </div>
+      <div class="how-legend" data-fade>
+        <div class="legend-item"><span class="legend-sw" style="background:#0071e3;"></span>AI 자동화</div>
+        <div class="legend-item"><span class="legend-sw" style="background:#1d1d1f;"></span>전문가 직접 개입</div>
+      </div>
+      <div class="grid grid-6">
+        <div class="card step lift" data-fade>
+          <div class="step-top"><span class="step-n">STEP 1</span><span class="tag tag-human">전문가 개입</span></div>
+          <h3>바이어 발굴</h3><p>국가별 바이어 DB 자동 매칭.</p>
+        </div>
+        <div class="card step lift" data-fade>
+          <div class="step-top"><span class="step-n">STEP 2</span><span class="tag tag-ai">AI 자동화</span></div>
+          <h3>시장·규제 진단</h3><p>EU 화장품 규제(CPNP) 자동 체크.</p>
+        </div>
+        <div class="card step lift" data-fade>
+          <div class="step-top"><span class="step-n">STEP 3</span><span class="tag tag-ai">AI 자동화</span></div>
+          <h3>콜드 이메일 작성</h3><p>바이어가 반응하는 제안서 직접 작성.</p>
+        </div>
+        <div class="card step lift" data-fade>
+          <div class="step-top"><span class="step-n">STEP 4</span><span class="tag tag-ai">AI 자동화</span></div>
+          <h3>응답·후속 대응</h3><p>답장 대응 스크립트 실시간 생성.</p>
+        </div>
+        <div class="card step lift" data-fade>
+          <div class="step-top"><span class="step-n">STEP 5</span><span class="tag tag-human">전문가 개입</span></div>
+          <h3>협상 전략</h3><p>가격·조건 협상을 동석해 리드.</p>
+        </div>
+        <div class="card step lift" data-fade>
+          <div class="step-top"><span class="step-n">STEP 6</span><span class="tag tag-human">전문가 개입</span></div>
+          <h3>계약 테이블</h3><p>첫 계약까지 실무를 마무리.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COMPARISON ===== -->
+  <section class="alt">
+    <div class="cmp-wrap">
+      <div class="sec-head" style="margin-bottom:48px;">
+        <div class="eyebrow blue" data-fade>COMPARISON</div>
+        <h2 class="sec-title" data-fade>지금 혼자 할 때 vs BridgeX</h2>
+      </div>
+      <div class="cmp" data-fade>
+        <div class="cmp-row cmp-head">
+          <div class="c-label"></div>
+          <div class="c-solo">혼자 할 때</div>
+          <div class="c-bx">BridgeX와 함께</div>
+        </div>
+        <div class="cmp-body">
+          <div class="cmp-row"><div class="c-label">바이어 찾기</div><div class="c-solo">지인 소개·박람회 명함</div><div class="c-bx">검증된 바이어 데이터베이스</div></div>
+          <div class="cmp-row"><div class="c-label">이메일</div><div class="c-solo">한글→AI 번역 콜드메일</div><div class="c-bx">맞춤형 이메일 템플릿</div></div>
+          <div class="cmp-row"><div class="c-label">규제 대응</div><div class="c-solo">무엇을 볼지 모름</div><div class="c-bx">EU CPNP 규제 자동 진단</div></div>
+          <div class="cmp-row"><div class="c-label">답장이 오면</div><div class="c-solo">어떻게 답할지 막막</div><div class="c-bx">실시간 대응 스크립트</div></div>
+          <div class="cmp-row"><div class="c-label">협상</div><div class="c-solo">혼자 감당</div><div class="c-bx">글로벌 실무 전문가 조언</div></div>
+          <div class="cmp-row"><div class="c-label">비용</div><div class="c-solo">고액 컨설팅비 부담</div><div class="c-bx">소규모 맞춤 실행형</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BEFORE / AFTER ===== -->
+  <section>
+    <div class="ba-wrap">
+      <div class="sec-head" style="margin-bottom:48px;">
+        <div class="eyebrow blue" data-fade>BEFORE / AFTER</div>
+        <h2 class="sec-title" data-fade>3개월 전과 후</h2>
+      </div>
+      <div class="ba-row" data-fade>
+        <div class="ba-card ba-before">
+          <div class="ba-label">지금 · 혼자</div>
+          <div class="ba-list">
+            <div class="ba-item"><span class="ba-mark">✕</span><span class="txt">이메일 10통 → 답변 0건</span></div>
+            <div class="ba-item"><span class="ba-mark">✕</span><span class="txt">유럽 바이어 접점 0</span></div>
+            <div class="ba-item"><span class="ba-mark">✕</span><span class="txt">혼자 다 하다 지침</span></div>
+          </div>
+        </div>
+        <div class="ba-arrow">→</div>
+        <div class="ba-card ba-after">
+          <div class="ba-label">3개월 후 · BridgeX와</div>
+          <div class="ba-list">
+            <div class="ba-item"><span class="ba-mark">✓</span><span class="txt">바이어에게서 답장이 온다</span></div>
+            <div class="ba-item"><span class="ba-mark">✓</span><span class="txt">첫 계약 테이블에 앉는다</span></div>
+            <div class="ba-item"><span class="ba-mark">✓</span><span class="txt">제품 개발에만 집중한다</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== VALUES ===== -->
+  <section class="alt">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow blue" data-fade>OUR PRINCIPLES</div>
+        <h2 class="sec-title" data-fade>타협하지 않는 3원칙</h2>
+      </div>
+      <div class="grid grid-6">
+        <div class="card val lift" data-fade>
+          <div class="val-n">01</div>
+          <h3>실행 가능성</h3>
+          <p>지금 바로 보낼 이메일 한 통.</p>
+          <div class="val-proof"><span class="proof-tag">증명</span><span class="proof-txt">즉시 쓰는 실무 산출물</span></div>
+        </div>
+        <div class="card val lift" data-fade>
+          <div class="val-n">02</div>
+          <h3>소규모 접근성</h3>
+          <p>1인 브랜드도 가능한 실행형 구조.</p>
+          <div class="val-proof"><span class="proof-tag">증명</span><span class="proof-txt">고액 컨설팅비 없이 시작</span></div>
+        </div>
+        <div class="card val lift" data-fade>
+          <div class="val-n">03</div>
+          <h3>K뷰티 특화 깊이</h3>
+          <p>화장품 규제와 바이어만 깊게 팝니다.</p>
+          <div class="val-proof"><span class="proof-tag">증명</span><span class="proof-txt">EU CPNP·현지 유통 전문</span></div>
+        </div>
+      </div>
+      <div class="deal-video" data-fade>
+        <video src="assets/handshake-deal.mp4" poster="assets/handshake-deal-poster.jpg" autoplay muted loop playsinline preload="metadata"></video>
+        <div class="overlay">
+          <div class="cap">
+            <div class="cap-eyebrow">The Goal</div>
+            <h3 class="goal-line">우리의 목표는 하나입니다.</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section id="cta">
+    <div class="cta-card" data-fade>
+      <h2>해외 수출, 이제 혼자<br>고민하지 마세요.</h2>
+      <div class="cta-form">
+        <a href="diagnose.html" class="btn-lg">우리 브랜드 수출 가능성 진단하기</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="foot-in">
+      <div class="foot-logo">Bridge<span>X</span></div>
+      <div class="foot-copy">© 2026 BridgeX. K뷰티 수출의 모든 실행을 대신합니다.</div>
+    </div>
+  </footer>
+
+<!-- ===== SIGNUP MODAL ===== -->
+<div class="signup-overlay" id="signupOverlay">
+  <div class="signup-card">
+    <span class="sc-x" id="signupClose">✕</span>
+    <div id="signupFormWrap">
+      <h2>회원가입</h2>
+      <p class="sc-sub">간단히 가입하고 내 수출 진행 상황을 관리하세요.</p>
+      <form id="signupForm">
+        <label>이름</label>
+        <input id="suName" type="text" autocomplete="name" placeholder="홍길동">
+        <label>회사명</label>
+        <input id="suCompany" type="text" autocomplete="organization" placeholder="브랜드/회사명">
+        <label>이메일</label>
+        <input id="suEmail" type="email" autocomplete="email" placeholder="hello@brand.com">
+        <label>전화번호</label>
+        <input id="suPhone" type="tel" autocomplete="tel" placeholder="010-1234-5678">
+        <label>비밀번호</label>
+        <input id="suPassword" type="password" autocomplete="new-password" placeholder="8자 이상">
+        <div class="sc-err" id="suErr"></div>
+        <button type="submit" class="sc-btn" id="suBtn">가입하기</button>
+        <div class="sc-switch">이미 회원이신가요? <span data-open="login">로그인</span></div>
+      </form>
+    </div>
+    <div class="signup-done" id="signupDone" style="display:none;">
+      <div class="sd-ico">✓</div>
+      <h2>회원가입이 완료되었습니다.</h2>
+      <p>BridgeX와 함께 유럽 수출을 시작해보세요.</p>
+      <button class="sc-btn" id="suGoMypage">내 페이지로 이동</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LOGIN MODAL ===== -->
+<div class="signup-overlay" id="loginOverlay">
+  <div class="signup-card">
+    <span class="sc-x" id="loginClose">✕</span>
+    <h2>로그인</h2>
+    <p class="sc-sub">가입하신 이메일과 비밀번호로 로그인하세요.</p>
+    <form id="loginForm">
+      <label>이메일</label>
+      <input id="liEmail" type="email" autocomplete="email" placeholder="hello@brand.com">
+      <label>비밀번호</label>
+      <input id="liPassword" type="password" autocomplete="current-password" placeholder="비밀번호">
+      <div class="sc-err" id="liErr"></div>
+      <button type="submit" class="sc-btn" id="liBtn">로그인</button>
+      <div class="sc-switch">아직 회원이 아니신가요? <span data-open="signup">회원가입</span></div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // ── 회원가입 / 로그인 ──
+  (function () {
+    var API_BASE = (location.protocol === 'file:' || ['localhost','127.0.0.1'].includes(location.hostname))
+      ? 'http://localhost:4000' : '';
+    var TOKEN_KEY = 'bridgex_member_token';
+    var getToken = function () { try { return localStorage.getItem(TOKEN_KEY); } catch (e) { return null; } };
+    var setToken = function (t) { try { localStorage.setItem(TOKEN_KEY, t); } catch (e) {} };
+    var clearToken = function () { try { localStorage.removeItem(TOKEN_KEY); } catch (e) {} };
+
+    var signupOverlay = document.getElementById('signupOverlay');
+    var loginOverlay = document.getElementById('loginOverlay');
+    var signupForm = document.getElementById('signupForm');
+    var loginForm = document.getElementById('loginForm');
+    var suErr = document.getElementById('suErr');
+    var liErr = document.getElementById('liErr');
+    var suBtn = document.getElementById('suBtn');
+    var liBtn = document.getElementById('liBtn');
+
+    // 네비: 로그인 상태에 따라 렌더
+    function renderNav() {
+      var el = document.getElementById('navActions');
+      if (getToken()) {
+        el.innerHTML = '<a href="mypage.html" class="nav-cta">내 페이지</a><button type="button" class="nav-link-btn" id="navLogout">로그아웃</button>';
+        document.getElementById('navLogout').addEventListener('click', function () { clearToken(); renderNav(); });
+      } else {
+        el.innerHTML = '<button type="button" class="nav-link-btn" id="navLogin">로그인</button><button type="button" class="nav-cta" id="navSignup">회원가입</button>';
+        document.getElementById('navLogin').addEventListener('click', openLogin);
+        document.getElementById('navSignup').addEventListener('click', openSignup);
+      }
+    }
+
+    function openSignup() { closeLogin(); suErr.textContent = ''; signupOverlay.classList.add('open'); setTimeout(function(){ document.getElementById('suName').focus(); }, 50); }
+    function closeSignup() {
+      signupOverlay.classList.remove('open');
+      signupForm.reset(); suErr.textContent = '';
+      document.getElementById('signupFormWrap').style.display = 'block';
+      document.getElementById('signupDone').style.display = 'none';
+      suBtn.disabled = false; suBtn.textContent = '가입하기';
+    }
+    function openLogin() { closeSignup(); liErr.textContent = ''; loginOverlay.classList.add('open'); setTimeout(function(){ document.getElementById('liEmail').focus(); }, 50); }
+    function closeLogin() { loginOverlay.classList.remove('open'); loginForm.reset(); liErr.textContent = ''; liBtn.disabled = false; liBtn.textContent = '로그인'; }
+
+    document.getElementById('signupClose').addEventListener('click', closeSignup);
+    document.getElementById('loginClose').addEventListener('click', closeLogin);
+    document.getElementById('suGoMypage').addEventListener('click', function () { location.href = 'mypage.html'; });
+    signupOverlay.addEventListener('click', function (e) { if (e.target === signupOverlay) closeSignup(); });
+    loginOverlay.addEventListener('click', function (e) { if (e.target === loginOverlay) closeLogin(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeSignup(); closeLogin(); } });
+    // 모달 간 전환 링크
+    document.querySelectorAll('[data-open]').forEach(function (s) {
+      s.addEventListener('click', function () { s.dataset.open === 'login' ? openLogin() : openSignup(); });
+    });
+
+    // 회원가입
+    signupForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      suErr.textContent = '';
+      var p = {
+        name: document.getElementById('suName').value.trim(),
+        companyName: document.getElementById('suCompany').value.trim(),
+        email: document.getElementById('suEmail').value.trim(),
+        phone: document.getElementById('suPhone').value.trim(),
+        password: document.getElementById('suPassword').value,
+      };
+      if (!p.name || !p.companyName || !p.email || !p.phone || !p.password) { suErr.textContent = '모든 항목을 입력해주세요.'; return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email)) { suErr.textContent = '이메일 형식이 올바르지 않습니다.'; return; }
+      if (!/^0\d{1,2}-?\d{3,4}-?\d{4}$/.test(p.phone.replace(/\s/g,''))) { suErr.textContent = '전화번호 형식이 올바르지 않습니다. (예: 010-1234-5678)'; return; }
+      if (p.password.length < 8) { suErr.textContent = '비밀번호는 8자 이상이어야 합니다.'; return; }
+
+      suBtn.disabled = true; suBtn.textContent = '가입 중…';
+      try {
+        var res = await fetch(API_BASE + '/api/members', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(p) });
+        var json = await res.json().catch(function(){ return {}; });
+        if (!res.ok || !json.success) throw new Error(json.message || '회원가입에 실패했습니다.');
+        setToken(json.data.token); // 가입 즉시 로그인 상태
+        renderNav();
+        document.getElementById('signupFormWrap').style.display = 'none';
+        document.getElementById('signupDone').style.display = 'block';
+      } catch (err) {
+        suErr.textContent = err.message; suBtn.disabled = false; suBtn.textContent = '가입하기';
+      }
+    });
+
+    // 로그인
+    loginForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      liErr.textContent = '';
+      var p = { email: document.getElementById('liEmail').value.trim(), password: document.getElementById('liPassword').value };
+      if (!p.email || !p.password) { liErr.textContent = '이메일과 비밀번호를 입력해주세요.'; return; }
+      liBtn.disabled = true; liBtn.textContent = '로그인 중…';
+      try {
+        var res = await fetch(API_BASE + '/api/members/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(p) });
+        var json = await res.json().catch(function(){ return {}; });
+        if (!res.ok || !json.success) throw new Error(json.message || '로그인에 실패했습니다.');
+        setToken(json.data.token);
+        location.href = 'mypage.html';
+      } catch (err) {
+        liErr.textContent = err.message; liBtn.disabled = false; liBtn.textContent = '로그인';
+      }
+    });
+
+    renderNav();
+  })();
+
+  // scroll fade-up
+  (function () {
+    var els = document.querySelectorAll('[data-fade]');
+    els.forEach(function (el, i) {
+      var d = Math.min(i * 0.04, 0.24);
+      el.style.transition = 'opacity .7s cubic-bezier(.22,.61,.36,1) ' + d + 's, transform .7s cubic-bezier(.22,.61,.36,1) ' + d + 's';
+    });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    els.forEach(function (el) { io.observe(el); });
+  })();
+
+  // nav hairline / shadow on scroll
+  (function () {
+    var nav = document.getElementById('nav');
+    function onScroll() {
+      if (window.scrollY > 12) {
+        nav.style.borderBottomColor = 'rgba(0,0,0,0.09)';
+        nav.style.boxShadow = '0 1px 16px rgba(0,0,0,0.05)';
+      } else {
+        nav.style.borderBottomColor = 'rgba(0,0,0,0)';
+        nav.style.boxShadow = 'none';
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+
+  // (CTA now links directly to diagnose.html — no inline form handling needed)
+
+  // goal line — per-character sequential emphasis
+  (function () {
+    var line = document.querySelector('.goal-line');
+    if (!line) return;
+    var text = line.textContent;
+    line.textContent = '';
+    var spans = [];
+    for (var i = 0; i < text.length; i++) {
+      var s = document.createElement('span');
+      s.className = 'ch';
+      s.textContent = text[i];
+      s.style.setProperty('--d', (i * 0.09) + 's');
+      line.appendChild(s);
+      spans.push(s);
+    }
+    var total = (text.length * 0.09 + 0.5) * 1000;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          line.classList.add('play');
+          io.unobserve(line);
+          // replay softly every time it comes back into view
+          setTimeout(function () {
+            var reio = new IntersectionObserver(function (en) {
+              en.forEach(function (x) {
+                if (!x.isIntersecting) { line.classList.remove('play'); }
+                else { void line.offsetWidth; line.classList.add('play'); }
+              });
+            }, { threshold: 0.4 });
+            reio.observe(line);
+          }, total);
+        }
+      });
+    }, { threshold: 0.4 });
+    io.observe(line);
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>진단 요청 관리 — BridgeX Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue:#0066cc; --blue-focus:#0071e3; --ink:#1d1d1f; --muted:#6e6e73;
+    --parchment:#f5f5f7; --white:#fff; --hairline:#e0e0e0; --danger:#d64545;
+    --shadow-card:0 2px 20px rgba(0,0,0,0.06);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--parchment);color:var(--ink);font-family:'Inter','Noto Sans KR',sans-serif;-webkit-font-smoothing:antialiased;word-break:keep-all;}
+  a{color:inherit;text-decoration:none;}
+  h1,h2,h3,p{margin:0;}
+
+  nav{position:sticky;top:0;z-index:40;height:60px;display:flex;align-items:center;justify-content:space-between;
+    padding:0 clamp(20px,4vw,40px);background:rgba(250,248,244,0.9);backdrop-filter:saturate(180%) blur(14px);
+    border-bottom:1px solid rgba(0,0,0,0.07);}
+  .logo{font-size:20px;font-weight:800;letter-spacing:-0.5px;}
+  .logo span{color:var(--blue);}
+  .logo .tag{font-size:12px;font-weight:700;color:var(--muted);margin-left:8px;padding:3px 8px;background:var(--parchment);border-radius:6px;}
+  .nav-link{font-size:14px;font-weight:600;color:var(--muted);}
+  .nav-link:hover{color:var(--ink);}
+
+  .wrap{max-width:1280px;margin:0 auto;padding:24px clamp(16px,3vw,32px) 60px;}
+  .head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
+  .head h1{font-size:24px;font-weight:800;letter-spacing:-0.5px;}
+  .head .count{font-size:14px;color:var(--muted);font-weight:600;}
+
+  /* filters */
+  .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;background:var(--white);padding:14px;border-radius:14px;box-shadow:var(--shadow-card);}
+  .filters select,.filters input{height:40px;padding:0 12px;font-size:14px;font-family:inherit;color:var(--ink);
+    background:var(--white);border:1px solid var(--hairline);border-radius:9px;outline:none;}
+  .filters input{flex:1;min-width:160px;}
+  .filters select:focus,.filters input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,102,204,0.1);}
+  .btn{height:40px;padding:0 18px;border-radius:9px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;border:none;transition:all .15s;}
+  .btn-primary{background:var(--blue-focus);color:#fff;}
+  .btn-primary:hover{background:var(--blue);}
+  .btn-ghost{background:var(--white);color:var(--muted);border:1px solid var(--hairline);}
+  .btn-ghost:hover{color:var(--ink);border-color:var(--muted);}
+
+  /* table */
+  .tablecard{background:var(--white);border-radius:16px;box-shadow:var(--shadow-card);overflow:hidden;}
+  .tablescroll{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;min-width:960px;}
+  th,td{text-align:left;padding:14px 16px;font-size:13px;border-bottom:1px solid rgba(0,0,0,0.05);white-space:nowrap;}
+  th{font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--muted);background:#fafafc;position:sticky;top:0;}
+  tbody tr{cursor:pointer;transition:background .12s;}
+  tbody tr:hover{background:rgba(0,102,204,0.04);}
+  td .company{font-weight:700;color:var(--ink);}
+  td .sub{color:var(--muted);}
+  .tags{display:flex;gap:4px;flex-wrap:wrap;max-width:220px;white-space:normal;}
+  .tags .t{font-size:11px;background:var(--parchment);border-radius:5px;padding:2px 7px;color:var(--ink);}
+  .empty{padding:60px;text-align:center;color:var(--muted);font-size:14px;}
+
+  /* status badge */
+  .badge{display:inline-block;font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap;}
+  .st-submitted{background:rgba(0,102,204,0.12);color:var(--blue);}
+  .st-reviewing{background:rgba(214,158,46,0.16);color:#a9741a;}
+  .st-ai_generated{background:rgba(120,80,220,0.14);color:#6b46c1;}
+  .st-consulting_needed{background:rgba(224,120,60,0.16);color:#c05a1e;}
+  .st-completed{background:rgba(46,158,107,0.16);color:#1e7a50;}
+  .st-archived{background:rgba(0,0,0,0.07);color:var(--muted);}
+
+  /* pagination */
+  .pager{display:flex;align-items:center;justify-content:center;gap:14px;padding:16px;}
+  .pager button{height:34px;min-width:34px;padding:0 12px;border-radius:8px;border:1px solid var(--hairline);background:var(--white);cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;}
+  .pager button:disabled{opacity:.4;cursor:default;}
+  .pager .info{font-size:13px;color:var(--muted);}
+
+  /* modal */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:none;align-items:flex-start;justify-content:center;z-index:100;padding:40px 16px;overflow-y:auto;}
+  .overlay.open{display:flex;}
+  .modal{background:var(--white);border-radius:20px;max-width:760px;width:100%;box-shadow:0 30px 80px rgba(0,0,0,0.3);}
+  .modal-head{display:flex;align-items:center;justify-content:space-between;padding:22px 26px;border-bottom:1px solid var(--hairline);position:sticky;top:0;background:var(--white);border-radius:20px 20px 0 0;}
+  .modal-head h2{font-size:19px;font-weight:800;letter-spacing:-0.4px;}
+  .modal-head .x{font-size:22px;color:var(--muted);cursor:pointer;line-height:1;padding:4px;}
+  .modal-body{padding:22px 26px;}
+  .mgroup{margin-bottom:22px;}
+  .mgroup h3{font-size:12px;font-weight:800;color:var(--blue);letter-spacing:0.4px;text-transform:uppercase;margin-bottom:10px;}
+  .mrow{display:flex;gap:14px;padding:7px 0;border-bottom:1px solid rgba(0,0,0,0.05);font-size:14px;}
+  .mrow .mk{flex:0 0 34%;color:var(--muted);font-weight:600;}
+  .mrow .mv{flex:1;color:var(--ink);}
+  .mrow .mv.empty{color:#b0b0b5;}
+  .filelink{display:inline-block;margin:2px 6px 2px 0;font-size:13px;color:var(--blue);font-weight:600;background:rgba(0,102,204,0.07);padding:4px 10px;border-radius:7px;}
+  .admin-box{background:var(--parchment);border-radius:14px;padding:18px;margin-top:8px;}
+  .admin-box label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;}
+  .admin-box select,.admin-box textarea{width:100%;font-family:inherit;font-size:14px;border:1px solid var(--hairline);border-radius:9px;padding:10px 12px;outline:none;background:var(--white);}
+  .admin-box select{height:42px;margin-bottom:12px;}
+  .admin-box textarea{min-height:70px;resize:vertical;margin-bottom:12px;}
+  .admin-box .save-row{display:flex;align-items:center;gap:12px;}
+  .save-msg{font-size:13px;font-weight:600;color:#1e7a50;}
+  .result-json{background:#1d1d1f;color:#d2d2d7;font-family:ui-monospace,Menlo,monospace;font-size:12px;border-radius:10px;padding:14px;overflow-x:auto;white-space:pre-wrap;}
+
+  /* consulting track */
+  .cstepper{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;}
+  .cstep{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:78px;flex:1 1 78px;padding:9px 6px;border:1px solid var(--hairline);border-radius:10px;background:var(--white);cursor:pointer;font-family:inherit;transition:all .12s;}
+  .cstep:hover{border-color:var(--blue);}
+  .cstep-lbl{font-size:11.5px;font-weight:700;color:var(--ink);text-align:center;line-height:1.25;}
+  .cstep-cnt{font-size:10px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;}
+  .cstep.current{background:rgba(0,102,204,0.1);border-color:var(--blue);}
+  .cstep.current .cstep-lbl{color:var(--blue);}
+  .cstep.done{border-color:#2e9e6b;}
+  .cstep.done .cstep-cnt{color:#2e9e6b;}
+  .cstage-title{font-size:13px;font-weight:800;color:var(--blue);margin:0 0 10px;}
+  .clist{display:flex;flex-direction:column;gap:2px;margin-bottom:16px;}
+  .citem{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;font-size:14px;cursor:pointer;}
+  .citem:hover{background:var(--parchment);}
+  .citem input{width:17px;height:17px;accent-color:var(--blue);cursor:pointer;flex:0 0 auto;}
+  .citem input:checked + span{color:var(--muted);text-decoration:line-through;}
+  .clabel{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:6px 0 6px;}
+  .cnotes{width:100%;min-height:64px;font-family:inherit;font-size:14px;border:1px solid var(--hairline);border-radius:9px;padding:10px 12px;outline:none;resize:vertical;background:var(--white);margin-bottom:12px;}
+  .cnotes:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,102,204,0.1);}
+
+  /* meetings */
+  .mt-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:12px 14px;background:var(--parchment);border-radius:10px;margin-bottom:8px;}
+  .mt-main{display:flex;align-items:center;gap:8px;flex:1;min-width:200px;}
+  .mt-type{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;}
+  .mt-type.on{background:rgba(0,102,204,0.12);color:var(--blue);}
+  .mt-type.off{background:rgba(120,80,220,0.14);color:#6b46c1;}
+  .mt-title{font-size:14px;font-weight:700;}
+  .mt-sub{font-size:13px;color:var(--muted);flex-basis:100%;}
+  .mt-link{color:var(--blue);font-weight:600;}
+  .mt-del{font-size:12px;color:var(--muted);cursor:pointer;font-weight:600;}
+  .mt-del:hover{color:var(--danger);}
+  .mt-form{display:flex;flex-direction:column;gap:8px;margin-top:12px;padding-top:14px;border-top:1px solid var(--hairline);}
+  .mt-form-row{display:flex;gap:8px;}
+  .mt-form input,.mt-form select{height:40px;padding:0 12px;font-size:14px;font-family:inherit;border:1px solid var(--hairline);border-radius:9px;outline:none;background:var(--white);width:100%;}
+  .mt-form select{flex:0 0 110px;}
+  .mt-form-row input{flex:1;}
+  .mt-form input:focus,.mt-form select:focus{border-color:var(--blue);}
+
+  /* login */
+  .login-screen{min-height:calc(100vh - 60px);display:flex;align-items:center;justify-content:center;padding:24px;}
+  .login-card{background:var(--white);border-radius:20px;box-shadow:var(--shadow-card);padding:36px 32px;width:100%;max-width:380px;}
+  .login-logo{font-size:24px;font-weight:800;letter-spacing:-0.5px;text-align:center;}
+  .login-logo span{color:var(--blue);}
+  .login-title{font-size:15px;color:var(--muted);text-align:center;margin:6px 0 24px;font-weight:600;}
+  .login-card label{display:block;font-size:13px;font-weight:700;margin:14px 0 6px;}
+  .login-card input{width:100%;height:46px;padding:0 14px;font-size:15px;font-family:inherit;border:1px solid var(--hairline);border-radius:11px;outline:none;}
+  .login-card input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,102,204,0.12);}
+  .login-err{color:var(--danger);font-size:13px;font-weight:600;margin-top:12px;min-height:18px;}
+</style>
+</head>
+<body>
+  <nav>
+    <div class="logo">Bridge<span>X</span><span class="tag">ADMIN</span></div>
+    <div style="display:flex;align-items:center;gap:18px;">
+      <span id="who" style="font-size:13px;color:var(--muted);font-weight:600;"></span>
+      <a href="index.html" class="nav-link">랜딩 →</a>
+      <a id="logout" class="nav-link" style="display:none;cursor:pointer;">로그아웃</a>
+    </div>
+  </nav>
+
+  <!-- login gate -->
+  <div class="login-screen" id="loginScreen" style="display:none;">
+    <form class="login-card" id="loginForm">
+      <div class="login-logo">Bridge<span>X</span></div>
+      <div class="login-title">관리자 로그인</div>
+      <label>아이디</label>
+      <input id="lgUser" type="text" autocomplete="username" placeholder="admin">
+      <label>비밀번호</label>
+      <input id="lgPass" type="password" autocomplete="current-password" placeholder="비밀번호">
+      <div class="login-err" id="lgErr"></div>
+      <button class="btn btn-primary" type="submit" id="lgBtn" style="width:100%;height:46px;margin-top:6px;">로그인</button>
+    </form>
+  </div>
+
+  <div class="wrap" id="wrap" style="display:none;">
+    <div class="head">
+      <h1>수출 가능성 진단 요청</h1>
+      <div class="count" id="count">—</div>
+    </div>
+
+    <div class="filters">
+      <select id="fStatus"><option value="">전체 상태</option></select>
+      <select id="fCountry"><option value="">전체 국가</option></select>
+      <select id="fCategory"><option value="">전체 카테고리</option></select>
+      <input id="fCompany" type="text" placeholder="회사명 검색">
+      <button class="btn btn-primary" id="btnSearch">검색</button>
+      <button class="btn btn-ghost" id="btnReset">초기화</button>
+    </div>
+
+    <div class="tablecard">
+      <div class="tablescroll">
+        <table>
+          <thead>
+            <tr>
+              <th>제출일</th><th>회사명</th><th>담당자</th><th>이메일</th><th>전화번호</th>
+              <th>대표 제품</th><th>목표 국가</th><th>가장 어려운 부분</th><th>상태</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div id="emptyState" class="empty" style="display:none;">진단 요청이 없습니다.</div>
+      <div class="pager" id="pager"></div>
+    </div>
+  </div>
+
+  <!-- detail modal -->
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="mTitle">진단 요청 상세</h2>
+        <span class="x" id="mClose">✕</span>
+      </div>
+      <div class="modal-body" id="mBody"></div>
+    </div>
+  </div>
+
+<script>
+  const API_BASE = (location.protocol === 'file:' || ['localhost','127.0.0.1'].includes(location.hostname))
+    ? 'http://localhost:4000' : '';
+
+  const STATUS_LABELS = {
+    submitted:'제출 완료', reviewing:'검토 중', ai_generated:'AI 초안 생성',
+    consulting_needed:'컨설팅 필요', completed:'진단 완료', archived:'보관/종료',
+  };
+
+  const state = { page: 1, limit: 20, options: {}, filters: {} };
+  const $ = (id) => document.getElementById(id);
+
+  // ── 인증 ──
+  const TOKEN_KEY = 'bridgex_admin_token';
+  const getToken = () => localStorage.getItem(TOKEN_KEY);
+  const setToken = (t) => localStorage.setItem(TOKEN_KEY, t);
+  const clearToken = () => localStorage.removeItem(TOKEN_KEY);
+
+  async function api(path, opts = {}) {
+    const headers = Object.assign({}, opts.headers);
+    const token = getToken();
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+    const res = await fetch(API_BASE + path, Object.assign({}, opts, { headers }));
+    if (res.status === 401) { clearToken(); showLogin('세션이 만료되었습니다. 다시 로그인해주세요.'); }
+    return { status: res.status, json: await res.json().catch(() => ({})) };
+  }
+
+  function showLogin(msg) {
+    $('wrap').style.display = 'none';
+    $('logout').style.display = 'none';
+    $('who').textContent = '';
+    $('loginScreen').style.display = 'flex';
+    $('lgErr').textContent = msg || '';
+  }
+
+  async function doLogin(e) {
+    e.preventDefault();
+    $('lgErr').textContent = '';
+    $('lgBtn').disabled = true; $('lgBtn').textContent = '확인 중…';
+    try {
+      const res = await fetch(API_BASE + '/api/auth/login', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: $('lgUser').value.trim(), password: $('lgPass').value }),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || !json.success) throw new Error(json.message || '로그인에 실패했습니다.');
+      setToken(json.data.token);
+      $('loginScreen').style.display = 'none';
+      await enterAdmin();
+    } catch (err) {
+      $('lgErr').textContent = err.message;
+    } finally {
+      $('lgBtn').disabled = false; $('lgBtn').textContent = '로그인';
+    }
+  }
+
+  function logout() { clearToken(); showLogin('로그아웃되었습니다.'); }
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+  function fmtDate(s){ if(!s) return '-'; const d=new Date(s); return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; }
+  function badge(st){ return `<span class="badge st-${st}">${STATUS_LABELS[st]||st}</span>`; }
+
+  let wired = false;
+
+  async function init() {
+    $('loginForm').addEventListener('submit', doLogin);
+    $('logout').addEventListener('click', logout);
+    if (!getToken()) { showLogin(); return; }
+    // 토큰 유효성 확인
+    const me = await api('/api/auth/me');
+    if (me.status !== 200) { showLogin(); return; }
+    await enterAdmin(me.json.data && me.json.data.username);
+  }
+
+  async function enterAdmin(username) {
+    $('loginScreen').style.display = 'none';
+    $('wrap').style.display = 'block';
+    $('logout').style.display = 'inline';
+    if (username) $('who').textContent = username + ' 님';
+
+    const { json } = await api('/api/export-diagnosis/options');
+    state.options = json.data || {};
+    // 필터 드롭다운 (한 번만 채움)
+    if (!wired) {
+      (state.options.diagnosisStatuses||[]).forEach(s => $('fStatus').insertAdjacentHTML('beforeend', `<option value="${s}">${STATUS_LABELS[s]||s}</option>`));
+      (state.options.targetCountries||[]).forEach(c => $('fCountry').insertAdjacentHTML('beforeend', `<option value="${esc(c)}">${esc(c)}</option>`));
+      (state.options.productCategories||[]).forEach(c => $('fCategory').insertAdjacentHTML('beforeend', `<option value="${esc(c)}">${esc(c)}</option>`));
+
+      $('btnSearch').onclick = () => { state.page = 1; load(); };
+      $('btnReset').onclick = () => { $('fStatus').value=''; $('fCountry').value=''; $('fCategory').value=''; $('fCompany').value=''; state.page=1; load(); };
+      $('fCompany').addEventListener('keydown', e => { if(e.key==='Enter'){ state.page=1; load(); } });
+      $('mClose').onclick = closeModal;
+      $('overlay').addEventListener('click', e => { if(e.target===$('overlay')) closeModal(); });
+      wired = true;
+    }
+    load();
+  }
+
+  async function load() {
+    const q = new URLSearchParams();
+    if ($('fStatus').value) q.set('status', $('fStatus').value);
+    if ($('fCountry').value) q.set('country', $('fCountry').value);
+    if ($('fCategory').value) q.set('productCategory', $('fCategory').value);
+    if ($('fCompany').value.trim()) q.set('companyName', $('fCompany').value.trim());
+    q.set('page', state.page); q.set('limit', state.limit);
+
+    const { json } = await api('/api/export-diagnosis?' + q.toString());
+    const rows = json.data || [];
+    const pg = json.pagination || { total: 0, page: 1, totalPages: 1 };
+    $('count').textContent = `총 ${pg.total}건`;
+
+    $('rows').innerHTML = rows.map(r => `
+      <tr data-id="${r.id}">
+        <td class="sub">${fmtDate(r.submittedAt)}</td>
+        <td class="company">${esc(r.companyName)}</td>
+        <td>${esc(r.contactName)}</td>
+        <td class="sub">${esc(r.email)}</td>
+        <td class="sub">${esc(r.phone)}</td>
+        <td>${esc(r.productName)}</td>
+        <td><div class="tags">${(r.targetCountries||[]).map(c=>`<span class="t">${esc(c)}</span>`).join('')}</div></td>
+        <td><div class="tags">${(r.painPoints||[]).slice(0,2).map(p=>`<span class="t">${esc(p)}</span>`).join('')}${(r.painPoints||[]).length>2?'<span class="t">…</span>':''}</div></td>
+        <td>${badge(r.diagnosisStatus)}</td>
+      </tr>`).join('');
+    $('emptyState').style.display = rows.length ? 'none' : 'block';
+    $('rows').querySelectorAll('tr').forEach(tr => tr.onclick = () => openDetail(tr.dataset.id));
+
+    renderPager(pg);
+  }
+
+  function renderPager(pg) {
+    const totalPages = pg.totalPages || 1;
+    $('pager').innerHTML = `
+      <button id="prev" ${pg.page<=1?'disabled':''}>← 이전</button>
+      <span class="info">${pg.page} / ${totalPages}</span>
+      <button id="next" ${pg.page>=totalPages?'disabled':''}>다음 →</button>`;
+    const prev=$('pager').querySelector('#prev'), next=$('pager').querySelector('#next');
+    if(prev) prev.onclick = () => { if(state.page>1){state.page--; load();} };
+    if(next) next.onclick = () => { if(state.page<totalPages){state.page++; load();} };
+  }
+
+  async function openDetail(id) {
+    const { json } = await api('/api/export-diagnosis/' + id);
+    const d = json.data;
+    if (!d) return;
+    $('mTitle').textContent = `${d.companyName} · ${d.productName}`;
+
+    const row = (k,v) => { const disp = Array.isArray(v)?(v.length?v.join(', '):''):(v||''); return `<div class="mrow"><div class="mk">${k}</div><div class="mv ${disp?'':'empty'}">${disp?esc(disp):'미입력'}</div></div>`; };
+    const files = (d.productFiles||[]).map(f => `<a class="filelink" href="${API_BASE}${esc(f.fileUrl)}" target="_blank">📎 ${esc(f.fileName)}</a>`).join('') || '<span class="mv empty">없음</span>';
+
+    $('mBody').innerHTML = `
+      <div class="mgroup"><h3>Step 1 · 기본 정보</h3>
+        ${row('담당자명',d.contactName)}${row('회사명',d.companyName)}${row('직책',d.position)}
+        ${row('이메일',d.email)}${row('전화번호',d.phone)}
+        ${row('홈페이지',d.homepageUrl)}${row('스마트스토어',d.smartStoreUrl)}${row('인스타그램',d.instagramUrl)}
+        ${row('매출 규모',d.annualRevenueRange)}</div>
+      <div class="mgroup"><h3>Step 2 · 제품 정보</h3>
+        ${row('대표 제품명',d.productName)}${row('카테고리',d.productCategory)}${row('INCI 보유',d.hasInci)}
+        ${row('용량/가격대',d.volumeAndPriceRange)}${row('국내 판매',d.isSellingInKorea)}${row('월 판매량',d.monthlySalesOrBestSeller)}
+        ${row('인증',d.certifications)}
+        ${row('EU 규제 준비',d.euComplianceReadiness)}
+        ${row('포장(PPWR) 준비',d.packagingReadiness)}
+        <div class="mrow"><div class="mk">첨부 파일</div><div class="mv">${files}</div></div></div>
+      <div class="mgroup"><h3>Step 3 · 수출 목표 및 현재 상태</h3>
+        ${row('목표 국가',d.targetCountries)}${row('희망 채널',d.preferredChannels)}${row('수출 경험',d.exportExperience)}
+        ${row('박람회 경험',d.tradeFairExperience)}${row('기존 바이어',d.hasExistingBuyer)}${row('가장 어려운 부분',d.painPoints)}</div>
+      <div class="mgroup"><h3>관리 · 진단 상태</h3>
+        ${row('제출일',fmtDate(d.submittedAt))}
+        <div class="admin-box">
+          <label>진단 상태</label>
+          <select id="mStatus">${(state.options.diagnosisStatuses||[]).map(s=>`<option value="${s}" ${s===d.diagnosisStatus?'selected':''}>${STATUS_LABELS[s]||s}</option>`).join('')}</select>
+          <label>관리자 메모</label>
+          <textarea id="mMemo" placeholder="내부 메모">${esc(d.adminMemo||'')}</textarea>
+          <div class="save-row">
+            <button class="btn btn-primary" id="mSave">저장</button>
+            <button class="btn btn-ghost" id="mDiagnose">임시 진단 실행</button>
+            <span class="save-msg" id="mSaveMsg" style="display:none;">✓ 저장됨</span>
+          </div>
+        </div>
+      </div>
+      <div class="mgroup"><h3>컨설팅 진행 트랙</h3><div id="consultBox"></div></div>
+      <div class="mgroup"><h3>예정 미팅 (온/오프라인)</h3><div id="meetingBox"></div></div>
+      ${d.diagnosisResult ? `<div class="mgroup"><h3>진단 결과 (JSON)</h3><div class="result-json">${esc(JSON.stringify(d.diagnosisResult,null,2))}</div></div>` : ''}`;
+
+    $('mBody').querySelector('#mSave').onclick = async () => {
+      const body = { diagnosisStatus: $('mBody').querySelector('#mStatus').value, adminMemo: $('mBody').querySelector('#mMemo').value };
+      const { status } = await api('/api/export-diagnosis/'+id+'/status', { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+      if (status === 200) { const m=$('mBody').querySelector('#mSaveMsg'); m.style.display='inline'; setTimeout(()=>m.style.display='none',2000); load(); }
+      else alert('저장 실패');
+    };
+    $('mBody').querySelector('#mDiagnose').onclick = async () => {
+      const { status } = await api('/api/export-diagnosis/'+id+'/diagnose', { method:'POST' });
+      if (status === 200) { openDetail(id); load(); } else alert('진단 실행 실패');
+    };
+
+    // ── 컨설팅 진행 트랙 ──
+    const stages = state.options.consultingStages || [];
+    const cState = {
+      stage: d.consultingStage || (stages[0] && stages[0].key),
+      checklist: Object.assign({}, d.consultingChecklist || {}),
+      notes: d.consultingNotes || '',
+    };
+    const stageDone = (st) => st.items.length > 0 && st.items.every(it => cState.checklist[it.key]);
+
+    function renderConsult() {
+      const box = $('mBody').querySelector('#consultBox');
+      if (!box) return;
+      const stepper = stages.map(st => {
+        const cur = st.key === cState.stage;
+        const done = stageDone(st);
+        const cnt = st.items.filter(it => cState.checklist[it.key]).length;
+        return `<button type="button" class="cstep ${cur?'current':''} ${done?'done':''}" data-stage="${st.key}">
+          <span class="cstep-lbl">${esc(st.label)}</span><span class="cstep-cnt">${done?'✓':cnt+'/'+st.items.length}</span></button>`;
+      }).join('');
+      const cur = stages.find(s => s.key === cState.stage) || stages[0] || { items: [], label: '' };
+      const checks = cur.items.map(it =>
+        `<label class="citem"><input type="checkbox" data-item="${it.key}" ${cState.checklist[it.key]?'checked':''}><span>${esc(it.label)}</span></label>`
+      ).join('');
+      box.innerHTML = `
+        <div class="cstepper">${stepper}</div>
+        <div class="cstage-title">${esc(cur.label)} 체크리스트</div>
+        <div class="clist">${checks}</div>
+        <label class="clabel">컨설팅 메모</label>
+        <textarea id="cNotes" class="cnotes" placeholder="상담 내용·다음 액션 기록">${esc(cState.notes)}</textarea>
+        <div class="save-row"><button class="btn btn-primary" id="cSave">진행 저장</button><span class="save-msg" id="cSaveMsg" style="display:none;">✓ 저장됨</span></div>`;
+
+      box.querySelectorAll('.cstep').forEach(b => b.onclick = () => {
+        cState.notes = box.querySelector('#cNotes').value; cState.stage = b.dataset.stage; renderConsult();
+      });
+      box.querySelectorAll('input[data-item]').forEach(cb => cb.onchange = () => {
+        cState.notes = box.querySelector('#cNotes').value;
+        if (cb.checked) cState.checklist[cb.dataset.item] = true; else delete cState.checklist[cb.dataset.item];
+        renderConsult();
+      });
+      box.querySelector('#cSave').onclick = async () => {
+        cState.notes = box.querySelector('#cNotes').value;
+        const body = { consultingStage: cState.stage, consultingChecklist: cState.checklist, consultingNotes: cState.notes };
+        const { status } = await api('/api/export-diagnosis/'+id+'/consulting', { method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+        if (status === 200) { const m = box.querySelector('#cSaveMsg'); m.style.display='inline'; setTimeout(()=>m.style.display='none',2000); load(); }
+        else alert('저장 실패');
+      };
+    }
+    if (stages.length) renderConsult();
+
+    // ── 미팅 관리 ──
+    function fmtMeeting(iso) { if (!iso) return '일시 미정'; var dt = new Date(iso); if (isNaN(dt)) return esc(iso); return dt.getFullYear()+'.'+String(dt.getMonth()+1).padStart(2,'0')+'.'+String(dt.getDate()).padStart(2,'0')+' '+String(dt.getHours()).padStart(2,'0')+':'+String(dt.getMinutes()).padStart(2,'0'); }
+    function renderMeetings() {
+      var box = $('mBody').querySelector('#meetingBox');
+      if (!box) return;
+      var list = (d.meetings || []).slice().sort(function(a,b){ return (a.scheduledAt||'').localeCompare(b.scheduledAt||''); });
+      var rows = list.length ? list.map(function(m){
+        var loc = m.location ? (m.type==='online' ? '<a href="'+esc(m.location)+'" target="_blank" class="mt-link">미팅 링크</a>' : esc(m.location)) : '<span class="mv empty">장소/링크 미정</span>';
+        return '<div class="mt-row"><div class="mt-main"><span class="mt-type '+(m.type==='offline'?'off':'on')+'">'+(m.type==='offline'?'오프라인':'온라인')+'</span>'
+          + '<span class="mt-title">'+esc(m.title)+'</span></div>'
+          + '<div class="mt-sub">'+fmtMeeting(m.scheduledAt)+' · '+loc+'</div>'
+          + '<span class="mt-del" data-mid="'+m.id+'">삭제</span></div>';
+      }).join('') : '<div class="mv empty" style="padding:6px 0;">등록된 미팅이 없습니다.</div>';
+      box.innerHTML = rows
+        + '<div class="mt-form">'
+        + '<input id="mtTitle" placeholder="미팅 제목 (예: 1차 상담)">'
+        + '<div class="mt-form-row"><select id="mtType"><option value="online">온라인</option><option value="offline">오프라인</option></select>'
+        + '<input id="mtWhen" type="datetime-local"></div>'
+        + '<input id="mtLoc" placeholder="미팅 링크(온라인) 또는 장소(오프라인)">'
+        + '<button class="btn btn-primary" id="mtAdd">미팅 추가</button></div>';
+
+      box.querySelectorAll('.mt-del').forEach(function(x){ x.onclick = async function(){
+        var r = await api('/api/export-diagnosis/'+id+'/meetings/'+x.dataset.mid, { method:'DELETE' });
+        if (r.status===200) { d.meetings = r.json.data.meetings; renderMeetings(); }
+      };});
+      box.querySelector('#mtAdd').onclick = async function(){
+        var title = box.querySelector('#mtTitle').value.trim();
+        var when = box.querySelector('#mtWhen').value;
+        var body = { title: title, type: box.querySelector('#mtType').value, scheduledAt: when ? new Date(when).toISOString() : null, location: box.querySelector('#mtLoc').value.trim() };
+        var r = await api('/api/export-diagnosis/'+id+'/meetings', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+        if (r.status===201) { d.meetings = r.json.data.meetings; renderMeetings(); } else alert('미팅 등록 실패');
+      };
+    }
+    renderMeetings();
+
+    $('overlay').classList.add('open');
+  }
+
+  function closeModal(){ $('overlay').classList.remove('open'); }
+
+  init();
+</script>
+</body>
+</html>

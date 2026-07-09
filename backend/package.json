@@ -1,0 +1,28 @@
+{
+  "name": "bridgex-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "BridgeX 수출 가능성 진단 Intake Form 백엔드 (Express + Prisma + SQLite)",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "generate": "prisma generate",
+    "migrate": "prisma migrate dev --name init",
+    "studio": "prisma studio",
+    "smoke": "node tests/smoke.mjs"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.2.0",
+    "nodemailer": "^9.0.3"
+  },
+  "devDependencies": {
+    "prisma": "^5.22.0"
+  }
+}

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>내 페이지 — BridgeX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root { --blue:#0066cc; --blue-focus:#0071e3; --ink:#1d1d1f; --muted:#6e6e73; --parchment:#f5f5f7; --white:#fff; --hairline:#e0e0e0; --shadow-card:0 2px 20px rgba(0,0,0,0.06); }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--parchment); color:var(--ink); font-family:'Inter','Noto Sans KR',sans-serif; -webkit-font-smoothing:antialiased; word-break:keep-all; }
+  a { color:inherit; text-decoration:none; }
+  h1,h2,h3,p { margin:0; }
+
+  nav { position:sticky; top:0; z-index:40; height:60px; display:flex; align-items:center; justify-content:space-between; padding:0 clamp(20px,5vw,40px); background:rgba(250,248,244,0.9); backdrop-filter:saturate(180%) blur(14px); border-bottom:1px solid rgba(0,0,0,0.07); }
+  .logo { font-size:20px; font-weight:800; letter-spacing:-0.5px; }
+  .logo span { color:var(--blue); }
+  .nav-right { display:flex; align-items:center; gap:18px; }
+  .nav-link { font-size:14px; font-weight:600; color:var(--muted); cursor:pointer; background:none; border:none; font-family:inherit; }
+  .nav-link:hover { color:var(--ink); }
+
+  .wrap { max-width:840px; margin:0 auto; padding:clamp(28px,5vw,48px) clamp(16px,4vw,24px) 80px; }
+  .hello { margin-bottom:28px; }
+  .hello h1 { font-size:clamp(24px,4vw,32px); font-weight:800; letter-spacing:-0.6px; }
+  .hello h1 span { color:var(--blue); }
+  .hello p { font-size:15px; color:var(--muted); margin-top:8px; }
+
+  .card { background:var(--white); border-radius:18px; box-shadow:var(--shadow-card); padding:clamp(22px,4vw,32px); margin-bottom:20px; }
+  .card h2 { font-size:16px; font-weight:800; letter-spacing:-0.3px; margin-bottom:18px; }
+  .prow { display:flex; gap:14px; padding:10px 0; border-bottom:1px solid rgba(0,0,0,0.05); font-size:14px; }
+  .prow:last-child { border-bottom:none; }
+  .prow .pk { flex:0 0 32%; color:var(--muted); font-weight:600; }
+  .prow .pv { flex:1; color:var(--ink); font-weight:500; }
+
+  .placeholder { border:1.5px dashed var(--hairline); border-radius:16px; padding:36px 24px; text-align:center; }
+  .placeholder .ph-ico { font-size:32px; margin-bottom:12px; }
+  .placeholder h3 { font-size:18px; font-weight:800; margin-bottom:8px; }
+  .placeholder p { font-size:14px; color:var(--muted); line-height:1.7; max-width:440px; margin:0 auto; }
+
+  .cta-row { display:flex; gap:12px; flex-wrap:wrap; margin-top:22px; justify-content:center; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; height:48px; padding:0 26px; border-radius:999px; font-size:15px; font-weight:600; font-family:inherit; cursor:pointer; border:none; transition:transform .15s, box-shadow .15s; }
+  .btn-primary { background:var(--blue-focus); color:#fff; box-shadow:0 6px 20px rgba(0,102,204,0.28); }
+  .btn-primary:hover { transform:translateY(-2px); box-shadow:0 10px 26px rgba(0,102,204,0.36); }
+  .btn-ghost { background:var(--white); color:var(--muted); border:1px solid var(--hairline); }
+  .btn-ghost:hover { color:var(--ink); border-color:var(--muted); }
+
+  .loading { text-align:center; padding:80px 0; color:var(--muted); font-size:14px; }
+
+  /* diagnosis result in mypage */
+  .dg-head { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:18px; }
+  .dg-meta { font-size:13px; color:var(--muted); }
+  .badge { display:inline-block; font-size:11px; font-weight:700; padding:4px 10px; border-radius:999px; }
+  .st-submitted { background:rgba(0,102,204,0.12); color:var(--blue); }
+  .st-reviewing { background:rgba(214,158,46,0.16); color:#a9741a; }
+  .st-ai_generated { background:rgba(120,80,220,0.14); color:#6b46c1; }
+  .st-consulting_needed { background:rgba(224,120,60,0.16); color:#c05a1e; }
+  .st-completed { background:rgba(46,158,107,0.16); color:#1e7a50; }
+  .st-archived { background:rgba(0,0,0,0.07); color:var(--muted); }
+  .dg-hero { display:flex; align-items:center; gap:20px; flex-wrap:wrap; margin-bottom:22px; }
+  .dg-ring { width:104px; height:104px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex:0 0 auto; }
+  .dg-ring-in { width:82px; height:82px; border-radius:50%; background:var(--white); display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .dg-num { font-size:30px; font-weight:800; letter-spacing:-1px; line-height:1; }
+  .dg-den { font-size:11px; color:var(--muted); font-weight:600; }
+  .dg-side { flex:1; min-width:200px; }
+  .dg-level { font-size:18px; font-weight:800; margin-bottom:6px; }
+  .dg-summary { font-size:13px; line-height:1.6; color:var(--ink); margin:0; }
+  .dg-dims { display:flex; flex-direction:column; gap:12px; margin-bottom:22px; }
+  .dg-dim-top { display:flex; justify-content:space-between; font-size:13px; font-weight:700; margin-bottom:5px; }
+  .dg-track { height:7px; border-radius:999px; background:#ececef; overflow:hidden; }
+  .dg-fill { height:100%; border-radius:999px; }
+  .dg-consult { font-size:13px; font-weight:600; color:#c05a1e; background:rgba(224,120,60,0.1); border-radius:10px; padding:10px 14px; margin-bottom:18px; }
+
+  /* customer consulting progress */
+  .consult-card { background:rgba(0,102,204,0.05); border:1px solid rgba(0,102,204,0.18); border-radius:14px; padding:20px; margin-bottom:20px; }
+  .st-consulting_needed { background:rgba(224,120,60,0.16); color:#c05a1e; }
+  .cc-head { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+  .cc-stage { font-size:14px; color:var(--ink); }
+  .cbar { height:8px; border-radius:999px; background:#e2e6ec; overflow:hidden; margin-bottom:10px; }
+  .cbar-fill { height:100%; background:var(--blue); border-radius:999px; transition:width .5s ease; }
+  .cticks { display:flex; flex-wrap:wrap; gap:6px 12px; margin-bottom:20px; }
+  .ctick { font-size:11.5px; color:var(--muted); font-weight:600; }
+  .ctick.on { color:var(--blue); }
+  .cmeet-title { font-size:13px; font-weight:800; margin-bottom:10px; }
+  .cmeet { display:flex; align-items:flex-start; gap:10px; padding:12px 14px; background:#fff; border-radius:10px; margin-bottom:8px; }
+  .mt-type { font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; flex:0 0 auto; }
+  .mt-type.on { background:rgba(0,102,204,0.12); color:var(--blue); }
+  .mt-type.off { background:rgba(120,80,220,0.14); color:#6b46c1; }
+  .cmeet-t { font-size:14px; font-weight:700; }
+  .cmeet-s { font-size:13px; color:var(--muted); margin-top:2px; }
+  .mt-link { color:var(--blue); font-weight:600; }
+  .cmeet-none { font-size:13px; color:var(--muted); padding:6px 0; }
+
+  /* print report */
+  .print-only { display:none; }
+  .print-head .ph-brand { font-size:20px; font-weight:800; }
+  .print-head .ph-brand span { color:var(--blue); }
+  .print-head .ph-sub { font-size:13px; color:var(--muted); margin-top:4px; }
+  .print-foot { font-size:11px; color:var(--muted); }
+  @media print {
+    nav, .no-print, .hello { display:none !important; }
+    body { background:#fff; }
+    .wrap { padding:0; max-width:100%; }
+    .card { box-shadow:none; padding:0; margin-bottom:16px; }
+    #infoCard { display:none; }
+    .print-only { display:block !important; }
+    .print-head { border-bottom:2px solid var(--ink); padding-bottom:12px; margin-bottom:20px; }
+    .print-foot { border-top:1px solid var(--hairline); padding-top:10px; margin-top:24px; }
+    * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
+</style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="logo">Bridge<span>X</span></a>
+    <div class="nav-right">
+      <a href="index.html" class="nav-link">홈</a>
+      <button type="button" class="nav-link" id="logout">로그아웃</button>
+    </div>
+  </nav>
+
+  <div class="wrap">
+    <div class="loading" id="loading">불러오는 중…</div>
+    <div id="content" style="display:none;">
+      <div class="hello">
+        <h1><span id="mName"></span>님, 환영합니다.</h1>
+        <p id="mCompany"></p>
+      </div>
+
+      <div class="card" id="infoCard">
+        <h2>내 정보</h2>
+        <div class="prow"><div class="pk">이름</div><div class="pv" id="pName"></div></div>
+        <div class="prow"><div class="pk">회사명</div><div class="pv" id="pCompany"></div></div>
+        <div class="prow"><div class="pk">이메일</div><div class="pv" id="pEmail"></div></div>
+        <div class="prow"><div class="pk">전화번호</div><div class="pv" id="pPhone"></div></div>
+        <div class="prow"><div class="pk">가입일</div><div class="pv" id="pCreated"></div></div>
+      </div>
+
+      <div class="card">
+        <h2>내 수출 진행 현황</h2>
+        <div id="progress"></div>
+      </div>
+
+      <div class="card">
+        <h2>AI 실무 도구</h2>
+        <p style="font-size:13px;color:var(--muted);margin:2px 0 16px;line-height:1.6;">콜드 이메일·박람회 후속·답장 대응 등 상황별 영문 이메일 초안을 내 제품 정보로 만들어 드립니다.</p>
+        <a href="email.html" class="btn btn-primary" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">✉️ AI 이메일 작성 도구 열기</a>
+      </div>
+    </div>
+  </div>
+
+<script>
+  var API_BASE = (location.protocol === 'file:' || ['localhost','127.0.0.1'].includes(location.hostname))
+    ? 'http://localhost:4000' : '';
+  var TOKEN_KEY = 'bridgex_member_token';
+  var token = null;
+  try { token = localStorage.getItem(TOKEN_KEY); } catch (e) {}
+
+  var currentMember = null;
+  var consultingStages = [];
+  function logout() { try { localStorage.removeItem(TOKEN_KEY); } catch (e) {} location.href = 'index.html'; }
+  document.getElementById('logout').addEventListener('click', logout);
+  function todayStr() { var d = new Date(); return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0'); }
+  function fmtDateTime(iso) { if (!iso) return '일시 미정'; var d = new Date(iso); if (isNaN(d)) return esc(iso); var days=['일','월','화','수','목','금','토']; return (d.getMonth()+1)+'/'+d.getDate()+'('+days[d.getDay()]+') '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
+
+  function consultingHtml(latest) {
+    if (!latest.consultationRequested && !latest.consultingStage) return '';
+    var stages = consultingStages;
+    var curKey = latest.consultingStage || (stages[0] && stages[0].key);
+    var idx = Math.max(0, stages.findIndex(function(s){ return s.key === curKey; }));
+    var curLabel = (stages[idx] && stages[idx].label) || '상담 준비';
+    var pct = stages.length ? Math.round(((idx+1)/stages.length)*100) : 0;
+    var ticks = stages.map(function(s,i){ return '<span class="ctick '+(i<=idx?'on':'')+'">'+esc(s.label)+'</span>'; }).join('');
+    var ms = (latest.meetings || []).slice().sort(function(a,b){ return (a.scheduledAt||'').localeCompare(b.scheduledAt||''); });
+    var meetingHtml = ms.length ? ms.map(function(m){
+      var loc = m.location ? (m.type==='online' ? '<a href="'+esc(m.location)+'" target="_blank" class="mt-link">미팅 참여 →</a>' : esc(m.location)) : '';
+      return '<div class="cmeet"><span class="mt-type '+(m.type==='offline'?'off':'on')+'">'+(m.type==='offline'?'오프라인':'온라인')+'</span>'
+        + '<div><div class="cmeet-t">'+esc(m.title)+'</div><div class="cmeet-s">'+fmtDateTime(m.scheduledAt)+(loc?' · '+loc:'')+'</div></div></div>';
+    }).join('') : '<div class="cmeet-none">예정된 미팅이 없습니다. 담당 전문가가 곧 일정을 안내드립니다.</div>';
+
+    return '<div class="consult-card no-print">'
+      + '<div class="cc-head"><span class="badge st-consulting_needed">컨설팅 진행 중</span>'
+      + '<span class="cc-stage">현재 단계 · <b>'+esc(curLabel)+'</b> ('+(idx+1)+'/'+stages.length+')</span></div>'
+      + '<div class="cbar"><div class="cbar-fill" style="width:'+pct+'%"></div></div>'
+      + '<div class="cticks">'+ticks+'</div>'
+      + '<div class="cmeet-title">예정 미팅 (온/오프라인)</div>'+meetingHtml
+      + '</div>';
+  }
+
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function fmtDate(s){ if(!s) return '-'; var d=new Date(s); return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0'); }
+
+  async function init() {
+    if (!token) { location.href = 'index.html'; return; }
+    try {
+      var res = await fetch(API_BASE + '/api/members/me', { headers: { 'Authorization': 'Bearer ' + token } });
+      if (res.status === 401) { logout(); return; }
+      var json = await res.json();
+      if (!json.success) throw new Error();
+      var m = json.data;
+      currentMember = m;
+      document.getElementById('mName').textContent = m.name;
+      document.getElementById('mCompany').textContent = m.companyName;
+      document.getElementById('pName').textContent = m.name;
+      document.getElementById('pCompany').textContent = m.companyName;
+      document.getElementById('pEmail').textContent = m.email;
+      document.getElementById('pPhone').textContent = m.phone;
+      document.getElementById('pCreated').textContent = fmtDate(m.createdAt);
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+      await renderProgress();
+    } catch (e) {
+      document.getElementById('loading').textContent = '정보를 불러오지 못했습니다. 백엔드 서버를 확인해주세요.';
+    }
+  }
+
+  var STATUS_LABELS = { submitted:'접수됨', reviewing:'검토 중', ai_generated:'진단 완료', consulting_needed:'상담 신청됨', completed:'컨설팅 완료', archived:'종료' };
+  var SCORE_COLOR = function(s){ return s>=75?'#2e9e6b':s>=55?'#0071e3':'#d68e2e'; };
+
+  async function renderProgress() {
+    var box = document.getElementById('progress');
+    // 컨설팅 단계 정의 로드 (공개 옵션)
+    if (!consultingStages.length) {
+      try { var o = await (await fetch(API_BASE + '/api/export-diagnosis/options')).json(); consultingStages = (o.data && o.data.consultingStages) || []; } catch (e) {}
+    }
+    var list = [];
+    try {
+      var res = await fetch(API_BASE + '/api/members/me/diagnoses', { headers: { Authorization: 'Bearer ' + token } });
+      var json = await res.json();
+      if (json.success) list = json.data || [];
+    } catch (e) {}
+
+    if (!list.length) {
+      box.innerHTML = '<div class="placeholder">'
+        + '<div class="ph-ico">📋</div><h3>아직 진단 이력이 없습니다</h3>'
+        + '<p>수출 가능성 진단을 받으면 결과와 진행 상황이 여기에 저장됩니다.</p></div>'
+        + '<div class="cta-row"><a href="diagnose.html" class="btn btn-primary">우리 브랜드 수출 가능성 진단하기</a>'
+        + '<a href="index.html" class="btn btn-ghost">홈으로</a></div>';
+      return;
+    }
+
+    var latest = list[0];
+    var r = latest.diagnosisResult;
+    var status = latest.diagnosisStatus;
+    var printHead = '<div class="print-only print-head"><div class="ph-brand">Bridge<span>X</span> · 수출 가능성 진단 리포트</div>'
+      + '<div class="ph-sub">' + esc((currentMember && currentMember.companyName) || '') + ' · ' + todayStr() + '</div></div>';
+    var head = '<div class="dg-head no-print"><div>'
+      + '<span class="badge st-' + status + '">' + (STATUS_LABELS[status] || status) + '</span>'
+      + '<span class="dg-meta" style="margin-left:10px;">' + esc(latest.productName || '') + ' · ' + fmtDate(latest.submittedAt) + '</span>'
+      + '</div></div>';
+
+    var body = '';
+    if (r && typeof r.overallScore === 'number') {
+      var c = SCORE_COLOR(r.overallScore);
+      body += '<div class="dg-hero">'
+        + '<div class="dg-ring" style="background:conic-gradient(' + c + ' ' + (r.overallScore*3.6) + 'deg, #ececef 0deg)">'
+        + '<div class="dg-ring-in"><span class="dg-num">' + r.overallScore + '</span><span class="dg-den">/100</span></div></div>'
+        + '<div class="dg-side"><div class="dg-level" style="color:' + c + '">' + esc(r.readinessLevel || '') + '</div>'
+        + '<p class="dg-summary">' + esc(r.summary || '') + '</p></div></div>';
+      if (r.sections) {
+        body += '<div class="dg-dims">';
+        Object.keys(r.sections).forEach(function(k){
+          var s = r.sections[k];
+          body += '<div><div class="dg-dim-top"><span>' + esc(s.label) + '</span><span style="color:' + SCORE_COLOR(s.score) + '">' + s.score + '</span></div>'
+            + '<div class="dg-track"><div class="dg-fill" style="width:' + s.score + '%;background:' + SCORE_COLOR(s.score) + '"></div></div></div>';
+        });
+        body += '</div>';
+      }
+    }
+
+    if (latest.consultationRequested) {
+      body += '<div class="dg-consult">🔥 상담 신청 완료 — 담당 전문가가 곧 연락드립니다.</div>';
+    }
+
+    var cta = '<div class="cta-row no-print">'
+      + '<button class="btn btn-primary" id="mpPdf">📄 진단 결과 PDF로 저장</button>'
+      + '<a href="diagnose.html" class="btn btn-ghost">새 진단 받기</a></div>';
+    var foot = '<div class="print-only print-foot">본 리포트는 입력 정보 기반 자동 기초 진단이며, 정식 EU 규제 적합성 판단은 전문가 검토가 필요합니다. © 2026 BridgeX</div>';
+
+    box.innerHTML = consultingHtml(latest) + printHead + head + body + cta + foot;
+    var pdf = document.getElementById('mpPdf');
+    if (pdf) pdf.addEventListener('click', function () { window.print(); });
+  }
+
+  init();
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+/* ============================================================
+   Apple Design System — Color Tokens
+   Single blue accent. Light-dominant. Near-black tiles.
+   ============================================================ */
+
+:root {
+  /* ---- Brand & Accent ---------------------------------- */
+  --color-primary: #0066cc;          /* Action Blue — the single interactive color */
+  --color-primary-focus: #0071e3;    /* Focus ring blue (slightly brighter) */
+  --color-primary-on-dark: #2997ff;  /* Sky Link Blue — links on dark tiles */
+
+  /* ---- Surface ----------------------------------------- */
+  --color-canvas: #ffffff;                 /* Pure White — dominant canvas */
+  --color-canvas-parchment: #f5f5f7;       /* Parchment off-white */
+  --color-surface-pearl: #fafafc;          /* Pearl — ghost button fill */
+  --color-surface-tile-1: #272729;         /* Near-black tile 1 (primary dark) */
+  --color-surface-tile-2: #2a2a2c;         /* Near-black tile 2 (micro lighter) */
+  --color-surface-tile-3: #252527;         /* Near-black tile 3 (micro darker) */
+  --color-surface-black: #000000;          /* Pure black — nav bar, video void */
+  --color-surface-chip: #d2d2d7;           /* Translucent chip base */
+  --color-surface-chip-translucent: rgba(210, 210, 215, 0.64);
+
+  /* ---- Text -------------------------------------------- */
+  --color-ink: #1d1d1f;              /* Near-black ink — headlines & body */
+  --color-body: #1d1d1f;            /* Body (same as ink) */
+  --color-body-on-dark: #ffffff;     /* Text on dark tiles & nav */
+  --color-body-muted: #cccccc;       /* Secondary copy on dark tiles */
+  --color-ink-muted-80: #333333;     /* Body on pearl surface */
+  --color-ink-muted-48: #7a7a7a;     /* Disabled text, legal fine-print */
+
+  /* ---- Hairlines & Borders ----------------------------- */
+  --color-divider-soft: #f0f0f0;     /* Soft ring on secondary buttons */
+  --color-divider-soft-alpha: rgba(0, 0, 0, 0.04);
+  --color-hairline: #e0e0e0;         /* 1px hairline on cards/chips */
+  --color-hairline-alpha: rgba(0, 0, 0, 0.08);
+
+  /* ---- Semantic aliases -------------------------------- */
+  --text-primary: var(--color-ink);
+  --text-secondary: var(--color-ink-muted-80);
+  --text-disabled: var(--color-ink-muted-48);
+  --text-on-dark: var(--color-body-on-dark);
+  --text-link: var(--color-primary);
+  --text-link-on-dark: var(--color-primary-on-dark);
+
+  --surface-page: var(--color-canvas);
+  --surface-alt: var(--color-canvas-parchment);
+  --surface-card: var(--color-canvas);
+  --surface-dark: var(--color-surface-tile-1);
+  --surface-nav: var(--color-surface-black);
+
+  --border-card: var(--color-hairline);
+  --border-button-soft: var(--color-divider-soft);
+}

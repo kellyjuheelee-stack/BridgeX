@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/apple-design-system-80e477bf-ca2a-4375-b2c5-f628728014d5/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/apple-design-system-80e477bf-ca2a-4375-b2c5-f628728014d5/tokens/colors.css">
+<link rel="stylesheet" href="_ds/apple-design-system-80e477bf-ca2a-4375-b2c5-f628728014d5/tokens/typography.css">
+<link rel="stylesheet" href="_ds/apple-design-system-80e477bf-ca2a-4375-b2c5-f628728014d5/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/apple-design-system-80e477bf-ca2a-4375-b2c5-f628728014d5/tokens/shape.css">
+<link rel="stylesheet" href="_ds/apple-design-system-80e477bf-ca2a-4375-b2c5-f628728014d5/tokens/base.css">
+<link rel="stylesheet" href="_ds/apple-design-system-80e477bf-ca2a-4375-b2c5-f628728014d5/styles.css">
+<script src="_ds/apple-design-system-80e477bf-ca2a-4375-b2c5-f628728014d5/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+  body { margin: 0; background: #ffffff; }
+  * { box-sizing: border-box; }
+  ::selection { background: #0071e3; color: #fff; }
+  @keyframes bx-pulse { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
+  input:focus-visible, a:focus-visible, button:focus-visible { outline: 2px solid #0066cc; outline-offset: 3px; }
+</style>
+</helmet>
+<div style="font-family: 'Inter','Noto Sans KR',sans-serif; color: #1d1d1f; background: #ffffff; -webkit-font-smoothing: antialiased; overflow-x: hidden;">
+
+  <!-- ===== NAV ===== -->
+  <nav style="position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 68px; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(20px,5vw,56px); background: rgba(250,248,244,0.82); backdrop-filter: saturate(180%) blur(14px); -webkit-backdrop-filter: saturate(180%) blur(14px); borderBottom: 1px solid rgba(0,0,0,0.07);" ref="{{ navRef }}">
+    <a href="#top" style="font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: #1d1d1f; text-decoration: none;">Bridge<span style="color: #0066cc;">X</span></a>
+    <a href="#cta" style="display: inline-flex; align-items: center; height: 40px; padding: 0 20px; border-radius: 999px; background: #0071e3; color: #fff; font-size: 14px; font-weight: 600; text-decoration: none; box-shadow: 0 2px 12px rgba(0,102,204,0.28); transition: transform .18s ease, box-shadow .18s ease;" style-hover="{{ ctaHover }}">회원 가입</a>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <header id="top" style="position: relative; padding: clamp(128px,16vh,168px) clamp(20px,5vw,56px) clamp(64px,9vh,104px); max-width: 1120px; margin: 0 auto; text-align: center;">
+    <div style="display: inline-flex; align-items: center; gap: 8px; padding: 7px 15px; border-radius: 999px; background: #f5f5f7; border: 1px solid rgba(0,102,204,0.28); font-size: 13px; font-weight: 600; color: #0066cc; letter-spacing: 0.2px; margin-bottom: 28px;" data-fade>
+      <span style="width: 6px; height: 6px; border-radius: 50%; background: #0071e3; animation: bx-pulse 2.4s ease-in-out infinite;"></span>
+      AI + Human 하이브리드 수출 대행
+    </div>
+    <h1 style="font-size: clamp(34px,6vw,60px); line-height: 1.12; letter-spacing: -1.2px; font-weight: 800; color: #1d1d1f; margin: 0 0 24px; text-wrap: balance;" data-fade>
+      화장품 해외 수출,<br>이제 <span style="color: #0066cc;">BridgeX</span>가 끝냅니다.
+    </h1>
+    <p style="font-size: clamp(17px,2.2vw,21px); line-height: 1.7; color: #6e6e73; max-width: 620px; margin: 0 auto 40px; font-weight: 400;" data-fade>
+      <span style="color: #1d1d1f; font-weight: 500;">대표님은 제품에만 집중하십시오.</span>
+    </p>
+    <div style="display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-bottom: 64px;" data-fade>
+      <a href="#cta" style="display: inline-flex; align-items: center; justify-content: center; height: 54px; padding: 0 34px; border-radius: 999px; background: #0071e3; color: #fff; font-size: 17px; font-weight: 600; text-decoration: none; box-shadow: 0 6px 22px rgba(0,102,204,0.32); transition: transform .18s ease, box-shadow .18s ease;" style-hover="{{ ctaHoverLg }}">우리 브랜드 수출 가능성 진단하기 →</a>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: clamp(20px,5vw,56px); justify-content: center;" data-fade>
+      <div style="text-align: center;">
+        <div style="font-size: clamp(30px,5vw,42px); font-weight: 800; color: #0066cc; letter-spacing: -1px;">3개월</div>
+        <div style="font-size: 14px; color: #6e6e73; margin-top: 4px; font-weight: 500;">첫 계약 테이블까지</div>
+      </div>
+      <div style="width: 1px; background: rgba(0,0,0,0.1);"></div>
+      <div style="text-align: center;">
+        <div style="font-size: clamp(30px,5vw,42px); font-weight: 800; color: #0066cc; letter-spacing: -1px;">30분</div>
+        <div style="font-size: 14px; color: #6e6e73; margin-top: 4px; font-weight: 500;">무료 상담 한 번이면 시작</div>
+      </div>
+      <div style="width: 1px; background: rgba(0,0,0,0.1);"></div>
+      <div style="text-align: center;">
+        <div style="font-size: clamp(30px,5vw,42px); font-weight: 800; color: #0066cc; letter-spacing: -1px;">100%</div>
+        <div style="font-size: 14px; color: #6e6e73; margin-top: 4px; font-weight: 500;">K뷰티 수출 특화</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== PROBLEM ===== -->
+  <section style="background: #f5f5f7; padding: clamp(72px,10vh,112px) clamp(20px,5vw,56px);">
+    <div style="max-width: 1120px; margin: 0 auto;">
+      <div style="text-align: center; max-width: 680px; margin: 0 auto 56px;">
+        <div style="font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #6e6e73; margin-bottom: 16px;" data-fade>THE PROBLEM</div>
+        <h2 style="font-size: clamp(28px,4.5vw,40px); line-height: 1.22; letter-spacing: -0.8px; font-weight: 800; color: #1d1d1f; margin: 0; text-wrap: balance;" data-fade>바이어를 만나도<br>계약까지 못 가는 이유</h2>
+      </div>
+
+      <!-- painpoints -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 20px;">
+        <sc-for list="{{ pains }}" as="p" hint-placeholder-count="3">
+          <div style="background: #fff; border-radius: 16px; padding: 28px; box-shadow: 0 2px 20px rgba(0,0,0,0.06); transition: transform .22s ease, box-shadow .22s ease;" style-hover="{{ lift }}" data-fade>
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: #f5f5f7; display: flex; align-items: center; justify-content: center; margin-bottom: 18px;">{{ p.iconEl }}</div>
+            <h3 style="font-size: 18px; font-weight: 700; color: #1d1d1f; margin: 0 0 8px; letter-spacing: -0.3px;">{{ p.title }}</h3>
+            <p style="font-size: 15px; line-height: 1.6; color: #6e6e73; margin: 0;">{{ p.desc }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <section id="how" style="padding: clamp(72px,10vh,120px) clamp(20px,5vw,56px);">
+    <div style="max-width: 1120px; margin: 0 auto;">
+      <div style="text-align: center; max-width: 680px; margin: 0 auto 24px;">
+        <div style="font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #0066cc; margin-bottom: 16px;" data-fade>HOW IT WORKS</div>
+        <h2 style="font-size: clamp(28px,4.5vw,40px); line-height: 1.22; letter-spacing: -0.8px; font-weight: 800; color: #1d1d1f; margin: 0; text-wrap: balance;" data-fade>AI가 실행을, 전문가가 협상을.</h2>
+      </div>
+      <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px;" data-fade>
+        <div style="display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: #6e6e73;"><span style="width: 12px; height: 12px; border-radius: 4px; background: #0071e3;"></span>AI 자동화</div>
+        <div style="display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: #6e6e73;"><span style="width: 12px; height: 12px; border-radius: 4px; background: #1d1d1f;"></span>전문가 직접 개입</div>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 20px;">
+        <sc-for list="{{ steps }}" as="st" hint-placeholder-count="6">
+          <div style="background: #fff; border-radius: 16px; padding: 26px; box-shadow: 0 2px 20px rgba(0,0,0,0.06); transition: transform .22s ease, box-shadow .22s ease; position: relative;" style-hover="{{ lift }}" data-fade>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+              <span style="font-size: 13px; font-weight: 800; color: #0071e3; letter-spacing: 0.5px;">STEP {{ st.n }}</span>
+              <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.3px; padding: 5px 11px; border-radius: 999px; background: {{ st.tagBg }}; color: {{ st.tagColor }};">{{ st.tag }}</span>
+            </div>
+            <h3 style="font-size: 18px; font-weight: 700; color: #1d1d1f; margin: 0 0 6px; letter-spacing: -0.3px;">{{ st.title }}</h3>
+            <p style="font-size: 15px; line-height: 1.55; color: #6e6e73; margin: 0;">{{ st.desc }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COMPARISON ===== -->
+  <section style="background: #f5f5f7; padding: clamp(72px,10vh,112px) clamp(20px,5vw,56px);">
+    <div style="max-width: 900px; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 48px;">
+        <div style="font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #0066cc; margin-bottom: 16px;" data-fade>COMPARISON</div>
+        <h2 style="font-size: clamp(28px,4.5vw,40px); line-height: 1.22; letter-spacing: -0.8px; font-weight: 800; color: #1d1d1f; margin: 0; text-wrap: balance;" data-fade>지금 혼자 할 때 vs BridgeX</h2>
+      </div>
+      <div style="background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 20px rgba(0,0,0,0.06);" data-fade>
+        <div style="display: grid; grid-template-columns: {{ cmpCols }};">
+          <div style="padding: 16px 20px;"></div>
+          <div style="padding: 16px 18px; background: #f5f5f7; text-align: center; font-size: 14px; font-weight: 700; color: #6e6e73;">혼자 할 때</div>
+          <div style="padding: 16px 18px; background: rgba(0,102,204,0.08); text-align: center; font-size: 14px; font-weight: 700; color: #0066cc;">BridgeX와 함께</div>
+        </div>
+        <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+          <div style="display: grid; grid-template-columns: {{ cmpCols }}; border-top: 1px solid rgba(0,0,0,0.06);">
+            <div style="padding: 16px 20px; font-size: 14px; font-weight: 700; color: #1d1d1f; background: #ffffff;">{{ r.label }}</div>
+            <div style="padding: 16px 18px; font-size: 14px; line-height: 1.45; color: #6e6e73; text-align: center;">{{ r.solo }}</div>
+            <div style="padding: 16px 18px; font-size: 14px; line-height: 1.45; color: #1d1d1f; font-weight: 600; text-align: center;">{{ r.bx }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BEFORE / AFTER ===== -->
+  <section style="padding: clamp(72px,10vh,112px) clamp(20px,5vw,56px);">
+    <div style="max-width: 1000px; margin: 0 auto;">
+      <div style="text-align: center; margin-bottom: 48px;">
+        <div style="font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #0066cc; margin-bottom: 16px;" data-fade>BEFORE / AFTER</div>
+        <h2 style="font-size: clamp(28px,4.5vw,40px); line-height: 1.22; letter-spacing: -0.8px; font-weight: 800; color: #1d1d1f; margin: 0; text-wrap: balance;" data-fade>3개월 전과 후</h2>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; align-items: stretch; gap: 20px; justify-content: center;" data-fade>
+        <div style="flex: 1 1 300px; background: #fff; border: 1px solid rgba(0,0,0,0.2); border-radius: 20px; padding: 32px; box-shadow: 0 2px 20px rgba(0,0,0,0.05);">
+          <div style="font-size: 13px; font-weight: 700; color: #6e6e73; margin-bottom: 20px; letter-spacing: 0.5px;">지금 · 혼자</div>
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <sc-for list="{{ before }}" as="b" hint-placeholder-count="3">
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <span style="flex: 0 0 auto; color: #6e6e73; font-weight: 700; margin-top: 1px;">✕</span>
+                <span style="font-size: 16px; line-height: 1.5; color: #1d1d1f;">{{ b }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="flex: 0 0 auto; display: flex; align-items: center; justify-content: center; color: #0071e3; font-size: 34px; font-weight: 300;">{{ arrow }}</div>
+        <div style="flex: 1 1 300px; background: #fff; border: 1.5px solid rgba(0,102,204,0.32); border-radius: 20px; padding: 32px; box-shadow: 0 8px 30px rgba(0,102,204,0.1);">
+          <div style="font-size: 13px; font-weight: 700; color: #0066cc; margin-bottom: 20px; letter-spacing: 0.5px;">3개월 후 · BridgeX와</div>
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <sc-for list="{{ after }}" as="a" hint-placeholder-count="3">
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <span style="flex: 0 0 auto; color: #0066cc; font-weight: 700; margin-top: 1px;">✓</span>
+                <span style="font-size: 16px; line-height: 1.5; color: #1d1d1f; font-weight: 500;">{{ a }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== VALUES ===== -->
+  <section style="background: #f5f5f7; padding: clamp(72px,10vh,112px) clamp(20px,5vw,56px);">
+    <div style="max-width: 1120px; margin: 0 auto;">
+      <div style="text-align: center; max-width: 680px; margin: 0 auto 56px;">
+        <div style="font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #0066cc; margin-bottom: 16px;" data-fade>OUR PRINCIPLES</div>
+        <h2 style="font-size: clamp(28px,4.5vw,40px); line-height: 1.22; letter-spacing: -0.8px; font-weight: 800; color: #1d1d1f; margin: 0; text-wrap: balance;" data-fade>타협하지 않는 3원칙</h2>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 20px;">
+        <sc-for list="{{ values }}" as="v" hint-placeholder-count="3">
+          <div style="background: #fff; border-radius: 18px; padding: 32px; box-shadow: 0 2px 20px rgba(0,0,0,0.06); transition: transform .22s ease, box-shadow .22s ease;" style-hover="{{ lift }}" data-fade>
+            <div style="font-size: 13px; font-weight: 800; color: #0071e3; margin-bottom: 14px;">0{{ v.n }}</div>
+            <h3 style="font-size: 20px; font-weight: 700; color: #1d1d1f; margin: 0 0 10px; letter-spacing: -0.4px;">{{ v.title }}</h3>
+            <p style="font-size: 15px; line-height: 1.6; color: #6e6e73; margin: 0 0 18px;">{{ v.desc }}</p>
+            <div style="display: flex; gap: 8px; align-items: center; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.07);">
+              <span style="font-size: 11px; font-weight: 700; color: #0066cc; background: rgba(0,102,204,0.08); padding: 3px 8px; border-radius: 6px;">증명</span>
+              <span style="font-size: 13px; color: #1d1d1f; font-weight: 500;">{{ v.proof }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section id="cta" style="padding: clamp(80px,12vh,128px) clamp(20px,5vw,56px);">
+    <div style="max-width: 640px; margin: 0 auto; text-align: center; background: #fff; border-radius: 28px; padding: clamp(40px,6vw,64px); box-shadow: 0 20px 60px rgba(0,0,0,0.08); border: 1px solid rgba(0,102,204,0.14);" data-fade>
+      <h2 style="font-size: clamp(28px,4.5vw,40px); line-height: 1.2; letter-spacing: -0.8px; font-weight: 800; color: #1d1d1f; margin: 0 0 14px; text-wrap: balance;">해외 수출, 이제 혼자<br>고민하지 마세요.</h2>
+      <form onSubmit="{{ onSubmit }}" style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 20px;">
+        <button type="submit" style="height: 54px; padding: 0 34px; border-radius: 999px; border: none; background: #0071e3; color: #fff; font-size: 17px; font-weight: 600; font-family: inherit; cursor: pointer; box-shadow: 0 6px 22px rgba(0,102,204,0.32); transition: transform .18s ease;" style-hover="{{ lift }}">우리 브랜드 수출 가능성 진단하기</button>
+      </form>
+      <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size: 15px; font-weight: 600; color: #0066cc; margin-bottom: 12px;">✓ 신청이 접수되었습니다. 1영업일 내 연락드리겠습니다.</div>
+      </sc-if>
+
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer style="background: #f5f5f7; padding: 40px clamp(20px,5vw,56px); border-top: 1px solid rgba(0,0,0,0.07);">
+    <div style="max-width: 1120px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between;">
+      <div style="font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: #1d1d1f;">Bridge<span style="color: #0066cc;">X</span></div>
+      <div style="font-size: 13px; color: #6e6e73;">© 2026 BridgeX. K뷰티 수출의 모든 실행을 대신합니다.</div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { email: "", sent: false, isMobile: false };
+
+  componentDidMount() {
+    // scroll fade-up
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = "1";
+          e.target.style.transform = "none";
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+    this._root = document.currentScript ? null : null;
+    requestAnimationFrame(() => {
+      document.querySelectorAll("[data-fade]").forEach((el, i) => {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(24px)";
+        el.style.transition = "opacity .7s cubic-bezier(.22,.61,.36,1) " + Math.min(i * 0.04, 0.24) + "s, transform .7s cubic-bezier(.22,.61,.36,1) " + Math.min(i * 0.04, 0.24) + "s";
+        io.observe(el);
+      });
+    });
+
+    // nav hairline / shadow on scroll
+    const nav = this._nav;
+    const onScroll = () => {
+      if (!nav) return;
+      if (window.scrollY > 12) {
+        nav.style.borderBottom = "1px solid rgba(0,0,0,0.09)";
+        nav.style.boxShadow = "0 1px 16px rgba(0,0,0,0.05)";
+      } else {
+        nav.style.borderBottom = "1px solid rgba(0,0,0,0.0)";
+        nav.style.boxShadow = "none";
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    // responsive flag
+    const mq = window.matchMedia("(max-width: 720px)");
+    const apply = () => this.setState({ isMobile: mq.matches });
+    apply();
+    mq.addEventListener("change", apply);
+    this._cleanup = () => { window.removeEventListener("scroll", onScroll); mq.removeEventListener("change", apply); io.disconnect(); };
+  }
+
+  componentWillUnmount() { this._cleanup && this._cleanup(); }
+
+  renderVals() {
+    const isMobile = this.state.isMobile;
+    const lift = { transform: "translateY(-4px)", boxShadow: "0 14px 34px rgba(0,0,0,0.12)" };
+
+    const stages = [
+      { num: "01", label: "리드 발굴", danger: false },
+      { num: "02", label: "첫 접촉", danger: false },
+      { num: "03", label: "관심 확보", danger: false },
+      { num: "04", label: "제안", danger: true },
+      { num: "05", label: "협상", danger: true },
+      { num: "06", label: "계약", danger: false },
+      { num: "07", label: "수출", danger: false },
+    ].map((s) => ({
+      ...s,
+      bg: s.danger ? "#f5f5f7" : "#ffffff",
+      border: s.danger ? "rgba(0,0,0,0.35)" : "rgba(0,0,0,0.07)",
+      color: s.danger ? "#6e6e73" : "#1d1d1f",
+      numColor: s.danger ? "#6e6e73" : "#0066cc",
+    }));
+
+    const pains = [
+      { title: "답장이 오지 않는다", desc: "이메일 10통, 긍정 답변 0건. 번역은 되는데 바이어가 안 움직입니다.", iconEl: this.icon("mail") },
+      { title: "답이 와도 막막하다", desc: "후속 대응·협상 노하우가 없어 대화가 계약으로 이어지지 않습니다.", iconEl: this.icon("chat") },
+      { title: "컨설팅은 너무 비싸다", desc: "예산 없는 1인 브랜드가 감당할 실행 파트너가 없습니다.", iconEl: this.icon("coin") },
+    ];
+
+    const steps = [
+      { n: "1", title: "바이어 발굴", desc: "국가별 바이어 DB 자동 매칭.", ai: false },
+      { n: "2", title: "시장·규제 진단", desc: "EU 화장품 규제(CPNP) 자동 체크.", ai: true },
+      { n: "3", title: "콜드 이메일 작성", desc: "바이어가 반응하는 제안서 직접 작성.", ai: true },
+      { n: "4", title: "응답·후속 대응", desc: "답장 대응 스크립트 실시간 생성.", ai: true },
+      { n: "5", title: "협상 전략", desc: "가격·조건 협상을 동석해 리드.", ai: false },
+      { n: "6", title: "계약 테이블", desc: "첫 계약까지 실무를 마무리.", ai: false },
+    ].map((st) => ({
+      ...st,
+      tag: st.ai ? "AI 자동화" : "전문가 개입",
+      tagBg: st.ai ? "rgba(0,113,227,0.16)" : "rgba(20,24,36,0.08)",
+      tagColor: st.ai ? "#0066cc" : "#1d1d1f",
+    }));
+
+    const rows = [
+      { label: "바이어 찾기", solo: "지인 소개·박람회 명함", bx: "검증된 바이어 데이터베이스" },
+      { label: "이메일", solo: "한글→AI 번역 콜드메일", bx: "맞춤형 이메일 템플릿" },
+      { label: "규제 대응", solo: "무엇을 볼지 모름", bx: "EU CPNP 규제 자동 진단" },
+      { label: "답장이 오면", solo: "어떻게 답할지 막막", bx: "실시간 대응 스크립트" },
+      { label: "협상", solo: "혼자 감당", bx: "글로벌 실무 전문가 조언" },
+      { label: "비용", solo: "고액 컨설팅비 부담", bx: "소규모 맞춤 실행형" },
+    ];
+
+    const values = [
+      { n: "1", title: "실행 가능성", desc: "지금 바로 보낼 이메일 한 통.", proof: "즉시 쓰는 실무 산출물" },
+      { n: "2", title: "소규모 접근성", desc: "1인 브랜드도 가능한 실행형 구조.", proof: "고액 컨설팅비 없이 시작" },
+      { n: "3", title: "K뷰티 특화 깊이", desc: "화장품 규제와 바이어만 깊게 팝니다.", proof: "EU CPNP·현지 유통 전문" },
+    ];
+
+    return {
+      navRef: (el) => { this._nav = el; },
+      email: this.state.email,
+      sent: this.state.sent,
+      onEmail: (e) => this.setState({ email: e.target.value }),
+      onSubmit: (e) => { e.preventDefault(); this.setState({ sent: true }); },
+      lift,
+      ctaHover: { transform: "translateY(-2px)", boxShadow: "0 6px 18px rgba(0,102,204,0.4)" },
+      ctaHoverLg: { transform: "translateY(-3px)", boxShadow: "0 12px 30px rgba(0,102,204,0.42)" },
+      arrow: isMobile ? "↓" : "→",
+      cmpCols: isMobile ? "0.9fr 1fr 1fr" : "1fr 1.3fr 1.3fr",
+      stages, pains, steps, rows, values,
+      before: ["이메일 10통 → 답변 0건", "유럽 바이어 접점 0", "혼자 다 하다 지침"],
+      after: ["바이어에게서 답장이 온다", "첫 계약 테이블에 앉는다", "제품 개발에만 집중한다"],
+    };
+  }
+
+  icon(kind) {
+    const s = 'width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6e6e73" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"';
+    const paths = {
+      mail: '<rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="m3 6 9 7 9-7"/>',
+      chat: '<path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7A8.38 8.38 0 0 1 4 11.5 8.5 8.5 0 0 1 12.5 3 8.38 8.38 0 0 1 21 11.5z"/>',
+      coin: '<circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5c0-1.1 1.1-2 2.5-2s2.5.9 2.5 2-1.1 2-2.5 2-2.5.9-2.5 2 1.1 2 2.5 2 2.5-.9 2.5-2"/>',
+    };
+    return React.createElement('span', { style: { display: 'flex' }, dangerouslySetInnerHTML: { __html: '<svg ' + s + '>' + paths[kind] + '</svg>' } });
+  }
+}
+</script>
+</body>
+</html>
