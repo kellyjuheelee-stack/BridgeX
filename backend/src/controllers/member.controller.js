@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const memberService = require('../services/member.service');
 const diagnosisService = require('../services/diagnosis.service');
+const roadmapService = require('../services/roadmap.service');
 const { validateMember, validateLogin } = require('../validators/member.validator');
 const { getSecret } = require('../middleware/auth');
 const emailTemplates = require('../constants/emailTemplates');
@@ -110,4 +111,27 @@ async function list(req, res, next) {
   }
 }
 
-module.exports = { register, login, me, myDiagnoses, emailTemplateList, generateEmailDraft, list };
+// GET /api/members/me/roadmap — 내 수출 실행 로드맵 (회원)
+async function myRoadmap(req, res, next) {
+  try {
+    const data = await memberService.getRoadmap(req.member.id);
+    return res.json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
+}
+
+// POST /api/members/me/roadmap/steps/:stepId/toggle — 단계 완료 토글 (회원)
+async function toggleRoadmapStep(req, res, next) {
+  try {
+    const { stepId } = req.params;
+    if (!roadmapService.isValidStepId(stepId)) throw new ApiError(400, '유효하지 않은 단계입니다.');
+    const done = req.body && req.body.done === false ? false : true; // 기본 true
+    const data = await memberService.toggleRoadmapStep(req.member.id, stepId, done);
+    return res.json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { register, login, me, myDiagnoses, emailTemplateList, generateEmailDraft, list, myRoadmap, toggleRoadmapStep };
