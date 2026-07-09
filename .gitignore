@@ -1,6 +1,7 @@
 # tooling / scratch
 .claude/
 .superpowers/
+.worktrees/
 
 # node (backend/.gitignore also covers these)
 node_modules/
