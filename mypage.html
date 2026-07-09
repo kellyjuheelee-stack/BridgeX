@@ -48,6 +48,23 @@
 
   .loading { text-align:center; padding:80px 0; color:var(--muted); font-size:14px; }
 
+  /* dashboard KPI strip */
+  .kpi-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:20px; }
+  .kpi { background:var(--white); border-radius:16px; box-shadow:var(--shadow-card); padding:18px 14px; text-align:center; }
+  .kpi-val { font-size:26px; font-weight:800; letter-spacing:-0.5px; color:var(--blue); line-height:1.1; }
+  .kpi-val.warn { color:#c05a1e; }
+  .kpi-label { font-size:12px; color:var(--muted); font-weight:600; margin-top:5px; }
+  @media (max-width:560px){ .kpi-val{ font-size:21px; } .kpi-label{ font-size:11px; } }
+
+  /* AI tools grid */
+  .tool-sub { font-size:13px; color:var(--muted); margin:2px 0 16px; line-height:1.6; }
+  .tool-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; }
+  .tool { display:block; border:1px solid var(--hairline); border-radius:14px; padding:16px; background:var(--white); cursor:pointer; transition:border-color .15s, transform .15s, box-shadow .15s; }
+  .tool:hover { border-color:var(--blue); transform:translateY(-2px); box-shadow:0 8px 22px rgba(0,102,204,0.12); }
+  .tool-ico { font-size:24px; }
+  .tool-name { font-size:15px; font-weight:800; margin-top:8px; color:var(--ink); }
+  .tool-desc { font-size:12.5px; color:var(--muted); line-height:1.5; margin-top:4px; }
+
   /* diagnosis result in mypage */
   .dg-head { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:18px; }
   .dg-meta { font-size:13px; color:var(--muted); }
@@ -169,13 +186,10 @@
         <p id="mCompany"></p>
       </div>
 
-      <div class="card" id="infoCard">
-        <h2>내 정보</h2>
-        <div class="prow"><div class="pk">이름</div><div class="pv" id="pName"></div></div>
-        <div class="prow"><div class="pk">회사명</div><div class="pv" id="pCompany"></div></div>
-        <div class="prow"><div class="pk">이메일</div><div class="pv" id="pEmail"></div></div>
-        <div class="prow"><div class="pk">전화번호</div><div class="pv" id="pPhone"></div></div>
-        <div class="prow"><div class="pk">가입일</div><div class="pv" id="pCreated"></div></div>
+      <div class="kpi-strip">
+        <div class="kpi"><div class="kpi-val" id="kpiScore">—</div><div class="kpi-label">수출 준비도</div></div>
+        <div class="kpi"><div class="kpi-val" id="kpiProgress">—</div><div class="kpi-label">로드맵 진행률</div></div>
+        <div class="kpi"><div class="kpi-val" id="kpiExpert">—</div><div class="kpi-label">전문가 필요 단계</div></div>
       </div>
 
       <div class="card">
@@ -186,6 +200,37 @@
       <div class="card" id="roadmapCard" style="display:none;">
         <h2>내 수출 실행 로드맵</h2>
         <div id="roadmap"></div>
+      </div>
+
+      <div class="card">
+        <h2>AI 실무 도구</h2>
+        <p class="tool-sub">수출 실무를 AI가 함께합니다. 필요할 때 바로 여세요.</p>
+        <div class="tool-grid">
+          <a href="email.html" class="tool">
+            <div class="tool-ico">✉️</div>
+            <div class="tool-name">AI 이메일 작성</div>
+            <div class="tool-desc">콜드·박람회 후속 등 상황별 영문 이메일 초안</div>
+          </a>
+          <a href="reply.html" class="tool">
+            <div class="tool-ico">💬</div>
+            <div class="tool-name">바이어 답장 대응</div>
+            <div class="tool-desc">받은 답장을 분석해 맞춤 영문 대응 초안</div>
+          </a>
+          <a href="catalog.html" class="tool">
+            <div class="tool-ico">🧴</div>
+            <div class="tool-name">카탈로그 EU 점검</div>
+            <div class="tool-desc">문구가 EU에서 문제될 소지를 예비 점검</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="card" id="infoCard">
+        <h2>내 정보</h2>
+        <div class="prow"><div class="pk">이름</div><div class="pv" id="pName"></div></div>
+        <div class="prow"><div class="pk">회사명</div><div class="pv" id="pCompany"></div></div>
+        <div class="prow"><div class="pk">이메일</div><div class="pv" id="pEmail"></div></div>
+        <div class="prow"><div class="pk">전화번호</div><div class="pv" id="pPhone"></div></div>
+        <div class="prow"><div class="pk">가입일</div><div class="pv" id="pCreated"></div></div>
       </div>
     </div>
   </div>
@@ -261,6 +306,8 @@
 
     card.style.display = 'block';
     var p = data.progress;
+    var kp = document.getElementById('kpiProgress'); if (kp) kp.textContent = p.percent + '%';
+    var ke = document.getElementById('kpiExpert'); if (ke) { ke.textContent = p.expertRemaining; ke.classList.toggle('warn', p.expertRemaining > 0); }
     var head = '<div class="rm-top"><span class="rm-pct">' + p.percent + '%</span>'
       + '<span class="rm-sub">' + p.total + '단계 중 ' + p.doneCount + '단계 완료</span>'
       + (p.expertRemaining > 0 ? '<span class="rm-wall">🔴 ' + p.expertRemaining + '단계는 전문가가 필요합니다</span>' : '')
@@ -392,12 +439,15 @@
         + '<p>수출 가능성 진단을 받으면 결과와 진행 상황이 여기에 저장됩니다.</p></div>'
         + '<div class="cta-row"><a href="diagnose.html" class="btn btn-primary">우리 브랜드 수출 가능성 진단하기</a>'
         + '<a href="index.html" class="btn btn-ghost">홈으로</a></div>';
+      var ks0 = document.getElementById('kpiScore'); if (ks0) ks0.textContent = '진단 전';
       return;
     }
 
     var latest = list[0];
     var r = latest.diagnosisResult;
     var status = latest.diagnosisStatus;
+    var ks = document.getElementById('kpiScore');
+    if (ks) ks.textContent = (r && typeof r.overallScore === 'number') ? r.overallScore : '—';
     var printHead = '<div class="print-only print-head"><div class="ph-brand">Bridge<span>X</span> · 수출 가능성 진단 리포트</div>'
       + '<div class="ph-sub">' + esc((currentMember && currentMember.companyName) || '') + ' · ' + todayStr() + '</div></div>';
     var head = '<div class="dg-head no-print"><div>'
