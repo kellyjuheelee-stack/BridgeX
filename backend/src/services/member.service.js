@@ -140,6 +140,16 @@ async function toggleRoadmapStep(memberId, stepId, done) {
   return getRoadmap(memberId);
 }
 
+// 회원 최신 진단 id (없으면 null) — 카탈로그 점검 결과의 상담 CTA용
+async function getLatestDiagnosisId(memberId) {
+  const latest = await prisma.exportDiagnosisRequest.findFirst({
+    where: { memberId },
+    orderBy: { submittedAt: 'desc' },
+    select: { id: true },
+  });
+  return latest ? latest.id : null;
+}
+
 module.exports = {
   createMember,
   findByEmailWithHash,
@@ -151,4 +161,5 @@ module.exports = {
   getEmailContext,
   getRoadmap,
   toggleRoadmapStep,
+  getLatestDiagnosisId,
 };

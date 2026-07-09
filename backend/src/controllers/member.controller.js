@@ -5,6 +5,7 @@ const roadmapService = require('../services/roadmap.service');
 const { validateMember, validateLogin } = require('../validators/member.validator');
 const { getSecret } = require('../middleware/auth');
 const emailTemplates = require('../constants/emailTemplates');
+const catalogAuditRules = require('../constants/catalogAuditRules');
 const ApiError = require('../utils/ApiError');
 
 function issueToken(member) {
@@ -134,4 +135,17 @@ async function toggleRoadmapStep(req, res, next) {
   }
 }
 
-module.exports = { register, login, me, myDiagnoses, emailTemplateList, generateEmailDraft, list, myRoadmap, toggleRoadmapStep };
+// POST /api/members/me/catalog-audit — 카탈로그 문구 컴플라이언스 예비 점검 (회원)
+async function catalogAudit(req, res, next) {
+  try {
+    const text = req.body && req.body.text;
+    if (!text || !String(text).trim()) throw new ApiError(400, '점검할 문구를 입력해주세요.');
+    const audit = catalogAuditRules.auditText(text);
+    const diagnosisId = await memberService.getLatestDiagnosisId(req.member.id);
+    return res.json({ success: true, data: { ...audit, diagnosisId } });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { register, login, me, myDiagnoses, emailTemplateList, generateEmailDraft, list, myRoadmap, toggleRoadmapStep, catalogAudit };
