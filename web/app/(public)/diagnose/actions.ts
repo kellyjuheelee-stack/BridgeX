@@ -77,3 +77,45 @@ export async function submitDiagnosis(formData: FormData): Promise<void> {
 
   redirect(`/diagnose/result/${data!.id}`);
 }
+
+export async function requestConsultation(id: string): Promise<void> {
+  const admin = createServiceClient();
+  await admin
+    .from("export_diagnosis_requests")
+    .update({
+      consultation_requested: true,
+      consultation_requested_at: new Date().toISOString(),
+      diagnosis_status: "consulting_needed",
+    })
+    .eq("id", id);
+  redirect(`/diagnose/result/${id}?consulted=1`);
+}
+
+export async function signUpAndLink(formData: FormData): Promise<void> {
+  const diagnosisId = str(formData, "diagnosisId");
+  const email = str(formData, "email");
+  const password = str(formData, "password");
+  const companyName = str(formData, "companyName");
+  const contactName = str(formData, "contactName");
+  const phone = str(formData, "phone");
+
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { data: { name: contactName, company_name: companyName, phone } },
+  });
+  if (error || !data.user) {
+    redirect(`/diagnose/result/${diagnosisId}?error=` + encodeURIComponent(error?.message ?? "가입 실패"));
+  }
+
+  // 비회원 진단행을 새 uid 로 원자적 연결 (member_id 가 아직 null 인 행만)
+  const admin = createServiceClient();
+  await admin
+    .from("export_diagnosis_requests")
+    .update({ member_id: data!.user!.id })
+    .eq("id", diagnosisId)
+    .is("member_id", null);
+
+  redirect("/mypage");
+}
