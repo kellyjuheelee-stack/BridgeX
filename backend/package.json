@@ -14,7 +14,8 @@
     "test:roadmap": "node --test tests/roadmap.test.mjs",
     "smoke:roadmap": "node tests/roadmap.smoke.mjs",
     "test:catalog": "node --test tests/catalog-audit.test.mjs",
-    "smoke:catalog": "node tests/catalog-audit.smoke.mjs"
+    "smoke:catalog": "node tests/catalog-audit.smoke.mjs",
+    "test:diagnosis": "node --test tests/ai-diagnosis.test.mjs"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",

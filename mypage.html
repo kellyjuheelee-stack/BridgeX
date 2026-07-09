@@ -71,6 +71,15 @@
   .dg-track { height:7px; border-radius:999px; background:#ececef; overflow:hidden; }
   .dg-fill { height:100%; border-radius:999px; }
   .dg-consult { font-size:13px; font-weight:600; color:#c05a1e; background:rgba(224,120,60,0.1); border-radius:10px; padding:10px 14px; margin-bottom:18px; }
+  .dg-gaps { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .gap-chip { font-size:11.5px; font-weight:600; color:#c05a1e; background:rgba(224,120,60,0.1); border:1px solid rgba(224,120,60,0.25); border-radius:999px; padding:3px 10px; }
+  .prio-box { background:var(--parchment); border-radius:14px; padding:18px 20px; margin-bottom:20px; }
+  .prio-box h4 { font-size:14px; font-weight:800; margin:0 0 12px; }
+  .prio-item { display:flex; gap:12px; align-items:flex-start; padding:9px 0; border-bottom:1px solid rgba(0,0,0,0.06); }
+  .prio-item:last-child { border-bottom:none; }
+  .prio-num { flex:0 0 auto; width:22px; height:22px; border-radius:50%; background:var(--blue-focus); color:#fff; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; margin-top:1px; }
+  .prio-label { font-size:14px; font-weight:800; color:var(--ink); }
+  .prio-note { font-size:13px; color:var(--muted); line-height:1.55; margin-top:2px; }
 
   /* customer consulting progress */
   .consult-card { background:rgba(0,102,204,0.05); border:1px solid rgba(0,102,204,0.18); border-radius:14px; padding:20px; margin-bottom:20px; }
@@ -408,8 +417,16 @@
         body += '<div class="dg-dims">';
         Object.keys(r.sections).forEach(function(k){
           var s = r.sections[k];
+          var gaps = (s.gaps && s.gaps.length) ? '<div class="dg-gaps">' + s.gaps.map(function(g){ return '<span class="gap-chip">' + esc(g) + '</span>'; }).join('') + '</div>' : '';
           body += '<div><div class="dg-dim-top"><span>' + esc(s.label) + '</span><span style="color:' + SCORE_COLOR(s.score) + '">' + s.score + '</span></div>'
-            + '<div class="dg-track"><div class="dg-fill" style="width:' + s.score + '%;background:' + SCORE_COLOR(s.score) + '"></div></div></div>';
+            + '<div class="dg-track"><div class="dg-fill" style="width:' + s.score + '%;background:' + SCORE_COLOR(s.score) + '"></div></div>' + gaps + '</div>';
+        });
+        body += '</div>';
+      }
+      if (r.priorities && r.priorities.length) {
+        body += '<div class="prio-box"><h4>가장 먼저 해결할 과제 Top ' + r.priorities.length + '</h4>';
+        r.priorities.forEach(function(p, i){
+          body += '<div class="prio-item"><span class="prio-num">' + (i+1) + '</span><div><div class="prio-label">' + esc(p.label) + '</div><div class="prio-note">' + esc(p.note) + '</div></div></div>';
         });
         body += '</div>';
       }

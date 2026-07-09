@@ -154,6 +154,15 @@
   .next-box h4 { font-size: 14px; font-weight: 800; margin: 0 0 12px; }
   .next-box ul { margin: 0; padding-left: 18px; }
   .next-box li { font-size: 14px; line-height: 1.7; color: var(--ink); }
+  .dim-gaps { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .gap-chip { font-size:11.5px; font-weight:600; color:#c05a1e; background:rgba(224,120,60,0.1); border:1px solid rgba(224,120,60,0.25); border-radius:999px; padding:3px 10px; }
+  .prio-box { background:var(--parchment); border-radius:14px; padding:20px 22px; margin-bottom:24px; }
+  .prio-box h4 { font-size:14px; font-weight:800; margin:0 0 14px; }
+  .prio-item { display:flex; gap:12px; align-items:flex-start; padding:10px 0; border-bottom:1px solid rgba(0,0,0,0.06); }
+  .prio-item:last-child { border-bottom:none; }
+  .prio-num { flex:0 0 auto; width:22px; height:22px; border-radius:50%; background:var(--blue-focus); color:#fff; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; margin-top:1px; }
+  .prio-label { font-size:14px; font-weight:800; color:var(--ink); }
+  .prio-note { font-size:13px; color:var(--muted); line-height:1.55; margin-top:2px; }
   .hook { background: linear-gradient(135deg, #0a1830, #14284a); border-radius: 18px; padding: 30px 26px; color: #fff; }
   .hook h3 { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; margin: 0 0 12px; }
   .hook p { font-size: 14.5px; line-height: 1.7; color: rgba(255,255,255,0.85); margin: 0 0 20px; }
@@ -491,8 +500,15 @@
         <div class="dim-top"><span class="dim-label">${esc(s.label)}</span><span class="dim-score" style="color:${SCORE_COLOR(s.score)}">${s.score}</span></div>
         <div class="dim-track"><div class="dim-fill" style="width:${s.score}%;background:${SCORE_COLOR(s.score)}"></div></div>
         <div class="dim-comment">${esc(s.comment)}</div>
+        ${(s.gaps && s.gaps.length) ? `<div class="dim-gaps">${s.gaps.map(g => `<span class="gap-chip">${esc(g)}</span>`).join('')}</div>` : ''}
       </div>`).join('');
     const actions = r.nextActions.map(a => `<li>${esc(a)}</li>`).join('');
+    // 우선 해결 과제 Top 3 (고도화). 구버전 결과(priorities 없음)는 nextActions 로 폴백.
+    const priorityBox = (r.priorities && r.priorities.length)
+      ? `<div class="prio-box"><h4>가장 먼저 해결할 과제 Top ${r.priorities.length}</h4>`
+        + r.priorities.map((p, i) => `<div class="prio-item"><span class="prio-num">${i+1}</span><div><div class="prio-label">${esc(p.label)}</div><div class="prio-note">${esc(p.note)}</div></div></div>`).join('')
+        + `</div>`
+      : `<div class="next-box"><h4>지금 필요한 다음 단계</h4><ul>${actions}</ul></div>`;
 
     // 회원이면 상담 훅, 비회원이면 회원가입 유도 훅
     const hook = isMember ? `
@@ -534,10 +550,7 @@
 
         <div class="dims">${bars}</div>
 
-        <div class="next-box">
-          <h4>지금 필요한 다음 단계</h4>
-          <ul>${actions}</ul>
-        </div>
+        ${priorityBox}
 
         <div class="no-print" style="margin-bottom:20px;">
           <button class="btn btn-ghost" id="pdfBtn" style="width:100%;">📄 진단 결과 PDF로 저장</button>
