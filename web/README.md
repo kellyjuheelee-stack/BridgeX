@@ -5,7 +5,9 @@ Vercel + Supabase 기반 BridgeX 앱. P1 = 기반(인증·스키마·배포).
 ## 1. Supabase 프로젝트
 
 1. https://supabase.com 에서 새 프로젝트 생성(region: Northeast Asia).
-2. SQL Editor 에서 `supabase/migrations/0001_init.sql` 전체를 붙여넣고 실행.
+2. SQL Editor 에서 마이그레이션을 **순서대로** 실행:
+   1. `supabase/migrations/0001_init.sql` 전체를 붙여넣고 실행.
+   2. 이어서 `supabase/migrations/0002_diagnosis_checklist.sql` 전체를 붙여넣고 실행.
 3. Settings > API 에서 다음을 복사해 `.env.local` 작성 (`.env.example` 참고):
    - Project URL → `NEXT_PUBLIC_SUPABASE_URL`
    - anon public → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
@@ -18,8 +20,9 @@ Vercel + Supabase 기반 BridgeX 앱. P1 = 기반(인증·스키마·배포).
 ```bash
 npm install
 npm run dev        # http://localhost:3000
-npm test           # 단위 테스트 (resolveAccess)
-npm run smoke:auth # 실제 Supabase 대상 인증/스키마 스모크
+npm test               # 단위 테스트 (resolveAccess, 진단 엔진/매핑)
+npm run smoke:auth     # 실제 Supabase 대상 인증/스키마 스모크
+npm run smoke:diagnose # 실제 Supabase 대상 진단 제출→저장 왕복 스모크
 ```
 
 ## 3. 관리자 계정 만들기

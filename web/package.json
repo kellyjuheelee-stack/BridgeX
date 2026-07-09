@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",
-    "smoke:auth": "node scripts/smoke-auth.mjs"
+    "smoke:auth": "node scripts/smoke-auth.mjs",
+    "smoke:diagnose": "node scripts/smoke-diagnose.mjs"
   },
   "dependencies": {
     "next": "^15.1.0",
