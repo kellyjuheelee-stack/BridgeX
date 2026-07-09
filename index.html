@@ -77,6 +77,13 @@
   .signup-card .sc-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0,102,204,0.38); }
   .signup-card .sc-btn:disabled { opacity: .55; cursor: default; }
   .signup-card .sc-err { color: #d64545; font-size: 13px; font-weight: 600; margin-top: 12px; min-height: 16px; }
+  /* consent */
+  .consent-box { margin: 18px 0 4px; padding: 13px 15px; background: rgba(0,102,204,0.04); border: 1px solid #e0e0e0; border-radius: 12px; text-align: left; }
+  .consent-check { display: flex; align-items: flex-start; gap: 9px; font-size: 14px; font-weight: 600; color: #1d1d1f; cursor: pointer; line-height: 1.45; }
+  .consent-box input[type="checkbox"] { width: 18px; height: 18px; min-height: 0; margin: 1px 0 0; padding: 0; flex: 0 0 auto; accent-color: #0066cc; cursor: pointer; }
+  .consent-check .req { color: #0066cc; }
+  .consent-text { font-size: 12.5px; color: #6e6e73; line-height: 1.6; margin: 8px 0 0; }
+  .consent-text a { color: #0066cc; font-weight: 600; text-decoration: underline; }
   .signup-done { text-align: center; padding: 12px 0; }
   .signup-done .sd-ico { width: 60px; height: 60px; border-radius: 999px; background: rgba(0,102,204,0.1); color: #0066cc; font-size: 30px; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
   .signup-done h2 { margin-bottom: 8px; }
@@ -491,6 +498,10 @@
         <label>비밀번호</label>
         <input id="suPassword" type="password" autocomplete="new-password" placeholder="8자 이상">
         <div class="sc-err" id="suErr"></div>
+        <div class="consent-box">
+          <label class="consent-check"><input type="checkbox" id="suConsent"> 개인정보 수집 및 이용에 동의합니다. <span class="req">*</span></label>
+          <p class="consent-text">본 양식 제출 시 BridgeX의 <a href="terms.html" target="_blank" rel="noopener">이용약관</a> 및 <a href="privacy.html" target="_blank" rel="noopener">개인정보처리방침</a>에 동의하게 됩니다.</p>
+        </div>
         <button type="submit" class="sc-btn" id="suBtn">가입하기</button>
         <div class="sc-switch">이미 회원이신가요? <span data-open="login">로그인</span></div>
       </form>
@@ -591,6 +602,7 @@
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email)) { suErr.textContent = '이메일 형식이 올바르지 않습니다.'; return; }
       if (!/^0\d{1,2}-?\d{3,4}-?\d{4}$/.test(p.phone.replace(/\s/g,''))) { suErr.textContent = '전화번호 형식이 올바르지 않습니다. (예: 010-1234-5678)'; return; }
       if (p.password.length < 8) { suErr.textContent = '비밀번호는 8자 이상이어야 합니다.'; return; }
+      if (!document.getElementById('suConsent').checked) { suErr.textContent = '개인정보 수집 및 이용에 동의해주세요.'; return; }
 
       suBtn.disabled = true; suBtn.textContent = '가입 중…';
       try {

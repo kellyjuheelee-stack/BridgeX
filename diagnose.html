@@ -115,6 +115,15 @@
   .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--hairline); }
   .btn-ghost:hover { color: var(--ink); border-color: var(--muted); }
 
+  /* consent */
+  .consent-box { margin: 20px 0 4px; padding: 13px 15px; background: rgba(0,102,204,0.04); border: 1px solid var(--hairline, #e0e0e0); border-radius: 12px; text-align: left; }
+  .consent-check { display: flex; align-items: flex-start; gap: 9px; font-size: 14px; font-weight: 600; color: var(--ink, #1d1d1f); cursor: pointer; line-height: 1.45; }
+  .consent-box input[type="checkbox"] { width: 18px; height: 18px; min-height: 0; margin: 1px 0 0; padding: 0; flex: 0 0 auto; accent-color: var(--blue, #0066cc); cursor: pointer; }
+  .consent-check .req { color: var(--blue, #0066cc); }
+  .consent-text { font-size: 12.5px; color: var(--muted, #6e6e73); line-height: 1.6; margin: 8px 0 0; }
+  .consent-text a { color: var(--blue, #0066cc); font-weight: 600; text-decoration: underline; }
+  .consent-err { font-size: 12.5px; color: #d64545; font-weight: 600; margin-top: 8px; display: none; }
+
   /* completion */
   .done-box { text-align: center; padding: 20px 0; }
   .done-icon { width: 64px; height: 64px; border-radius: 999px; background: rgba(0,102,204,0.1); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 20px; }
@@ -400,7 +409,12 @@
       return `<div class="summary-group"><h4>${title}</h4>${rows}</div>`;
     };
     $('stepBody').innerHTML = `<div class="step-title">입력 내용 확인</div><div class="step-sub">아래 내용으로 진단을 요청합니다.</div>` +
-      grp('기본 정보', SCHEMA[0].fields) + grp('제품 정보', SCHEMA[1].fields) + grp('수출 목표', SCHEMA[2].fields);
+      grp('기본 정보', SCHEMA[0].fields) + grp('제품 정보', SCHEMA[1].fields) + grp('수출 목표', SCHEMA[2].fields) +
+      `<div class="consent-box">
+        <label class="consent-check"><input type="checkbox" id="dgConsent"> 개인정보 수집 및 이용에 동의합니다. <span class="req">*</span></label>
+        <p class="consent-text">본 양식 제출 시 BridgeX의 <a href="terms.html" target="_blank" rel="noopener">이용약관</a> 및 <a href="privacy.html" target="_blank" rel="noopener">개인정보처리방침</a>에 동의하게 됩니다.</p>
+        <div class="consent-err" id="dgConsentErr">개인정보 수집 및 이용에 동의해주세요.</div>
+      </div>`;
   }
 
   function validateStep(step) {
@@ -430,6 +444,8 @@
   async function onNext() {
     if (!validateStep(state.step)) return;
     if (state.step < 4) { state.step++; renderStep(); return; }
+    const c = document.getElementById('dgConsent'), ce = document.getElementById('dgConsentErr');
+    if (c && !c.checked) { if (ce) ce.style.display = 'block'; c.focus(); return; }
     await submit();
   }
 
@@ -491,6 +507,10 @@
           <p>비밀번호만 설정하면 회원가입 완료. 진단 결과가 계정에 저장되고, 전문가 상담·바이어 매칭으로 이어집니다.</p>
           <input id="rsPassword" type="password" class="rs-input" placeholder="비밀번호 (8자 이상)">
           <div class="rs-err" id="rsErr"></div>
+          <div class="consent-box">
+            <label class="consent-check"><input type="checkbox" id="rsConsent"> 개인정보 수집 및 이용에 동의합니다. <span class="req">*</span></label>
+            <p class="consent-text">본 양식 제출 시 BridgeX의 <a href="terms.html" target="_blank" rel="noopener">이용약관</a> 및 <a href="privacy.html" target="_blank" rel="noopener">개인정보처리방침</a>에 동의하게 됩니다.</p>
+          </div>
           <button class="btn btn-primary" id="rsBtn" style="width:100%;">회원가입하고 결과 저장 →</button>
           <div class="hook-note">이미 입력한 이름·회사·이메일(${esc(state.data.email||'')})로 자동 가입됩니다.</div>
         </div>`;
@@ -541,6 +561,8 @@
       err.textContent = '';
       const password = pw.value;
       if (!password || password.length < 8) { err.textContent = '비밀번호는 8자 이상이어야 합니다.'; return; }
+      const consent = document.getElementById('rsConsent');
+      if (consent && !consent.checked) { err.textContent = '개인정보 수집 및 이용에 동의해주세요.'; return; }
       btn.disabled = true; btn.textContent = '가입 중…';
       try {
         const res = await fetch(API_BASE + '/api/members', {
