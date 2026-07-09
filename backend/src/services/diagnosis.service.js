@@ -62,7 +62,7 @@ async function listRequests(query = {}) {
       orderBy: { submittedAt: 'desc' },
       skip,
       take: limit,
-      // 목록에서는 지시서 13장 항목만 선택
+      // 목록 항목 (+ 점수·컨설팅 단계로 리드 우선순위 파악)
       select: {
         id: true,
         companyName: true,
@@ -74,6 +74,9 @@ async function listRequests(query = {}) {
         targetCountries: true,
         painPoints: true,
         diagnosisStatus: true,
+        diagnosisResult: true,
+        consultingStage: true,
+        consultationRequested: true,
         submittedAt: true,
       },
     }),

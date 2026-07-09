@@ -54,6 +54,9 @@
   tbody tr:hover{background:rgba(0,102,204,0.04);}
   td .company{font-weight:700;color:var(--ink);}
   td .sub{color:var(--muted);}
+  .score-pill{display:inline-block;font-size:12px;font-weight:800;border:1.5px solid;border-radius:8px;padding:2px 8px;}
+  tr.hot{background:rgba(224,120,60,0.06);}
+  tr.hot:hover{background:rgba(224,120,60,0.11);}
   .tags{display:flex;gap:4px;flex-wrap:wrap;max-width:220px;white-space:normal;}
   .tags .t{font-size:11px;background:var(--parchment);border-radius:5px;padding:2px 7px;color:var(--ink);}
   .empty{padding:60px;text-align:center;color:var(--muted);font-size:14px;}
@@ -209,7 +212,7 @@
           <thead>
             <tr>
               <th>제출일</th><th>회사명</th><th>담당자</th><th>이메일</th><th>전화번호</th>
-              <th>대표 제품</th><th>목표 국가</th><th>가장 어려운 부분</th><th>상태</th>
+              <th>대표 제품</th><th>목표 국가</th><th>가장 어려운 부분</th><th>점수</th><th>상태</th><th>단계</th>
             </tr>
           </thead>
           <tbody id="rows"></tbody>
@@ -291,6 +294,8 @@
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
   function fmtDate(s){ if(!s) return '-'; const d=new Date(s); return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; }
   function badge(st){ return `<span class="badge st-${st}">${STATUS_LABELS[st]||st}</span>`; }
+  function scoreCell(r){ const s = r.diagnosisResult && r.diagnosisResult.overallScore; if (typeof s !== 'number') return '<span class="sub">—</span>'; const c = s>=75?'#2e9e6b':(s>=55?'#0071e3':'#d68e2e'); return `<span class="score-pill" style="color:${c};border-color:${c}">${s}</span>`; }
+  function stageCell(r){ if (!r.consultingStage) return '<span class="sub">—</span>'; const st = (state.options.consultingStages||[]).find(x => x.key === r.consultingStage); return `<span class="sub">${esc(st ? st.label : r.consultingStage)}</span>`; }
 
   let wired = false;
 
@@ -342,7 +347,7 @@
     $('count').textContent = `총 ${pg.total}건`;
 
     $('rows').innerHTML = rows.map(r => `
-      <tr data-id="${r.id}">
+      <tr data-id="${r.id}" class="${r.diagnosisStatus==='consulting_needed'?'hot':''}">
         <td class="sub">${fmtDate(r.submittedAt)}</td>
         <td class="company">${esc(r.companyName)}</td>
         <td>${esc(r.contactName)}</td>
@@ -351,7 +356,9 @@
         <td>${esc(r.productName)}</td>
         <td><div class="tags">${(r.targetCountries||[]).map(c=>`<span class="t">${esc(c)}</span>`).join('')}</div></td>
         <td><div class="tags">${(r.painPoints||[]).slice(0,2).map(p=>`<span class="t">${esc(p)}</span>`).join('')}${(r.painPoints||[]).length>2?'<span class="t">…</span>':''}</div></td>
+        <td>${scoreCell(r)}</td>
         <td>${badge(r.diagnosisStatus)}</td>
+        <td>${stageCell(r)}</td>
       </tr>`).join('');
     $('emptyState').style.display = rows.length ? 'none' : 'block';
     $('rows').querySelectorAll('tr').forEach(tr => tr.onclick = () => openDetail(tr.dataset.id));
