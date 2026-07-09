@@ -93,6 +93,7 @@ model Member {
   passwordHash String
   createdAt    DateTime @default(now())
   lastLoginAt  DateTime?
+  roadmapProgress String? // JSON: { "<stepId>": { "done": bool, "doneAt": iso } }
 
   diagnoses ExportDiagnosisRequest[]
 

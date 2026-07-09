@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const prisma = require('../lib/prisma');
 const { deserializeFromDb } = require('../utils/serialize');
+const roadmapService = require('./roadmap.service');
 
 // 응답에서 제외할 민감 필드
 const PUBLIC_SELECT = {
@@ -99,6 +100,46 @@ async function getEmailContext(memberId) {
   };
 }
 
+function parseProgress(raw) {
+  if (!raw || typeof raw !== 'string') return {};
+  try { return JSON.parse(raw) || {}; } catch { return {}; }
+}
+
+// 회원의 최신 진단 기반 로드맵 + 진행률
+async function getRoadmap(memberId) {
+  const latest = await prisma.exportDiagnosisRequest.findFirst({
+    where: { memberId },
+    orderBy: { submittedAt: 'desc' },
+  });
+  const member = await prisma.member.findUnique({
+    where: { id: memberId },
+    select: { roadmapProgress: true },
+  });
+  const progress = parseProgress(member && member.roadmapProgress);
+
+  if (!latest) {
+    return { hasDiagnosis: false, steps: [], progress: { total: 0, doneCount: 0, expertRemaining: 0, percent: 0 } };
+  }
+  const d = deserializeFromDb(latest);
+  const built = roadmapService.buildRoadmap(d, progress);
+  return { hasDiagnosis: true, diagnosisId: d.id, steps: built.steps, progress: built.progress };
+}
+
+// 단계 완료/해제 토글 후 갱신된 로드맵 반환
+async function toggleRoadmapStep(memberId, stepId, done) {
+  const member = await prisma.member.findUnique({
+    where: { id: memberId },
+    select: { roadmapProgress: true },
+  });
+  const progress = parseProgress(member && member.roadmapProgress);
+  progress[stepId] = { done: !!done, doneAt: done ? new Date().toISOString() : null };
+  await prisma.member.update({
+    where: { id: memberId },
+    data: { roadmapProgress: JSON.stringify(progress) },
+  });
+  return getRoadmap(memberId);
+}
+
 module.exports = {
   createMember,
   findByEmailWithHash,
@@ -108,4 +149,6 @@ module.exports = {
   listMembers,
   listMyDiagnoses,
   getEmailContext,
+  getRoadmap,
+  toggleRoadmapStep,
 };
