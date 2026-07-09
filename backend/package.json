@@ -12,7 +12,9 @@
     "studio": "prisma studio",
     "smoke": "node tests/smoke.mjs",
     "test:roadmap": "node --test tests/roadmap.test.mjs",
-    "smoke:roadmap": "node tests/roadmap.smoke.mjs"
+    "smoke:roadmap": "node tests/roadmap.smoke.mjs",
+    "test:catalog": "node --test tests/catalog-audit.test.mjs",
+    "smoke:catalog": "node tests/catalog-audit.smoke.mjs"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
