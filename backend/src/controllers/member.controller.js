@@ -6,6 +6,7 @@ const { validateMember, validateLogin } = require('../validators/member.validato
 const { getSecret } = require('../middleware/auth');
 const emailTemplates = require('../constants/emailTemplates');
 const catalogAuditRules = require('../constants/catalogAuditRules');
+const replyAssistant = require('../constants/replyAssistant');
 const ApiError = require('../utils/ApiError');
 
 function issueToken(member) {
@@ -148,4 +149,24 @@ async function catalogAudit(req, res, next) {
   }
 }
 
-module.exports = { register, login, me, myDiagnoses, emailTemplateList, generateEmailDraft, list, myRoadmap, toggleRoadmapStep, catalogAudit };
+// POST /api/members/me/reply-assist — 바이어 답장 분석 + 대응 초안 (회원)
+async function replyAssist(req, res, next) {
+  try {
+    const text = req.body && req.body.text;
+    if (!text || !String(text).trim()) throw new ApiError(400, '바이어 답장 내용을 입력해주세요.');
+    const analysis = replyAssistant.analyzeReply(text);
+    const base = await memberService.getEmailContext(req.member.id);
+    const ctx = Object.assign({}, base, { buyerName: (req.body && req.body.buyerName) || '' });
+    const draft = replyAssistant.draftResponse(analysis, ctx);
+    const tips = replyAssistant.tipsFor(analysis);
+    const diagnosisId = await memberService.getLatestDiagnosisId(req.member.id);
+    return res.json({
+      success: true,
+      data: { intents: analysis.intents, needsExpert: analysis.needsExpert, isRejection: analysis.isRejection, draft, tips, diagnosisId },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { register, login, me, myDiagnoses, emailTemplateList, generateEmailDraft, list, myRoadmap, toggleRoadmapStep, catalogAudit, replyAssist };

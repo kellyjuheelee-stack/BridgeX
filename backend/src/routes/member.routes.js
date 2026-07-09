@@ -16,6 +16,7 @@ router.post('/me/email-draft', requireMember, ctrl.generateEmailDraft); // 이�
 router.get('/me/roadmap', requireMember, ctrl.myRoadmap); // 수출 실행 로드맵
 router.post('/me/roadmap/steps/:stepId/toggle', requireMember, ctrl.toggleRoadmapStep); // 단계 토글
 router.post('/me/catalog-audit', requireMember, ctrl.catalogAudit); // 카탈로그 컴플라이언스 점검
+router.post('/me/reply-assist', requireMember, ctrl.replyAssist); // 바이어 답장 대응 초안
 
 // 관리자
 router.get('/', requireAdmin, ctrl.list); // 회원 목록
