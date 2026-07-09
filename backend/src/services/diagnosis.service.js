@@ -178,7 +178,7 @@ async function requestConsultation(id, stepContext = null) {
     select: { id: true, adminMemo: true },
   });
   if (!exists) return null;
-  const memoAddition = stepContext ? `[로드맵] '${String(stepContext).trim()}' 단계에서 상담 신청` : null;
+  const memoAddition = stepContext ? `[로드맵] '${String(stepContext).trim().slice(0, 200)}' 단계에서 상담 신청` : null;
   const adminMemo = memoAddition ? [exists.adminMemo, memoAddition].filter(Boolean).join('\n') : undefined;
   return prisma.exportDiagnosisRequest.update({
     where: { id },

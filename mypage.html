@@ -253,7 +253,9 @@
         else if (s.link.type === 'consulting') act = '<button class="rm-link" data-step="' + esc(s.title) + '" data-act="consult">전문가 상담 신청 →</button>';
         else if (s.link.type === 'soon') act = '<span class="rm-soon">' + esc(s.link.label || '준비 중') + '</span>';
         bodyHtml += '<div class="rm-step">'
-          + '<div class="rm-check ' + (s.done ? 'on' : '') + '" data-toggle="' + esc(s.id) + '" data-done="' + (s.done ? '1' : '0') + '">' + (s.done ? '✓' : '') + '</div>'
+          + (s.link.type === 'soon'
+              ? '<div class="rm-check" style="cursor:default;opacity:.4" title="준비 중"></div>'
+              : '<div class="rm-check ' + (s.done ? 'on' : '') + '" data-toggle="' + esc(s.id) + '" data-done="' + (s.done ? '1' : '0') + '">' + (s.done ? '✓' : '') + '</div>')
           + '<div class="rm-main"><div class="rm-title ' + (s.done ? 'done' : '') + '">' + esc(s.title)
           + '<span class="rm-tag ' + s.tag + '">' + esc(TAG_LABELS[s.tag] || s.tag) + '</span></div>'
           + '<div class="rm-cmt">' + esc(s.comment) + '</div>'
