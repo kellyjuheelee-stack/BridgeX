@@ -7,7 +7,7 @@
 const CLAIM_RULES = [
   { key: 'medicinal', category: '의약품·치료 뉘앙스',
     terms: ['치료', '치유', '여드름 치료', '염증', '항염', '재생', '콜라겐 생성', '상처', '흉터',
-      'cure', 'cures', 'heal', 'heals', 'treats', 'treatment', 'anti-inflammatory', 'wound'],
+      'cures', 'heals', 'healing', 'treats', 'treatment', 'anti-inflammatory', 'wound'],
     why: '치료·의학 효능 뉘앙스는 화장품이 아닌 의약품으로 분류될 소지가 있어 업계에서 자주 지적됩니다.',
     hint: '"관리에 도움", "결에 도움" 등 비의학적 표현으로 검토해보세요.' },
   { key: 'antibacterial', category: '항균·살균',
@@ -61,7 +61,11 @@ function auditText(text) {
       if (lower.includes(term.toLowerCase())) matched.push(term);
     }
     if (matched.length) {
-      findings.push({ key: rule.key, category: rule.category, matched, why: rule.why, hint: rule.hint });
+      // 겹치는 표현 정리: 더 긴 매칭에 포함되는 짧은 표현은 제거 (예: '여드름 치료'가 있으면 '치료' 제거)
+      const deduped = matched.filter(
+        (t) => !matched.some((o) => o !== t && o.toLowerCase().includes(t.toLowerCase()))
+      );
+      findings.push({ key: rule.key, category: rule.category, matched: deduped, why: rule.why, hint: rule.hint });
     }
   }
 
