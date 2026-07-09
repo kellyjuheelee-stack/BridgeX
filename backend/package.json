@@ -10,7 +10,9 @@
     "generate": "prisma generate",
     "migrate": "prisma migrate dev --name init",
     "studio": "prisma studio",
-    "smoke": "node tests/smoke.mjs"
+    "smoke": "node tests/smoke.mjs",
+    "test:roadmap": "node --test tests/roadmap.test.mjs",
+    "smoke:roadmap": "node tests/roadmap.smoke.mjs"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
