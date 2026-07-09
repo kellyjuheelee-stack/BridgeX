@@ -171,15 +171,22 @@ async function linkOrphanDiagnosis(diagnosisId, memberId) {
 }
 
 // 상담 신청 (훅 → 컨설팅 전환). 상태를 consulting_needed 로 전이.
-async function requestConsultation(id) {
-  const exists = await prisma.exportDiagnosisRequest.findUnique({ where: { id }, select: { id: true } });
+// stepContext: 로드맵 단계에서 진입 시 그 단계명 (관리자 메모에 기록)
+async function requestConsultation(id, stepContext = null) {
+  const exists = await prisma.exportDiagnosisRequest.findUnique({
+    where: { id },
+    select: { id: true, adminMemo: true },
+  });
   if (!exists) return null;
+  const memoAddition = stepContext ? `[로드맵] '${String(stepContext).trim()}' 단계에서 상담 신청` : null;
+  const adminMemo = memoAddition ? [exists.adminMemo, memoAddition].filter(Boolean).join('\n') : undefined;
   return prisma.exportDiagnosisRequest.update({
     where: { id },
     data: {
       consultationRequested: true,
       consultationRequestedAt: new Date(),
       diagnosisStatus: 'consulting_needed',
+      ...(adminMemo !== undefined ? { adminMemo } : {}),
     },
     select: { id: true, diagnosisStatus: true, consultationRequested: true },
   });

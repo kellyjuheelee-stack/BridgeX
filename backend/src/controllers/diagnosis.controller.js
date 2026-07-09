@@ -175,7 +175,7 @@ async function removeMeeting(req, res, next) {
 // POST /api/export-diagnosis/:id/request-consultation — 상담 신청 (공개, 훅 → 전환)
 async function requestConsultation(req, res, next) {
   try {
-    const updated = await diagnosisService.requestConsultation(req.params.id);
+    const updated = await diagnosisService.requestConsultation(req.params.id, (req.body && req.body.stepContext) || null);
     if (!updated) throw new ApiError(404, '해당 진단 요청을 찾을 수 없습니다.');
 
     // 관리자에게 핫리드 알림 + 신청자 확인 (비동기)

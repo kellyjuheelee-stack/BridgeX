@@ -59,6 +59,9 @@ async function run() {
   const bad = await json('POST', '/api/members/me/roadmap/steps/nope/toggle', { done: true }, token);
   check('잘못된 stepId → 400', bad.status === 400, `(got ${bad.status})`);
 
+  const consult = await json('POST', `/api/export-diagnosis/${diag.data.data.id}/request-consultation`, { stepContext: 'CPNP 사전 등록' });
+  check('단계맥락 상담신청 → consulting_needed', consult.status === 200 && consult.data.data.diagnosisStatus === 'consulting_needed', `(got ${consult.status})`);
+
   const noauth = await json('GET', '/api/members/me/roadmap');
   check('토큰 없음 → 401', noauth.status === 401, `(got ${noauth.status})`);
 
