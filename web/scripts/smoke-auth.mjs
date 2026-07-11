@@ -22,18 +22,21 @@ if (!url || !anon || !service) {
 
 const anonClient = createClient(url, anon);
 const svc = createClient(url, service, { auth: { persistSession: false } });
-const email = `smoke+${Date.now()}@bridgex.test`;
+// Supabase Auth 는 예약 TLD(.test 등)를 거부하므로 검증을 통과하는 도메인을 쓴다.
+const email = `smoke+${Date.now()}@example.com`;
 const password = "smoke-pass-123";
 let ok = true;
 const check = (name, cond) => { console.log(`${cond ? "✓" : "✗"} ${name}`); if (!cond) ok = false; };
 
-// 1) 회원가입 → auth 유저 + 트리거로 profiles 생성
-const { data: signUp, error: suErr } = await anonClient.auth.signUp({
-  email, password,
-  options: { data: { name: "스모크", company_name: "테스트상사", phone: "01000000000" } },
+// 1) 유저 생성 → auth 유저 + 트리거로 profiles 생성
+//    anon signUp 은 Confirm email ON 시 확인 메일을 발송해 내장 SMTP rate limit(429)에 걸린다.
+//    스모크는 메일 발송 없이 서비스롤 admin.createUser 로 만든다(트리거는 동일하게 발화).
+const { data: created, error: suErr } = await svc.auth.admin.createUser({
+  email, password, email_confirm: true,
+  user_metadata: { name: "스모크", company_name: "테스트상사", phone: "01000000000" },
 });
-check("회원가입 성공", !suErr && !!signUp.user);
-const uid = signUp.user?.id;
+check("회원가입 성공", !suErr && !!created.user);
+const uid = created.user?.id;
 
 // 2) 트리거가 profiles 행을 만들었는지 (서비스 롤로 조회)
 const { data: prof } = await svc.from("profiles").select("*").eq("id", uid).single();
@@ -41,14 +44,15 @@ check("가입 트리거가 profiles 생성", !!prof);
 check("profiles.name 매핑", prof?.name === "스모크");
 check("기본 is_admin=false", prof?.is_admin === false);
 
-// 3) 로그인
+// 3) 로그인 (이메일 확인 완료 상태이므로 Confirm email 설정과 무관하게 성공해야 함)
 const { data: signIn, error: siErr } = await anonClient.auth.signInWithPassword({ email, password });
 check("로그인 성공", !siErr && !!signIn.session);
 
 // 4) RLS: 익명(로그인 안 한) 클라이언트는 남의 profiles 를 못 봄
 const anon2 = createClient(url, anon);
-const { data: leaked } = await anon2.from("profiles").select("*").eq("id", uid);
-check("RLS: 비로그인은 profiles 조회 0건", Array.isArray(leaked) && leaked.length === 0);
+const { data: leaked, error: leakErr } = await anon2.from("profiles").select("*").eq("id", uid);
+// anon 은 테이블 GRANT 가 없어 permission denied, 또는 RLS 로 0건 — 둘 다 "못 읽음"으로 통과
+check("비로그인은 profiles 못 읽음 (권한거부 또는 0건)", !!leakErr || (Array.isArray(leaked) && leaked.length === 0));
 
 // 5) is_admin 승격 → resolveAccess 관리자 판정 시나리오
 await svc.from("profiles").update({ is_admin: true }).eq("id", uid);

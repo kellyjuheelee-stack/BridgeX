@@ -1,3 +1,9 @@
+# secrets — never commit
+.env
+.env.*
+!.env.example
+.mcp.json
+
 # tooling / scratch
 .claude/
 .superpowers/

@@ -67,11 +67,12 @@ check("checklist_answers.euRp 지속", got?.checklist_answers?.euRp === true);
 // 3) RLS: 익명 클라이언트는 이 행을 못 읽음 (anon key 있을 때만 검사)
 if (anon) {
   const anonClient = createClient(url, anon);
-  const { data: leaked } = await anonClient
+  const { data: leaked, error: leakErr } = await anonClient
     .from("export_diagnosis_requests")
     .select("id")
     .eq("id", data.id);
-  check("RLS: 익명은 진단행 조회 0건", Array.isArray(leaked) && leaked.length === 0);
+  // anon 은 테이블 GRANT 가 없어 permission denied, 또는 RLS 로 0건 — 둘 다 "못 읽음"으로 통과
+  check("익명은 진단행 못 읽음 (권한거부 또는 0건)", !!leakErr || (Array.isArray(leaked) && leaked.length === 0));
 } else {
   console.log("· anon key 없음 — RLS 검사 건너뜀");
 }
