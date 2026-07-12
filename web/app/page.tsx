@@ -261,6 +261,25 @@ export default async function Home() {
               </div>
             ))}
           </div>
+
+          {/* deal video banner */}
+          <div className={styles.dealVideo}>
+            <video
+              src="/assets/handshake-deal.mp4"
+              poster="/assets/handshake-deal-poster.jpg"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+            />
+            <div className={styles.dealOverlay}>
+              <div className={styles.dealCap}>
+                <div className={styles.dealCapEyebrow}>The Goal</div>
+                <h3>우리의 목표는 하나입니다.</h3>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
