@@ -1,6 +1,7 @@
 // web/app/page.tsx — 랜딩 (index.html 포팅)
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/auth/actions";
+import LandingEffects from "./LandingEffects";
 import styles from "./landing.module.css";
 
 export const dynamic = "force-dynamic";
@@ -19,8 +20,9 @@ export default async function Home() {
 
   return (
     <div className={styles.page} id="top">
+      <LandingEffects />
       {/* NAV */}
-      <nav className={styles.nav}>
+      <nav className={styles.nav} id="bx-nav">
         <a href="#top" className={styles.navLogo}>
           Bridge<span>X</span>
         </a>
@@ -51,21 +53,23 @@ export default async function Home() {
 
       {/* HERO */}
       <header className={styles.hero}>
-        <div className={styles.badge}>
+        <div className={styles.badge} data-fade>
           <span className={styles.dot}></span> AI + Human 하이브리드 수출 대행
         </div>
-        <h1>
+        <h1 data-fade>
           화장품 해외 수출,
           <br />
           이제 <span>BridgeX</span>가 끝냅니다.
         </h1>
-        <p className={styles.heroSub}>대표님은 제품에만 집중하십시오.</p>
-        <div className={styles.heroCtaRow}>
+        <p className={styles.heroSub} data-fade>
+          대표님은 제품에만 집중하십시오.
+        </p>
+        <div className={styles.heroCtaRow} data-fade>
           <a href="/diagnose" className={styles.btnLg}>
             우리 브랜드 수출 가능성 진단하기 →
           </a>
         </div>
-        <div className={styles.stats}>
+        <div className={styles.stats} data-fade>
           <div className={styles.stat}>
             <div className={styles.statNum}>3개월</div>
             <div className={styles.statLabel}>첫 계약 테이블까지</div>
@@ -86,7 +90,7 @@ export default async function Home() {
       {/* PROBLEM */}
       <section className={`${styles.section} ${styles.alt}`}>
         <div className={styles.wrap}>
-          <div className={styles.secHead}>
+          <div className={styles.secHead} data-fade>
             <div className={`${styles.eyebrow} ${styles.eyebrowGray}`}>THE PROBLEM</div>
             <h2 className={styles.secTitle}>
               바이어를 만나도
@@ -94,7 +98,7 @@ export default async function Home() {
               계약까지 못 가는 이유
             </h2>
           </div>
-          <div className={`${styles.grid} ${styles.grid3}`}>
+          <div className={`${styles.grid} ${styles.grid3}`} data-fade>
             <div className={`${styles.card} ${styles.lift}`}>
               <div className={styles.painIco}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6e6e73" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -135,11 +139,11 @@ export default async function Home() {
       {/* HOW IT WORKS */}
       <section className={styles.section} id="how">
         <div className={styles.wrap}>
-          <div className={styles.secHead} style={{ marginBottom: 24 }}>
+          <div className={styles.secHead} style={{ marginBottom: 24 }} data-fade>
             <div className={`${styles.eyebrow} ${styles.eyebrowBlue}`}>HOW IT WORKS</div>
             <h2 className={styles.secTitle}>AI가 실행을, 전문가가 협상을.</h2>
           </div>
-          <div className={styles.howLegend}>
+          <div className={styles.howLegend} data-fade>
             <div className={styles.legendItem}>
               <span className={styles.legendSw} style={{ background: "#0071e3" }}></span>AI 자동화
             </div>
@@ -147,7 +151,7 @@ export default async function Home() {
               <span className={styles.legendSw} style={{ background: "#1d1d1f" }}></span>전문가 직접 개입
             </div>
           </div>
-          <div className={`${styles.grid} ${styles.grid6}`}>
+          <div className={`${styles.grid} ${styles.grid6}`} data-fade>
             {[
               { n: "STEP 1", human: true, t: "바이어 발굴", d: "국가별 바이어 DB 자동 매칭." },
               { n: "STEP 2", human: false, t: "시장·규제 진단", d: "EU 화장품 규제(CPNP) 자동 체크." },
@@ -174,11 +178,11 @@ export default async function Home() {
       {/* COMPARISON */}
       <section className={`${styles.section} ${styles.alt}`}>
         <div className={styles.cmpWrap}>
-          <div className={styles.secHead} style={{ marginBottom: 48 }}>
+          <div className={styles.secHead} style={{ marginBottom: 48 }} data-fade>
             <div className={`${styles.eyebrow} ${styles.eyebrowBlue}`}>COMPARISON</div>
             <h2 className={styles.secTitle}>지금 혼자 할 때 vs BridgeX</h2>
           </div>
-          <div className={styles.cmp}>
+          <div className={styles.cmp} data-fade>
             <div className={`${styles.cmpRow} ${styles.cmpHead}`}>
               <div className={styles.cLabel}></div>
               <div className={styles.cSolo}>혼자 할 때</div>
@@ -205,11 +209,11 @@ export default async function Home() {
       {/* BEFORE / AFTER */}
       <section className={styles.section}>
         <div className={styles.baWrap}>
-          <div className={styles.secHead} style={{ marginBottom: 48 }}>
+          <div className={styles.secHead} style={{ marginBottom: 48 }} data-fade>
             <div className={`${styles.eyebrow} ${styles.eyebrowBlue}`}>BEFORE / AFTER</div>
             <h2 className={styles.secTitle}>3개월 전과 후</h2>
           </div>
-          <div className={styles.baRow}>
+          <div className={styles.baRow} data-fade>
             <div className={`${styles.baCard} ${styles.baBefore}`}>
               <div className={styles.baLabel}>지금 · 혼자</div>
               <div className={styles.baList}>
@@ -240,11 +244,11 @@ export default async function Home() {
       {/* VALUES */}
       <section className={`${styles.section} ${styles.alt}`}>
         <div className={styles.wrap}>
-          <div className={styles.secHead}>
+          <div className={styles.secHead} data-fade>
             <div className={`${styles.eyebrow} ${styles.eyebrowBlue}`}>OUR PRINCIPLES</div>
             <h2 className={styles.secTitle}>타협하지 않는 3원칙</h2>
           </div>
-          <div className={`${styles.grid} ${styles.grid6}`}>
+          <div className={`${styles.grid} ${styles.grid6}`} data-fade>
             {[
               { n: "01", t: "실행 가능성", p: "지금 바로 보낼 이메일 한 통.", proof: "즉시 쓰는 실무 산출물" },
               { n: "02", t: "소규모 접근성", p: "1인 브랜드도 가능한 실행형 구조.", proof: "고액 컨설팅비 없이 시작" },
@@ -263,7 +267,7 @@ export default async function Home() {
           </div>
 
           {/* deal video banner */}
-          <div className={styles.dealVideo}>
+          <div className={styles.dealVideo} data-fade>
             <video
               src="/assets/handshake-deal.mp4"
               poster="/assets/handshake-deal-poster.jpg"
@@ -276,7 +280,7 @@ export default async function Home() {
             <div className={styles.dealOverlay}>
               <div className={styles.dealCap}>
                 <div className={styles.dealCapEyebrow}>The Goal</div>
-                <h3>우리의 목표는 하나입니다.</h3>
+                <h3 data-goal-line>우리의 목표는 하나입니다.</h3>
               </div>
             </div>
           </div>
@@ -285,7 +289,7 @@ export default async function Home() {
 
       {/* CTA */}
       <section className={styles.section} id="cta">
-        <div className={styles.ctaCard}>
+        <div className={styles.ctaCard} data-fade>
           <h2>
             해외 수출, 이제 혼자
             <br />
