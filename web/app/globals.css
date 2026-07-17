@@ -1,0 +1,19 @@
+/* 전역 베이스 리셋 — 브라우저 기본 body 여백 제거 + box-sizing 통일.
+   이게 없으면 body 기본 margin(8px) 때문에 min-height:100dvh 페이지가
+   화면보다 커져 스크롤바가 생기고 중앙 정렬이 어긋난다. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
