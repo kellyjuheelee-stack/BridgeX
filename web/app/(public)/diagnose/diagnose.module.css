@@ -25,6 +25,46 @@
   letter-spacing: -0.6px;
   margin: 0 0 6px;
 }
+
+/* 헤더: 제목 + 예제입력 버튼 가로 배치 */
+.pageHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 6px;
+}
+.pageHead .pageTitle {
+  margin: 0;
+}
+
+/* 예제입력 = 보조 액션(고스트 필). 제출 blue pill과 위계 구분 */
+.exampleBtn {
+  flex: 0 0 auto;
+  height: 38px;
+  padding: 0 16px;
+  border: 1px solid var(--blue);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+.exampleBtn:hover {
+  background: rgba(0, 102, 204, 0.06);
+}
+.exampleBtn:active {
+  transform: scale(0.96);
+}
+
+@media (max-width: 560px) {
+  .pageHead {
+    flex-wrap: wrap;
+  }
+}
 .pageSub {
   font-size: 15px;
   color: var(--muted);

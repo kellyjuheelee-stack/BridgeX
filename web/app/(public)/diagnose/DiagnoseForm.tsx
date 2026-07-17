@@ -1,14 +1,18 @@
 // web/app/(public)/diagnose/DiagnoseForm.tsx
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   CHECKLIST_GROUPS,
   PRODUCT_CATEGORIES,
   TARGET_COUNTRIES,
 } from "@/lib/constants/diagnosisChecklist";
 import { submitDiagnosis } from "./actions";
+import { DIAGNOSE_EXAMPLES } from "./exampleData";
 import styles from "./diagnose.module.css";
+
+// 모든 체크리스트 키(19개)를 단일 출처에서 도출 — 키 목록 중복 정의 금지
+const ALL_CHECK_KEYS = CHECKLIST_GROUPS.flatMap((g) => g.items.map((i) => i.key));
 
 interface Prefill {
   contactName: string;
@@ -21,6 +25,56 @@ export default function DiagnoseForm({ prefill, isMember }: { prefill: Prefill; 
   const [consent, setConsent] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+  const lastIdxRef = useRef(-1); // 직전 세트 인덱스(연속 중복 방지)
+
+  function fillExample() {
+    const form = formRef.current;
+    if (!form) return;
+
+    // 1) 직전과 다른 랜덤 인덱스
+    let idx = Math.floor(Math.random() * DIAGNOSE_EXAMPLES.length);
+    if (DIAGNOSE_EXAMPLES.length > 1) {
+      while (idx === lastIdxRef.current) {
+        idx = Math.floor(Math.random() * DIAGNOSE_EXAMPLES.length);
+      }
+    }
+    lastIdxRef.current = idx;
+    const ex = DIAGNOSE_EXAMPLES[idx];
+
+    // 2) 텍스트/셀렉트 필드
+    const setVal = (name: string, value: string) => {
+      const el = form.elements.namedItem(name) as
+        | HTMLInputElement
+        | HTMLSelectElement
+        | null;
+      if (el && "value" in el) el.value = value;
+    };
+    setVal("contactName", ex.contactName);
+    setVal("companyName", ex.companyName);
+    setVal("email", ex.email);
+    setVal("phone", ex.phone);
+    setVal("homepageUrl", ex.homepageUrl ?? "");
+    setVal("smartStoreUrl", ex.smartStoreUrl ?? "");
+    setVal("instagramUrl", ex.instagramUrl ?? "");
+    setVal("productName", ex.productName);
+    setVal("productCategory", ex.productCategory);
+
+    // 3) 목표 국가 (같은 name의 체크박스 그룹)
+    form
+      .querySelectorAll<HTMLInputElement>('input[name="targetCountries"]')
+      .forEach((cb) => {
+        cb.checked = ex.targetCountries.includes(cb.value);
+      });
+
+    // 4) 체크리스트 19개 — 세트에 없는 키는 false로 해제
+    ALL_CHECK_KEYS.forEach((key) => {
+      const cb = form.elements.namedItem(key) as HTMLInputElement | null;
+      if (cb) cb.checked = !!ex.checks[key];
+    });
+
+    // 동의 체크박스는 의도적으로 건드리지 않음 (게이트 의미 유지)
+  }
 
   async function handleSubmit(formData: FormData) {
     setError("");
@@ -36,8 +90,13 @@ export default function DiagnoseForm({ prefill, isMember }: { prefill: Prefill; 
 
   return (
     <div className={styles.page}>
-      <form action={handleSubmit} className={styles.form}>
-        <h1 className={styles.pageTitle}>수출 준비도 진단</h1>
+      <form action={handleSubmit} className={styles.form} ref={formRef}>
+        <div className={styles.pageHead}>
+          <h1 className={styles.pageTitle}>수출 준비도 진단</h1>
+          <button type="button" className={styles.exampleBtn} onClick={fillExample}>
+            예제입력
+          </button>
+        </div>
         <p className={styles.pageSub}>
           우리 브랜드의 EU 수출 준비 상태를 항목별로 진단해 드립니다. 해당되는 정보를 입력해 주세요.
         </p>
