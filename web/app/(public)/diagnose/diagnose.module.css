@@ -1,0 +1,231 @@
+/* 수출 준비도 진단 폼 — 카드형 섹션 + 플로팅 라벨 + 선택 카드 그리드.
+   구조는 참조 이미지, 색상/타이포는 design.md (단일 blue 액센트). */
+.page {
+  --blue: #0066cc;
+  --blue-focus: #0071e3;
+  --ink: #1d1d1f;
+  --muted: #6e6e73;
+  --hairline: #e0e0e0;
+  --parchment: #f5f5f7;
+  min-height: 100dvh;
+  padding: 48px 20px 80px;
+  background: var(--parchment);
+  color: var(--ink);
+  font-family: "Inter", "Noto Sans KR", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  word-break: keep-all;
+}
+.form {
+  max-width: 720px;
+  margin: 0 auto;
+}
+.pageTitle {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  margin: 0 0 6px;
+}
+.pageSub {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0 0 28px;
+}
+
+/* 섹션 카드 */
+.card {
+  background: #fff;
+  border: 1px solid var(--hairline);
+  border-radius: 18px;
+  padding: 26px 24px;
+  margin-bottom: 18px;
+}
+.cardHead {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin: 0 0 4px;
+}
+.cardNote {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0 0 16px;
+}
+.cardHead + .grid,
+.cardHead + .optionGrid {
+  margin-top: 18px;
+}
+
+/* 입력 그리드 */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.colspan {
+  grid-column: 1 / -1;
+}
+
+/* 플로팅 라벨 필드 */
+.field {
+  position: relative;
+  border: 1px solid var(--hairline);
+  border-radius: 11px;
+  padding: 8px 14px 7px;
+  background: #fff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.field:focus-within {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.12);
+}
+.floatLabel {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+  color: var(--muted);
+  margin-bottom: 1px;
+}
+.floatInput,
+.floatSelect {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--ink);
+  padding: 0;
+}
+.floatSelect {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%236e6e73' stroke-width='1.5' d='M1 1.5 6 6.5 11 1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 2px center;
+  padding-right: 20px;
+}
+.floatInput::placeholder {
+  color: #b0b0b5;
+}
+
+/* 선택 카드 그리드 (목표 국가 · 준비도 체크리스트) */
+.optionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+.optionGridWide {
+  grid-template-columns: 1fr;
+}
+.optionCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  border: 1px solid var(--hairline);
+  border-radius: 11px;
+  padding: 13px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--ink);
+  transition: border-color 0.15s, background 0.15s;
+}
+.optionCard:has(input:checked) {
+  border-color: var(--blue);
+  background: rgba(0, 102, 204, 0.05);
+}
+.optionCard input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex: 0 0 auto;
+  accent-color: var(--blue);
+  cursor: pointer;
+}
+
+/* 동의 게이트 */
+.consentBox {
+  margin: 4px 0 22px;
+  padding: 15px 17px;
+  background: rgba(0, 102, 204, 0.04);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+}
+.consentCheck {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  line-height: 1.45;
+}
+.consentCheck input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 1px 0 0;
+  flex: 0 0 auto;
+  accent-color: var(--blue);
+  cursor: pointer;
+}
+.req {
+  color: var(--blue);
+}
+.consentText {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 8px 0 0;
+}
+.consentText a {
+  color: var(--blue);
+  font-weight: 600;
+  text-decoration: underline;
+}
+.err {
+  color: #d64545;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+/* 제출 버튼 (blue pill) */
+.submit {
+  width: 100%;
+  height: 52px;
+  border: none;
+  border-radius: 999px;
+  background: var(--blue-focus);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 102, 204, 0.3);
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+}
+.submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(0, 102, 204, 0.38);
+}
+.submit:active:not(:disabled) {
+  transform: scale(0.98);
+}
+.submit:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .optionGrid {
+    grid-template-columns: 1fr;
+  }
+}
