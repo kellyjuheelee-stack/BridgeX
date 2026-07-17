@@ -137,7 +137,7 @@
 }
 .hero h1 {
   font-size: clamp(34px, 6vw, 60px);
-  line-height: 1.12;
+  line-height: 1.2;
   letter-spacing: -1.2px;
   font-weight: 800;
   margin-bottom: 24px;
@@ -146,13 +146,14 @@
 .hero h1 span {
   color: var(--blue);
 }
-.heroSub {
+.hero .heroSub {
   font-size: clamp(17px, 2.2vw, 21px);
   line-height: 1.7;
   color: var(--ink);
   font-weight: 500;
   max-width: 620px;
   margin: 0 auto 40px;
+  text-align: center;
 }
 .btnLg {
   display: inline-flex;
