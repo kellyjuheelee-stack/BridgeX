@@ -25,12 +25,16 @@ export default function DiagnoseForm({ prefill, isMember }: { prefill: Prefill; 
   const [consent, setConsent] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  // 예제입력으로 채운 상태인지 — 예시 데이터는 실제 개인정보가 아니므로 동의 게이트를 건너뛴다.
+  const [exampleLoaded, setExampleLoaded] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const lastIdxRef = useRef(-1); // 직전 세트 인덱스(연속 중복 방지)
 
   function fillExample() {
     const form = formRef.current;
     if (!form) return;
+    setExampleLoaded(true);
+    setError("");
 
     // 1) 직전과 다른 랜덤 인덱스
     let idx = Math.floor(Math.random() * DIAGNOSE_EXAMPLES.length);
@@ -78,7 +82,8 @@ export default function DiagnoseForm({ prefill, isMember }: { prefill: Prefill; 
 
   async function handleSubmit(formData: FormData) {
     setError("");
-    if (!consent) {
+    // 예제입력으로 채운 경우 실제 개인정보가 아니므로 동의 없이도 진단을 진행한다.
+    if (!consent && !exampleLoaded) {
       setError("개인정보 수집 및 이용에 동의해주세요.");
       return;
     }
