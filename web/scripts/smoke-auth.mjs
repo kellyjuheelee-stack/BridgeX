@@ -54,6 +54,15 @@ const { data: leaked, error: leakErr } = await anon2.from("profiles").select("*"
 // anon 은 테이블 GRANT 가 없어 permission denied, 또는 RLS 로 0건 — 둘 다 "못 읽음"으로 통과
 check("비로그인은 profiles 못 읽음 (권한거부 또는 0건)", !!leakErr || (Array.isArray(leaked) && leaked.length === 0));
 
+// 4b) 온보딩 컬럼 존재 + 신규 가입은 온보딩 미완료(onboarded_at null)
+const { data: onbCols, error: onbErr } = await svc
+  .from("profiles")
+  .select("onboarded_at, consent_agreed_at")
+  .eq("id", uid)
+  .single();
+check("profiles 온보딩 컬럼 조회 가능", !onbErr && onbCols !== null);
+check("신규 admin.createUser 는 온보딩 미완료(null)", onbCols?.onboarded_at == null);
+
 // 5) is_admin 승격 → resolveAccess 관리자 판정 시나리오
 await svc.from("profiles").update({ is_admin: true }).eq("id", uid);
 const { data: promoted } = await svc.from("profiles").select("is_admin").eq("id", uid).single();
