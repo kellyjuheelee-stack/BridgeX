@@ -55,8 +55,7 @@ export default async function Home() {
       <header className={styles.hero}>
         <video
           className={styles.heroVideo}
-          src="/assets/handshake-deal.mp4"
-          poster="/assets/handshake-deal-poster.jpg"
+          src="/assets/hero-bg.mp4"
           autoPlay
           muted
           loop
