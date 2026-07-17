@@ -44,7 +44,8 @@ export default function SignupForm({ serverError }: { serverError?: string }) {
   }
 
   return (
-    <form action={handleSubmit} className={styles.form}>
+    <>
+      <form action={handleSubmit} className={styles.form}>
       <h1 className={styles.h}>회원가입</h1>
       <p className={styles.sub}>간단히 가입하고 내 수출 진행 상황을 관리하세요.</p>
 
@@ -114,6 +115,7 @@ export default function SignupForm({ serverError }: { serverError?: string }) {
       <button type="submit" className={styles.btn} disabled={submitting}>
         {submitting ? "가입 중…" : "가입하기"}
       </button>
+      </form>
 
       <div className={styles.divider}>또는</div>
 
@@ -132,6 +134,6 @@ export default function SignupForm({ serverError }: { serverError?: string }) {
       <div className={styles.switch}>
         이미 회원이신가요? <a href="/login">로그인</a>
       </div>
-    </form>
+    </>
   );
 }

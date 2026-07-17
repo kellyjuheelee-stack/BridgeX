@@ -22,7 +22,8 @@ export default function LoginForm({ serverError }: { serverError?: string }) {
   }
 
   return (
-    <form action={handleSubmit} className={styles.form}>
+    <>
+      <form action={handleSubmit} className={styles.form}>
       <h1 className={styles.h}>로그인</h1>
       <p className={styles.sub}>가입하신 이메일과 비밀번호로 로그인하세요.</p>
 
@@ -49,6 +50,7 @@ export default function LoginForm({ serverError }: { serverError?: string }) {
       <button type="submit" className={styles.btn} disabled={submitting}>
         {submitting ? "로그인 중…" : "로그인"}
       </button>
+      </form>
 
       <div className={styles.divider}>또는</div>
 
@@ -67,6 +69,6 @@ export default function LoginForm({ serverError }: { serverError?: string }) {
       <div className={styles.switch}>
         아직 회원이 아니신가요? <a href="/signup">회원가입</a>
       </div>
-    </form>
+    </>
   );
 }
