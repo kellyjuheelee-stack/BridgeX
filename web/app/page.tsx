@@ -30,7 +30,7 @@ export default async function Home() {
           {user ? (
             <>
               <a href="/mypage" className={styles.navCta}>
-                내 페이지
+                마이페이지
               </a>
               <form action={signOut}>
                 <button type="submit" className={styles.navLinkBtn}>

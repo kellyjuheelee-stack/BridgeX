@@ -41,7 +41,8 @@ export async function signUp(formData: FormData) {
 
   // Confirm email 이 켜져 있으면 세션이 아직 없다 → 확인 메일 안내 화면으로.
   if (!data.session) redirect("/signup?sent=1");
-  redirect("/mypage");
+  // 로그인 직후 자동으로 마이페이지에 들어가지 않고 홈으로 — 사용자가 메뉴로 진입.
+  redirect("/");
 }
 
 export async function signIn(formData: FormData) {
@@ -51,12 +52,14 @@ export async function signIn(formData: FormData) {
     password: String(formData.get("password")),
   });
   if (error) redirect(`/login?error=${encodeURIComponent(error.message)}`);
-  redirect("/mypage");
+  // 로그인 직후 홈으로 — 사용자가 마이페이지 메뉴로 직접 진입.
+  redirect("/");
 }
 
 export async function signOut() {
   const supabase = await createClient();
-  await supabase.auth.signOut();
+  // 세션·쿠키를 전역 범위로 완전히 폐기한다.
+  await supabase.auth.signOut({ scope: "global" });
   redirect("/login");
 }
 
@@ -69,7 +72,11 @@ export async function signInWithGoogle() {
   const origin = host ? `${proto}://${host}` : "";
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
-    options: { redirectTo: `${origin}/auth/callback` },
+    options: {
+      redirectTo: `${origin}/auth/callback`,
+      // 로그아웃 후 다시 로그인할 때 자동 재로그인 대신 계정 선택창을 강제한다.
+      queryParams: { prompt: "select_account" },
+    },
   });
   if (error || !data?.url) {
     redirect(

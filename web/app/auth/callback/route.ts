@@ -43,6 +43,7 @@ export async function GET(request: NextRequest) {
     .eq("id", user.id)
     .single();
 
-  const dest = isOnboarded(profile) ? "/mypage" : "/onboarding";
+  // 온보딩 완료자는 홈으로(마이페이지 메뉴로 직접 진입), 미완료자는 온보딩으로.
+  const dest = isOnboarded(profile) ? "/" : "/onboarding";
   return NextResponse.redirect(`${origin}${dest}`);
 }

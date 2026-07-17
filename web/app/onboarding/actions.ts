@@ -39,5 +39,6 @@ export async function completeOnboarding(formData: FormData) {
   if (error) {
     redirect(`/onboarding?error=${encodeURIComponent(error.message)}`);
   }
-  redirect("/mypage");
+  // 온보딩 완료 후 홈으로 — 사용자가 마이페이지 메뉴로 진입.
+  redirect("/");
 }
