@@ -1,6 +1,7 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isOnboarded } from "@/lib/auth/onboarding";
+import { createServiceClient } from "@/lib/supabase/service";
 
 type CookieToSet = { name: string; value: string; options: CookieOptions };
 
@@ -52,9 +53,13 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // 온보딩 게이트: 로그인했지만 미온보딩이고 보호 경로면 /onboarding 으로
+  // profiles 조회는 서비스 클라이언트로 한다. authenticated 롤에는 이 프로젝트에서
+  // 테이블 GRANT가 없어(전 조회를 service client로 수행하는 설계), SSR 클라이언트로
+  // 읽으면 권한 거부→null→미온보딩 오판→/mypage↔/onboarding 무한 루프가 난다.
   const { pathname } = request.nextUrl;
   if (user && !isExempt(pathname)) {
-    const { data: profile } = await supabase
+    const svc = createServiceClient();
+    const { data: profile } = await svc
       .from("profiles")
       .select("onboarded_at")
       .eq("id", user.id)
