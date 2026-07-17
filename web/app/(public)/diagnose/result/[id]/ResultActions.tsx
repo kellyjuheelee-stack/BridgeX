@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { requestConsultation, signUpAndLink } from "../../actions";
+import styles from "./result.module.css";
 
 interface Prefill {
   email: string;
@@ -26,18 +27,23 @@ export default function ResultActions({
   const [error, setError] = useState("");
 
   return (
-    <section style={{ marginTop: 32 }}>
-      <div style={{ padding: 16, background: "rgba(0,102,204,0.06)", borderRadius: 12 }}>
-        <p>{pitch}</p>
-        <form action={requestConsultation.bind(null, diagnosisId)}>
-          <button type="submit">무료 상담 신청</button>
+    <div>
+      <div className={`${styles.card} ${styles.ctaCard}`}>
+        <h3 className={styles.ctaTitle}>전문가와 함께, 계약 테이블까지.</h3>
+        <p className={styles.ctaText}>{pitch}</p>
+        <form className={styles.ctaForm} action={requestConsultation.bind(null, diagnosisId)}>
+          <button type="submit" className={styles.btn}>
+            무료 상담 신청 →
+          </button>
         </form>
+        <p className={styles.basicNote}>30분 무료 상담 · K뷰티 EU 수출 특화</p>
       </div>
 
       {showSignup && (
-        <div style={{ marginTop: 24 }}>
-          <h3>이 결과를 내 페이지에 저장하세요.</h3>
+        <div className={`${styles.card} ${styles.signupCard}`}>
+          <h3 className={styles.signupTitle}>이 결과를 내 페이지에 저장하세요.</h3>
           <form
+            className={styles.signupForm}
             action={(fd) => {
               setError("");
               if (!consent) {
@@ -52,20 +58,32 @@ export default function ResultActions({
             <input type="hidden" name="contactName" value={prefill.contactName} />
             <input type="hidden" name="companyName" value={prefill.companyName} />
             <input type="hidden" name="phone" value={prefill.phone} />
-            <input name="password" type="password" placeholder="비밀번호 (8자 이상)" minLength={8} required />
-            <label style={{ display: "flex", gap: 9, marginTop: 12, fontWeight: 600 }}>
+            <div className={styles.field}>
+              <label className={styles.floatLabel}>비밀번호 (8자 이상)</label>
+              <input className={styles.floatInput} name="password" type="password" minLength={8} required />
+            </div>
+            <label className={styles.consentRow}>
               <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
               개인정보 수집 및 이용에 동의합니다. *
             </label>
-            <p style={{ fontSize: 12.5, color: "#6e6e73", marginTop: 8 }}>
-              가입 시 BridgeX의 <a href="/terms" target="_blank" rel="noopener">이용약관</a> 및{" "}
-              <a href="/privacy" target="_blank" rel="noopener">개인정보처리방침</a>에 동의하게 됩니다.
+            <p className={styles.consentText}>
+              가입 시 BridgeX의{" "}
+              <a href="/terms" target="_blank" rel="noopener">
+                이용약관
+              </a>{" "}
+              및{" "}
+              <a href="/privacy" target="_blank" rel="noopener">
+                개인정보처리방침
+              </a>
+              에 동의하게 됩니다.
             </p>
-            {error && <p style={{ color: "#d64545", fontWeight: 600 }}>{error}</p>}
-            <button type="submit">가입하고 결과 저장</button>
+            {error && <p className={styles.err}>{error}</p>}
+            <button type="submit" className={styles.btn}>
+              가입하고 결과 저장
+            </button>
           </form>
         </div>
       )}
-    </section>
+    </div>
   );
 }

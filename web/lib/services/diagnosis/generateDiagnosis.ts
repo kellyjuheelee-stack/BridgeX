@@ -3,8 +3,8 @@
 // 입력만 ChecklistAnswers 로 개편. 향후 LLM 교체 지점은 comment/summary/pitch 문구뿐.
 import type { ChecklistAnswers, DiagnosisResult, Priority } from "./types";
 
-// EU 필수 7요건: 체크 키 → 화면 표기 라벨
-const EU_ITEMS: { key: keyof ChecklistAnswers; label: string }[] = [
+// EU 필수 7요건: 체크 키 → 화면 표기 라벨 (결과 시각화와 단일 출처로 공유)
+export const EU_ITEMS: { key: keyof ChecklistAnswers; label: string }[] = [
   { key: "euRp", label: "EU 책임자(RP) 지정" },
   { key: "euCpnp", label: "CPNP 사전 등록" },
   { key: "euPif", label: "PIF(제품정보파일) 구비" },
@@ -13,12 +13,14 @@ const EU_ITEMS: { key: keyof ChecklistAnswers; label: string }[] = [
   { key: "euLabeling", label: "EU 라벨링 요건" },
   { key: "euAllergen", label: "향료 알레르겐 표시" },
 ];
-const PKG_KEYS: (keyof ChecklistAnswers)[] = [
-  "pkgRecyclable",
-  "pkgDoc",
-  "pkgTechDoc",
-  "pkgRecycledContent",
+// EU 포장 규제(PPWR) 4항목: 결과 시각화에서 확보/미비 복원에 사용
+export const PACKAGING_ITEMS: { key: keyof ChecklistAnswers; label: string }[] = [
+  { key: "pkgRecyclable", label: "재활용 가능 포장재 사용" },
+  { key: "pkgDoc", label: "적합성 선언서(DoC) 구비" },
+  { key: "pkgTechDoc", label: "포장 기술 문서 구비" },
+  { key: "pkgRecycledContent", label: "재생원료 함량 확인" },
 ];
+const PKG_KEYS: (keyof ChecklistAnswers)[] = PACKAGING_ITEMS.map((x) => x.key);
 
 function clamp(n: number): number {
   return Math.max(5, Math.min(98, Math.round(n)));
