@@ -1,7 +1,9 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/service";
 
 export async function signUp(formData: FormData) {
   // 개인정보 수집·이용 동의는 필수 (클라이언트 게이트 + 서버 이중 검증)
@@ -25,6 +27,18 @@ export async function signUp(formData: FormData) {
     },
   });
   if (error) redirect(`/signup?error=${encodeURIComponent(error.message)}`);
+
+  // 이메일 가입은 동의/회사/전화를 폼에서 이미 받았으므로 온보딩 완료로 스탬프.
+  // (트리거가 profiles 행을 만든 뒤, 서비스 롤로 온보딩 시각 기록)
+  if (data.user) {
+    const svc = createServiceClient();
+    const now = new Date().toISOString();
+    await svc
+      .from("profiles")
+      .update({ onboarded_at: now, consent_agreed_at: now })
+      .eq("id", data.user.id);
+  }
+
   // Confirm email 이 켜져 있으면 세션이 아직 없다 → 확인 메일 안내 화면으로.
   if (!data.session) redirect("/signup?sent=1");
   redirect("/mypage");
@@ -44,4 +58,23 @@ export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
   redirect("/login");
+}
+
+export async function signInWithGoogle() {
+  const supabase = await createClient();
+  const hdrs = await headers();
+  // 프록시(Vercel) 뒤에서도 올바른 오리진 도출
+  const host = hdrs.get("x-forwarded-host") ?? hdrs.get("host") ?? "";
+  const proto = hdrs.get("x-forwarded-proto") ?? "https";
+  const origin = host ? `${proto}://${host}` : "";
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo: `${origin}/auth/callback` },
+  });
+  if (error || !data?.url) {
+    redirect(
+      `/login?error=${encodeURIComponent(error?.message ?? "구글 로그인을 시작할 수 없습니다.")}`
+    );
+  }
+  redirect(data.url);
 }
