@@ -53,36 +53,50 @@ export default async function Home() {
 
       {/* HERO */}
       <header className={styles.hero}>
-        <div className={styles.badge} data-fade>
-          <span className={styles.dot}></span> AI + Human 하이브리드 수출 대행
-        </div>
-        <h1 data-fade>
-          화장품 해외 수출,
-          <br />
-          이제 <span>BridgeX</span>가 끝냅니다.
-        </h1>
-        <p className={styles.heroSub} data-fade>
-          대표님은 제품에만 집중하십시오.
-        </p>
-        <div className={styles.heroCtaRow} data-fade>
-          <a href="/diagnose" className={styles.btnLg}>
-            우리 브랜드 수출 가능성 진단하기 →
-          </a>
-        </div>
-        <div className={styles.stats} data-fade>
-          <div className={styles.stat}>
-            <div className={styles.statNum}>3개월</div>
-            <div className={styles.statLabel}>첫 계약 테이블까지</div>
+        <video
+          className={styles.heroVideo}
+          src="/assets/handshake-deal.mp4"
+          poster="/assets/handshake-deal-poster.jpg"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+        />
+        <div className={styles.heroScrim} aria-hidden="true" />
+        <div className={styles.heroInner}>
+          <div className={styles.badge} data-fade>
+            <span className={styles.dot}></span> AI + Human 하이브리드 수출 대행
           </div>
-          <div className={styles.statDiv}></div>
-          <div className={styles.stat}>
-            <div className={styles.statNum}>30분</div>
-            <div className={styles.statLabel}>무료 상담 한 번이면 시작</div>
+          <h1 data-fade>
+            화장품 해외 수출,
+            <br />
+            이제 <span>BridgeX</span>가 끝냅니다.
+          </h1>
+          <p className={styles.heroSub} data-fade>
+            대표님은 제품에만 집중하십시오.
+          </p>
+          <div className={styles.heroCtaRow} data-fade>
+            <a href="/diagnose" className={styles.btnLg}>
+              우리 브랜드 수출 가능성 진단하기 →
+            </a>
           </div>
-          <div className={styles.statDiv}></div>
-          <div className={styles.stat}>
-            <div className={styles.statNum}>100%</div>
-            <div className={styles.statLabel}>K뷰티 수출 특화</div>
+          <div className={styles.stats} data-fade>
+            <div className={styles.stat}>
+              <div className={styles.statNum}>3개월</div>
+              <div className={styles.statLabel}>첫 계약 테이블까지</div>
+            </div>
+            <div className={styles.statDiv}></div>
+            <div className={styles.stat}>
+              <div className={styles.statNum}>30분</div>
+              <div className={styles.statLabel}>무료 상담 한 번이면 시작</div>
+            </div>
+            <div className={styles.statDiv}></div>
+            <div className={styles.stat}>
+              <div className={styles.statNum}>100%</div>
+              <div className={styles.statLabel}>K뷰티 수출 특화</div>
+            </div>
           </div>
         </div>
       </header>
@@ -264,25 +278,6 @@ export default async function Home() {
                 </div>
               </div>
             ))}
-          </div>
-
-          {/* deal video banner */}
-          <div className={styles.dealVideo} data-fade>
-            <video
-              src="/assets/handshake-deal.mp4"
-              poster="/assets/handshake-deal-poster.jpg"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-            />
-            <div className={styles.dealOverlay}>
-              <div className={styles.dealCap}>
-                <div className={styles.dealCapEyebrow}>The Goal</div>
-                <h3 data-goal-line>우리의 목표는 하나입니다.</h3>
-              </div>
-            </div>
           </div>
         </div>
       </section>
