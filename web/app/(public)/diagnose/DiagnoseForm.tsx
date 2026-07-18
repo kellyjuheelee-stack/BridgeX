@@ -1,7 +1,7 @@
 // web/app/(public)/diagnose/DiagnoseForm.tsx
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import {
   CHECKLIST_GROUPS,
   PRODUCT_CATEGORIES,
@@ -80,14 +80,20 @@ export default function DiagnoseForm({ prefill, isMember }: { prefill: Prefill; 
     // 동의 체크박스는 의도적으로 건드리지 않음 (게이트 의미 유지)
   }
 
-  async function handleSubmit(formData: FormData) {
+  // onSubmit 핸들러로 처리한다. (form action 은 트랜지션 내부라 setState 로딩 화면이
+  // 리다이렉트 전에 페인트되지 않음 — 일반 이벤트 핸들러의 urgent 업데이트로 로딩 화면을 확실히 노출)
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     setError("");
     // 예제입력으로 채운 경우 실제 개인정보가 아니므로 동의 없이도 진단을 진행한다.
     if (!consent && !exampleLoaded) {
       setError("개인정보 수집 및 이용에 동의해주세요.");
       return;
     }
+    const formData = new FormData(e.currentTarget);
     setSubmitting(true);
+    // 규칙 기반 진단은 즉시 끝나므로, 결과 이동 전 로딩 화면이 확실히 보이도록 최소 노출 시간을 둔다.
+    await new Promise((r) => setTimeout(r, 1600));
     // Server Action 이 성공 시 결과 페이지로 redirect 한다.
     await submitDiagnosis(formData);
     setSubmitting(false);
@@ -95,11 +101,11 @@ export default function DiagnoseForm({ prefill, isMember }: { prefill: Prefill; 
 
   return (
     <div className={styles.page}>
-      <form action={handleSubmit} className={styles.form} ref={formRef}>
+      <form onSubmit={handleSubmit} className={styles.form} ref={formRef}>
         <div className={styles.pageHead}>
           <h1 className={styles.pageTitle}>수출 준비도 진단</h1>
           <button type="button" className={styles.exampleBtn} onClick={fillExample}>
-            예제입력
+            샘플 보기
           </button>
         </div>
         <p className={styles.pageSub}>
