@@ -103,81 +103,152 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
           <DownloadPdfButton companyName={row.company_name as string} />
         </div>
 
-        {/* PDF 요약 — 인쇄 전용 1페이지 요점 정리 (화면에서는 숨김) */}
+        {/* PDF 요약 — 인쇄 전용 세로 1페이지 (대시보드 카드 레이아웃 · design.md 스타일, 화면에서는 숨김) */}
         <section className={styles.pdfSummary} aria-hidden="true">
-          <div className={styles.sumTop}>
-            <div>
-              <p className={styles.sumEyebrow}>수출 준비도 진단 · EU</p>
-              <h1 className={styles.sumTitle}>
-                {row.company_name as string}의 유럽 수출 준비도
-              </h1>
+          {/* 헤더: 타이틀 + 종합 점수 링 */}
+          <header className={styles.pHead}>
+            <div className={styles.pHeadMain}>
+              <p className={styles.pEyebrow}>수출 준비도 진단 · EU</p>
+              <h1 className={styles.pTitle}>{row.company_name as string}의 유럽 수출 준비도</h1>
+              <p className={styles.pLead}>{r.summary}</p>
             </div>
-            <div className={styles.sumScoreWrap}>
-              <div className={styles.sumScore}>
-                {r.overallScore}
-                <small> / 100</small>
-              </div>
-              <span className={styles.sumBand}>
-                {r.readinessLevel} · 컨설팅 필요도 {r.consultingNeed.level}
+            <div className={styles.pScore}>
+              <svg className={styles.pRing} viewBox="0 0 120 120" role="img" aria-label={`종합 ${r.overallScore}점`}>
+                <circle className={styles.pRingTrack} cx="60" cy="60" r="52" />
+                <circle
+                  className={styles.pRingVal}
+                  cx="60"
+                  cy="60"
+                  r="52"
+                  strokeDasharray="326.726"
+                  strokeDashoffset={326.726 * (1 - r.overallScore / 100)}
+                />
+                <text className={styles.pRingNum} x="60" y="61" textAnchor="middle" dominantBaseline="central">
+                  {r.overallScore}
+                </text>
+              </svg>
+              <span className={styles.pBand}>{r.readinessLevel}</span>
+              <span className={styles.pNeed}>
+                컨설팅 필요도 <b>{r.consultingNeed.level}</b>
               </span>
+            </div>
+          </header>
+
+          {/* KPI 카드 4종 */}
+          <div className={styles.pKpis}>
+            <div className={styles.pCard}>
+              <p className={styles.pKpiLabel}>종합 준비도</p>
+              <div className={styles.pKpiVal}>
+                {r.overallScore}
+                <small>/100</small>
+              </div>
+              <p className={styles.pKpiFoot}>{r.readinessLevel}</p>
+            </div>
+            <div className={styles.pCard}>
+              <p className={styles.pKpiLabel}>EU 필수 요건</p>
+              <div className={styles.pKpiVal}>
+                {r.euStatus.haveCount}
+                <small>/{r.euStatus.total}</small>
+              </div>
+              <p className={styles.pKpiFoot}>{missingCount > 0 ? `${missingCount}개 미비` : "충족"}</p>
+            </div>
+            <div className={styles.pCard}>
+              <p className={styles.pKpiLabel}>포장 규제 PPWR</p>
+              <div className={styles.pKpiVal}>
+                {hasPkgData ? pkgHave : "—"}
+                <small>/4</small>
+              </div>
+              <p className={styles.pKpiFoot}>2026.8 시행</p>
+            </div>
+            <div className={styles.pCard}>
+              <p className={styles.pKpiLabel}>우선 과제</p>
+              <div className={styles.pKpiVal}>
+                {r.priorities.length}
+                <small>건</small>
+              </div>
+              <p className={styles.pKpiFoot}>아래 참조</p>
             </div>
           </div>
 
-          <p className={styles.sumSummary}>{r.summary}</p>
-
-          <div className={styles.sumAxes}>
+          {/* 영역별 준비도 (미터 바) */}
+          <h2 className={styles.pSecTitle}>영역별 준비도</h2>
+          <div className={styles.pAxes}>
             {sections.map((s) => (
-              <div key={s.label} className={styles.sumAxis}>
-                <span className={styles.sumAxisNum}>{s.score}</span>
-                <span className={styles.sumAxisLabel}>{s.label}</span>
+              <div key={s.label} className={styles.pAxisCard}>
+                <div className={styles.pAxisTop}>
+                  <span className={styles.pAxisLabel}>{s.label}</span>
+                  <span className={styles.pAxisNum}>{s.score}</span>
+                </div>
+                <div className={styles.pMeter}>
+                  <span style={{ width: `${s.score}%` }} />
+                </div>
               </div>
             ))}
           </div>
 
-          <div className={styles.sumGrid}>
-            <div className={styles.sumBlock}>
-              <h3 className={styles.sumBlockHead}>
-                EU 필수 요건 <b>{r.euStatus.haveCount}/{r.euStatus.total}</b>
-              </h3>
-              {missingCount > 0 ? (
-                <p className={styles.sumMiss}>미비: {r.euStatus.missing.join(", ")}</p>
-              ) : (
-                <p className={styles.sumOk}>필수 7요건 모두 충족</p>
-              )}
+          {/* EU 요건 상세 + 우선 해결 과제 */}
+          <div className={styles.pGrid2}>
+            <div className={styles.pCard}>
+              <div className={styles.pCardHead}>
+                <h3 className={styles.pCardTitle}>EU 필수 요건</h3>
+                <span className={styles.pChip}>
+                  {r.euStatus.haveCount}/{r.euStatus.total} 확보
+                </span>
+              </div>
+              <div className={styles.pSeg}>
+                {euItems.map((it, i) => (
+                  <span key={i} className={it.ok ? `${styles.pSegCell} ${styles.pSegOn}` : styles.pSegCell} />
+                ))}
+              </div>
+              <ul className={styles.pReqList}>
+                {euItems.map((it) => (
+                  <li key={it.label} className={it.ok ? styles.pReq : `${styles.pReq} ${styles.pReqMiss}`}>
+                    <span className={it.ok ? styles.pReqDot : `${styles.pReqDot} ${styles.pReqDotMiss}`} />
+                    {it.label}
+                    {!it.ok && <span className={styles.pMissTag}>미비</span>}
+                  </li>
+                ))}
+              </ul>
               {hasPkgData && (
-                <p className={styles.sumPpwr}>
-                  EU 포장 규제(PPWR): {pkgHave}/4 확보 · 2026.8 시행 대응 필요
-                </p>
+                <p className={styles.pPpwr}>포장 규제(PPWR) {pkgHave}/4 확보 · 2026.8 시행 대응 필요</p>
               )}
             </div>
-            <div className={styles.sumBlock}>
-              <h3 className={styles.sumBlockHead}>우선 해결 과제</h3>
+            <div className={styles.pCard}>
+              <h3 className={styles.pCardTitle}>우선 해결 과제</h3>
               {r.priorities.length > 0 ? (
-                <ol className={styles.sumList}>
-                  {r.priorities.slice(0, 3).map((p) => (
-                    <li key={p.label}>
-                      <b>{p.label}</b> — {p.note}
+                <ol className={styles.pPrio}>
+                  {r.priorities.slice(0, 3).map((p, i) => (
+                    <li key={p.label} className={styles.pPrioItem}>
+                      <span className={styles.pRank}>{i + 1}</span>
+                      <div>
+                        <b className={styles.pPrioLabel}>{p.label}</b>
+                        <span className={styles.pPrioNote}>{p.note}</span>
+                      </div>
                     </li>
                   ))}
                 </ol>
               ) : (
-                <p className={styles.sumOk}>추가 우선 과제 없음</p>
+                <p className={styles.pOk}>추가 우선 과제 없음</p>
               )}
             </div>
           </div>
 
-          <div className={styles.sumBlock}>
-            <h3 className={styles.sumBlockHead}>다음 액션</h3>
-            <ol className={styles.sumList}>
+          {/* 다음 액션 타임라인 */}
+          <div className={`${styles.pCard} ${styles.pTlCard}`}>
+            <h3 className={styles.pCardTitle}>다음 액션</h3>
+            <ol className={styles.pTimeline}>
               {r.nextActions.slice(0, 4).map((a, i) => (
-                <li key={i}>{a}</li>
+                <li key={i} className={styles.pTlItem}>
+                  <span className={styles.pTlDot}>{String(i + 1).padStart(2, "0")}</span>
+                  <span className={styles.pTlText}>{a}</span>
+                </li>
               ))}
             </ol>
           </div>
 
-          <p className={styles.sumFoot}>
-            규칙 기반 자동 진단 결과 · 자기신고 응답 기반 · EU 필수 요건은 법적 판매 요건으로 별도
-            확인이 필요합니다 · BridgeX 수출 준비도 진단
+          <p className={styles.pFoot}>
+            규칙 기반 자동 진단 결과 · 자기신고 응답 기반 · EU 필수 요건은 법적 판매 요건으로 별도 확인이
+            필요합니다 · BridgeX 수출 준비도 진단
           </p>
         </section>
 

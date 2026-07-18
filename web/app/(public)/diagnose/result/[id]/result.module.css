@@ -592,137 +592,367 @@
 .pdfSummary {
   display: none;
 }
-.sumTop {
+/* --- 헤더: 타이틀 + 종합 점수 링 --- */
+.pHead {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
+  align-items: center;
+  gap: 20px;
   padding-bottom: 12px;
-  border-bottom: 2px solid var(--ink);
+  border-bottom: 1px solid var(--hairline);
 }
-.sumEyebrow {
+.pHeadMain {
+  flex: 1;
+}
+.pEyebrow {
   font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin: 0 0 7px;
+}
+.pTitle {
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -0.7px;
+  line-height: 1.12;
+  margin: 0 0 9px;
+}
+.pLead {
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0;
+  max-width: 46ch;
+}
+.pScore {
+  flex-shrink: 0;
+  width: 118px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 5px;
+}
+.pRing {
+  width: 100px;
+  height: 100px;
+}
+.pRing circle {
+  fill: none;
+  stroke-width: 9;
+}
+.pRingTrack {
+  stroke: var(--track);
+}
+.pRingVal {
+  stroke: var(--blue);
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+.pRingNum {
+  font-size: 30px;
+  font-weight: 800;
+  fill: var(--ink);
+  letter-spacing: -1px;
+}
+.pRingUnit {
+  font-size: 10px;
+  fill: var(--muted-2);
+}
+.pBand {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 13px;
+  border-radius: 9999px;
+  background: var(--pill-bg);
+  color: var(--blue);
+  font-size: 11px;
+  font-weight: 700;
+}
+.pNeed {
+  font-size: 10px;
+  color: var(--muted);
+}
+.pNeed b {
+  color: var(--blue);
+}
+
+/* --- 카드 공통 --- */
+.pCard {
+  background: #fff;
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+.pCardHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 11px;
+}
+.pCardTitle {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  margin: 0 0 11px;
+}
+.pCardHead .pCardTitle {
+  margin: 0;
+}
+.pChip {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--blue);
+  background: var(--pill-bg);
+  padding: 2px 10px;
+  border-radius: 9999px;
+}
+
+/* --- KPI 카드 4종 --- */
+.pKpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+.pKpiLabel {
+  font-size: 10.5px;
+  color: var(--muted);
+  font-weight: 600;
+  margin: 0 0 9px;
+}
+.pKpiVal {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.pKpiVal small {
+  font-size: 13px;
+  color: var(--muted-2);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.pKpiFoot {
+  font-size: 10px;
+  color: var(--muted);
+  margin: 7px 0 0;
+}
+
+/* --- 섹션 타이틀 --- */
+.pSecTitle {
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  color: var(--blue);
-  margin: 0 0 5px;
-}
-.sumTitle {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  line-height: 1.1;
-  margin: 0;
-}
-.sumScoreWrap {
-  text-align: right;
-  flex-shrink: 0;
-}
-.sumScore {
-  font-size: 40px;
-  font-weight: 800;
-  letter-spacing: -1.5px;
-  line-height: 0.9;
-  font-variant-numeric: tabular-nums;
-}
-.sumScore small {
-  font-size: 16px;
-  color: var(--muted-2);
-  font-weight: 400;
-}
-.sumBand {
-  display: inline-block;
-  margin-top: 4px;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--blue);
-}
-.sumSummary {
-  font-size: 12px;
   color: var(--muted);
-  line-height: 1.5;
-  margin: 12px 0 0;
+  margin: 13px 0 8px;
 }
-.sumAxes {
+
+/* --- 영역별 준비도 (미터) --- */
+.pAxes {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  margin: 14px 0 0;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
-.sumAxis {
+.pAxisCard {
+  background: #fff;
   border: 1px solid var(--hairline);
-  border-radius: 10px;
-  padding: 10px 8px;
-  text-align: center;
+  border-radius: 14px;
+  padding: 12px 14px;
 }
-.sumAxisNum {
-  display: block;
-  font-size: 24px;
+.pAxisTop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 9px;
+}
+.pAxisLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.pAxisNum {
+  font-size: 19px;
   font-weight: 800;
   letter-spacing: -0.5px;
-  color: var(--ink);
   font-variant-numeric: tabular-nums;
 }
-.sumAxisLabel {
-  display: block;
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 2px;
+.pMeter {
+  height: 7px;
+  background: var(--track);
+  border-radius: 9999px;
+  overflow: hidden;
 }
-.sumGrid {
+.pMeter span {
+  display: block;
+  height: 100%;
+  background: var(--blue);
+  border-radius: 9999px;
+}
+
+/* --- 2단 그리드 (EU 요건 + 우선 과제) --- */
+.pGrid2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-}
-.sumBlock {
-  border: 1px solid var(--hairline);
-  border-radius: 12px;
-  padding: 12px 14px;
   margin-top: 12px;
+  align-items: start;
 }
-.sumBlockHead {
-  font-size: 13px;
+.pSeg {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 12px;
+}
+.pSegCell {
+  height: 8px;
+  flex: 1;
+  border-radius: 3px;
+  background: var(--track);
+}
+.pSegOn {
+  background: var(--blue);
+}
+.pReqList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+.pReq {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 11.5px;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--hairline);
+}
+.pReq:last-child {
+  border-bottom: 0;
+}
+.pReqMiss {
+  color: var(--muted);
+}
+.pReqDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--blue);
+  flex-shrink: 0;
+}
+.pReqDotMiss {
+  background: transparent;
+  border: 1.5px dashed var(--muted-2);
+}
+.pMissTag {
+  margin-left: auto;
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--chip);
+  padding: 1px 8px;
+  border-radius: 9999px;
+}
+.pPpwr {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 11px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--hairline);
+}
+
+/* 우선 해결 과제 */
+.pPrio {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 11px;
+}
+.pPrioItem {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.pRank {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: var(--pill-bg);
+  color: var(--blue);
+  font-size: 11px;
   font-weight: 700;
-  margin: 0 0 6px;
+  display: grid;
+  place-items: center;
+  font-variant-numeric: tabular-nums;
+}
+.pPrioLabel {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 2px;
   letter-spacing: -0.2px;
 }
-.sumBlockHead b {
-  color: var(--blue);
-}
-.sumMiss {
-  font-size: 12px;
-  color: var(--ink);
-  line-height: 1.5;
-  margin: 0;
-}
-.sumOk {
-  font-size: 12px;
-  color: var(--muted);
-  margin: 0;
-}
-.sumPpwr {
+.pPrioNote {
+  display: block;
   font-size: 11px;
   color: var(--muted);
-  line-height: 1.5;
-  margin: 6px 0 0;
-}
-.sumList {
-  margin: 0;
-  padding-left: 18px;
-  display: grid;
-  gap: 5px;
-}
-.sumList li {
-  font-size: 12px;
   line-height: 1.45;
-  color: var(--ink);
 }
-.sumFoot {
-  font-size: 9.5px;
+.pOk {
+  font-size: 11.5px;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* --- 다음 액션 타임라인 --- */
+.pTlCard {
+  margin-top: 12px;
+}
+.pTimeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+.pTlItem {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 5px 0;
+}
+.pTlDot {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  font-variant-numeric: tabular-nums;
+}
+.pTlText {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--ink);
+  padding-top: 4px;
+}
+
+/* --- 푸터 --- */
+.pFoot {
+  font-size: 9px;
   color: var(--muted-2);
   line-height: 1.5;
-  margin: 14px 0 0;
+  margin: 12px 0 0;
   padding-top: 8px;
   border-top: 1px solid var(--hairline);
 }
@@ -739,7 +969,7 @@
     break-inside: avoid;
   }
   .page {
-    background: #fff;
+    background: var(--parchment);
     padding: 0;
     min-height: 0;
   }
