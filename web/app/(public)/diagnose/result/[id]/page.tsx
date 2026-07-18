@@ -5,6 +5,7 @@ import type { CSSProperties } from "react";
 import type { DiagnosisResult, SectionResult } from "@/lib/services/diagnosis/types";
 import { EU_ITEMS, PACKAGING_ITEMS } from "@/lib/services/diagnosis/generateDiagnosis";
 import ResultActions from "./ResultActions";
+import DownloadPdfButton from "./DownloadPdfButton";
 import styles from "./result.module.css";
 
 const CheckMark = () => (
@@ -97,6 +98,11 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
   return (
     <main className={styles.page}>
       <div className={styles.wrap}>
+        {/* TOOLBAR */}
+        <div className={styles.toolbar}>
+          <DownloadPdfButton companyName={row.company_name as string} />
+        </div>
+
         {/* HEADER */}
         <header className={styles.head}>
           <div>
@@ -265,17 +271,19 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
               </ul>
             </div>
 
-            <ResultActions
-              diagnosisId={row.id as string}
-              pitch={r.consultingNeed.pitch}
-              showSignup={!user && !isLinkedMember}
-              prefill={{
-                email: row.email as string,
-                contactName: row.contact_name as string,
-                companyName: row.company_name as string,
-                phone: row.phone as string,
-              }}
-            />
+            <div className={styles.noPrint}>
+              <ResultActions
+                diagnosisId={row.id as string}
+                pitch={r.consultingNeed.pitch}
+                showSignup={!user && !isLinkedMember}
+                prefill={{
+                  email: row.email as string,
+                  contactName: row.contact_name as string,
+                  companyName: row.company_name as string,
+                  phone: row.phone as string,
+                }}
+              />
+            </div>
           </div>
         </section>
 
