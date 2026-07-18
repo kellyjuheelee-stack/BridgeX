@@ -970,7 +970,9 @@
   }
   .page {
     background: var(--parchment);
-    padding: 0;
+    /* @page margin 을 0 으로 없애 브라우저 머리말/꼬리말(날짜·URL)을 제거하고,
+       여백은 콘텐츠 자체 패딩으로 확보 — A4 한 장에 알맞게 배치 */
+    padding: 12mm 13mm;
     min-height: 0;
   }
   .wrap {
@@ -984,6 +986,6 @@
   }
 }
 @page {
-  size: A4;
-  margin: 12mm;
+  size: A4 portrait;
+  margin: 0;
 }

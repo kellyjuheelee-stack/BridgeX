@@ -246,10 +246,6 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
             </ol>
           </div>
 
-          <p className={styles.pFoot}>
-            규칙 기반 자동 진단 결과 · 자기신고 응답 기반 · EU 필수 요건은 법적 판매 요건으로 별도 확인이
-            필요합니다 · BridgeX 수출 준비도 진단
-          </p>
         </section>
 
         {/* 화면 표시 콘텐츠 (인쇄 시 숨김) */}
