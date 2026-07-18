@@ -103,6 +103,86 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
           <DownloadPdfButton companyName={row.company_name as string} />
         </div>
 
+        {/* PDF 요약 — 인쇄 전용 1페이지 요점 정리 (화면에서는 숨김) */}
+        <section className={styles.pdfSummary} aria-hidden="true">
+          <div className={styles.sumTop}>
+            <div>
+              <p className={styles.sumEyebrow}>수출 준비도 진단 · EU</p>
+              <h1 className={styles.sumTitle}>
+                {row.company_name as string}의 유럽 수출 준비도
+              </h1>
+            </div>
+            <div className={styles.sumScoreWrap}>
+              <div className={styles.sumScore}>
+                {r.overallScore}
+                <small> / 100</small>
+              </div>
+              <span className={styles.sumBand}>
+                {r.readinessLevel} · 컨설팅 필요도 {r.consultingNeed.level}
+              </span>
+            </div>
+          </div>
+
+          <p className={styles.sumSummary}>{r.summary}</p>
+
+          <div className={styles.sumAxes}>
+            {sections.map((s) => (
+              <div key={s.label} className={styles.sumAxis}>
+                <span className={styles.sumAxisNum}>{s.score}</span>
+                <span className={styles.sumAxisLabel}>{s.label}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className={styles.sumGrid}>
+            <div className={styles.sumBlock}>
+              <h3 className={styles.sumBlockHead}>
+                EU 필수 요건 <b>{r.euStatus.haveCount}/{r.euStatus.total}</b>
+              </h3>
+              {missingCount > 0 ? (
+                <p className={styles.sumMiss}>미비: {r.euStatus.missing.join(", ")}</p>
+              ) : (
+                <p className={styles.sumOk}>필수 7요건 모두 충족</p>
+              )}
+              {hasPkgData && (
+                <p className={styles.sumPpwr}>
+                  EU 포장 규제(PPWR): {pkgHave}/4 확보 · 2026.8 시행 대응 필요
+                </p>
+              )}
+            </div>
+            <div className={styles.sumBlock}>
+              <h3 className={styles.sumBlockHead}>우선 해결 과제</h3>
+              {r.priorities.length > 0 ? (
+                <ol className={styles.sumList}>
+                  {r.priorities.slice(0, 3).map((p) => (
+                    <li key={p.label}>
+                      <b>{p.label}</b> — {p.note}
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p className={styles.sumOk}>추가 우선 과제 없음</p>
+              )}
+            </div>
+          </div>
+
+          <div className={styles.sumBlock}>
+            <h3 className={styles.sumBlockHead}>다음 액션</h3>
+            <ol className={styles.sumList}>
+              {r.nextActions.slice(0, 4).map((a, i) => (
+                <li key={i}>{a}</li>
+              ))}
+            </ol>
+          </div>
+
+          <p className={styles.sumFoot}>
+            규칙 기반 자동 진단 결과 · 자기신고 응답 기반 · EU 필수 요건은 법적 판매 요건으로 별도
+            확인이 필요합니다 · BridgeX 수출 준비도 진단
+          </p>
+        </section>
+
+        {/* 화면 표시 콘텐츠 (인쇄 시 숨김) */}
+        <div className={styles.screenContent}>
         {/* HEADER */}
         <header className={styles.head}>
           <div>
@@ -292,6 +372,7 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
           규제·영업·바이어) 평균이며, EU 필수 요건은 법적 판매 요건으로 별도 확인이 필요합니다. · BridgeX 수출
           준비도 진단
         </p>
+        </div>
       </div>
     </main>
   );

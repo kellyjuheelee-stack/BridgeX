@@ -190,6 +190,18 @@ export default function DiagnoseForm({ prefill, isMember }: { prefill: Prefill; 
           {submitting ? "진단 중..." : "수출 가능성 진단하기"}
         </button>
       </form>
+
+      {submitting && (
+        <div className={styles.loadingOverlay} role="status" aria-live="polite">
+          <div className={styles.loadingCard}>
+            <span className={styles.spinner} aria-hidden="true" />
+            <p className={styles.loadingTitle}>수출 준비도를 진단하고 있어요</p>
+            <p className={styles.loadingSub}>
+              입력하신 정보를 항목별로 분석하는 중입니다. 잠시만 기다려 주세요.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

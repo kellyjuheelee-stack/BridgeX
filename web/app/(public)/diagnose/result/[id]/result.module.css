@@ -587,53 +587,173 @@
   }
 }
 
+/* ---------- PDF 요약 (인쇄 전용 · 1페이지 요점) ---------- */
+/* 화면에서는 숨기고 @media print 에서만 표시한다. */
+.pdfSummary {
+  display: none;
+}
+.sumTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--ink);
+}
+.sumEyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin: 0 0 5px;
+}
+.sumTitle {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  margin: 0;
+}
+.sumScoreWrap {
+  text-align: right;
+  flex-shrink: 0;
+}
+.sumScore {
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+.sumScore small {
+  font-size: 16px;
+  color: var(--muted-2);
+  font-weight: 400;
+}
+.sumBand {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--blue);
+}
+.sumSummary {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 12px 0 0;
+}
+.sumAxes {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 14px 0 0;
+}
+.sumAxis {
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  padding: 10px 8px;
+  text-align: center;
+}
+.sumAxisNum {
+  display: block;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.sumAxisLabel {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.sumGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.sumBlock {
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 12px;
+}
+.sumBlockHead {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  letter-spacing: -0.2px;
+}
+.sumBlockHead b {
+  color: var(--blue);
+}
+.sumMiss {
+  font-size: 12px;
+  color: var(--ink);
+  line-height: 1.5;
+  margin: 0;
+}
+.sumOk {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+}
+.sumPpwr {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 6px 0 0;
+}
+.sumList {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 5px;
+}
+.sumList li {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+.sumFoot {
+  font-size: 9.5px;
+  color: var(--muted-2);
+  line-height: 1.5;
+  margin: 14px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--hairline);
+}
+
 /* ---------- print / PDF ---------- */
 @media print {
-  /* 인터랙티브·마케팅 요소는 리포트 PDF에서 제외 */
+  /* 화면 대시보드·툴바는 숨기고, 1페이지 요약만 인쇄 */
   .toolbar,
-  .noPrint {
+  .screenContent {
     display: none !important;
+  }
+  .pdfSummary {
+    display: block !important;
+    break-inside: avoid;
   }
   .page {
     background: #fff;
     padding: 0;
     min-height: 0;
   }
-  /* 데이터 시각화 색(게이지·세그먼트·필)을 인쇄에서 유지 */
+  .wrap {
+    max-width: 100%;
+  }
+  /* 색상(점수·강조)을 인쇄에서 유지 */
   .page,
   .page * {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
-  .wrap {
-    max-width: 100%;
-  }
-  /* 카드 그림자·hover 잔상 제거, 선명하게 */
-  .card,
-  .prioRow {
-    box-shadow: none;
-  }
-  /* 링 게이지 애니메이션은 즉시 완료 상태로 */
-  .ringVal {
-    animation: none;
-  }
-  /* 우측 CTA가 사라지므로 '다음 액션'은 전폭 사용 */
-  .close {
-    grid-template-columns: 1fr;
-  }
-  /* 섹션·카드가 페이지 경계에서 잘리지 않도록 */
-  .section {
-    break-inside: avoid;
-  }
-  .card,
-  .prioRow,
-  .gauge {
-    break-inside: avoid;
-  }
-  .head {
-    break-after: avoid;
-  }
 }
 @page {
-  margin: 14mm;
+  size: A4;
+  margin: 12mm;
 }
