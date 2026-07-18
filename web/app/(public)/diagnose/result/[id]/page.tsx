@@ -110,7 +110,6 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
             <div className={styles.pHeadMain}>
               <p className={styles.pEyebrow}>수출 준비도 진단 · EU</p>
               <h1 className={styles.pTitle}>{row.company_name as string}의 유럽 수출 준비도</h1>
-              <p className={styles.pLead}>{r.summary}</p>
             </div>
             <div className={styles.pScore}>
               <svg className={styles.pRing} viewBox="0 0 120 120" role="img" aria-label={`종합 ${r.overallScore}점`}>
@@ -233,9 +232,9 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
             </div>
           </div>
 
-          {/* 다음 액션 타임라인 */}
+          {/* 액션 플랜 타임라인 */}
           <div className={`${styles.pCard} ${styles.pTlCard}`}>
-            <h3 className={styles.pCardTitle}>다음 액션</h3>
+            <h3 className={styles.pCardTitle}>액션 플랜</h3>
             <ol className={styles.pTimeline}>
               {r.nextActions.slice(0, 4).map((a, i) => (
                 <li key={i} className={styles.pTlItem}>
