@@ -1,18 +1,15 @@
 // web/app/(public)/diagnose/DiagnoseForm.tsx
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
+import Link from "next/link";
 import {
   CHECKLIST_GROUPS,
   PRODUCT_CATEGORIES,
   TARGET_COUNTRIES,
 } from "@/lib/constants/diagnosisChecklist";
 import { submitDiagnosis } from "./actions";
-import { DIAGNOSE_EXAMPLES } from "./exampleData";
 import styles from "./diagnose.module.css";
-
-// 모든 체크리스트 키(19개)를 단일 출처에서 도출 — 키 목록 중복 정의 금지
-const ALL_CHECK_KEYS = CHECKLIST_GROUPS.flatMap((g) => g.items.map((i) => i.key));
 
 interface Prefill {
   contactName: string;
@@ -25,68 +22,13 @@ export default function DiagnoseForm({ prefill, isMember }: { prefill: Prefill; 
   const [consent, setConsent] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  // 예제입력으로 채운 상태인지 — 예시 데이터는 실제 개인정보가 아니므로 동의 게이트를 건너뛴다.
-  const [exampleLoaded, setExampleLoaded] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
-  const lastIdxRef = useRef(-1); // 직전 세트 인덱스(연속 중복 방지)
-
-  function fillExample() {
-    const form = formRef.current;
-    if (!form) return;
-    setExampleLoaded(true);
-    setError("");
-
-    // 1) 직전과 다른 랜덤 인덱스
-    let idx = Math.floor(Math.random() * DIAGNOSE_EXAMPLES.length);
-    if (DIAGNOSE_EXAMPLES.length > 1) {
-      while (idx === lastIdxRef.current) {
-        idx = Math.floor(Math.random() * DIAGNOSE_EXAMPLES.length);
-      }
-    }
-    lastIdxRef.current = idx;
-    const ex = DIAGNOSE_EXAMPLES[idx];
-
-    // 2) 텍스트/셀렉트 필드
-    const setVal = (name: string, value: string) => {
-      const el = form.elements.namedItem(name) as
-        | HTMLInputElement
-        | HTMLSelectElement
-        | null;
-      if (el && "value" in el) el.value = value;
-    };
-    setVal("contactName", ex.contactName);
-    setVal("companyName", ex.companyName);
-    setVal("email", ex.email);
-    setVal("phone", ex.phone);
-    setVal("homepageUrl", ex.homepageUrl ?? "");
-    setVal("smartStoreUrl", ex.smartStoreUrl ?? "");
-    setVal("instagramUrl", ex.instagramUrl ?? "");
-    setVal("productName", ex.productName);
-    setVal("productCategory", ex.productCategory);
-
-    // 3) 목표 국가 (같은 name의 체크박스 그룹)
-    form
-      .querySelectorAll<HTMLInputElement>('input[name="targetCountries"]')
-      .forEach((cb) => {
-        cb.checked = ex.targetCountries.includes(cb.value);
-      });
-
-    // 4) 체크리스트 19개 — 세트에 없는 키는 false로 해제
-    ALL_CHECK_KEYS.forEach((key) => {
-      const cb = form.elements.namedItem(key) as HTMLInputElement | null;
-      if (cb) cb.checked = !!ex.checks[key];
-    });
-
-    // 동의 체크박스는 의도적으로 건드리지 않음 (게이트 의미 유지)
-  }
 
   // onSubmit 핸들러로 처리한다. (form action 은 트랜지션 내부라 setState 로딩 화면이
   // 리다이렉트 전에 페인트되지 않음 — 일반 이벤트 핸들러의 urgent 업데이트로 로딩 화면을 확실히 노출)
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
-    // 예제입력으로 채운 경우 실제 개인정보가 아니므로 동의 없이도 진단을 진행한다.
-    if (!consent && !exampleLoaded) {
+    if (!consent) {
       setError("개인정보 수집 및 이용에 동의해주세요.");
       return;
     }
@@ -101,10 +43,29 @@ export default function DiagnoseForm({ prefill, isMember }: { prefill: Prefill; 
 
   return (
     <div className={styles.page}>
-      <form onSubmit={handleSubmit} className={styles.form} ref={formRef}>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.topBar}>
+          <Link href="/" className={styles.homeBtn} aria-label="홈으로">
+            <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+              <path
+                d="M3.5 9.5 10 4l6.5 5.5M5.5 8.5V15a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V8.5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            홈
+          </Link>
+        </div>
         <div className={styles.pageHead}>
           <h1 className={styles.pageTitle}>수출 준비도 진단</h1>
-          <button type="button" className={styles.exampleBtn} onClick={fillExample}>
+          <button
+            type="button"
+            className={styles.exampleBtn}
+            onClick={() => window.open("/diagnose/sample", "_blank", "noopener")}
+          >
             샘플 보기
           </button>
         </div>
@@ -123,9 +84,11 @@ export default function DiagnoseForm({ prefill, isMember }: { prefill: Prefill; 
             <Field label="홈페이지 (선택)" name="homepageUrl" type="url" placeholder="https://" />
             <Field label="스마트스토어 (선택)" name="smartStoreUrl" type="url" placeholder="https://" />
             <Field label="인스타그램 (선택)" name="instagramUrl" type="url" placeholder="https://" />
-            <Field label="대표 제품명" name="productName" required />
+            <Field label="대표 제품명 (선택)" name="productName" />
             <label className={`${styles.field} ${styles.colspan}`}>
-              <span className={styles.floatLabel}>제품 카테고리</span>
+              <span className={styles.floatLabel}>
+                제품 카테고리 <span className={styles.req}>*</span>
+              </span>
               <select name="productCategory" required defaultValue="" className={styles.floatSelect}>
                 <option value="" disabled>
                   선택하세요

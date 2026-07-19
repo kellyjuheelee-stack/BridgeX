@@ -1,0 +1,35 @@
+.homeBtn {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 15px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  -webkit-backdrop-filter: saturate(180%) blur(8px);
+  backdrop-filter: saturate(180%) blur(8px);
+  color: #1d1d1f;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  text-decoration: none;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  transition: background 0.15s, transform 0.15s;
+}
+.homeBtn:hover {
+  background: #fff;
+  transform: translateY(-1px);
+}
+.homeBtn:active {
+  transform: scale(0.96);
+}
+@media print {
+  .homeBtn {
+    display: none !important;
+  }
+}

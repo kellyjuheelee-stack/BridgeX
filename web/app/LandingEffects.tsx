@@ -69,19 +69,14 @@ export default function LandingEffects() {
         spans.forEach((s, i) => {
           s.animate(
             [
-              { opacity: 0, transform: "translateY(14px) scale(.92)", color: "#fff" },
-              {
-                opacity: 1,
-                transform: "translateY(-3px) scale(1.12)",
-                color: "#9ec9ff",
-                offset: 0.55,
-              },
-              { opacity: 1, transform: "translateY(0) scale(1)", color: "#fff" },
+              { opacity: 0, transform: "translateY(11px)", filter: "blur(6px)" },
+              { opacity: 1, transform: "translateY(0)", filter: "blur(0)" },
             ],
             {
-              duration: 500,
-              delay: i * 90,
-              easing: "cubic-bezier(.22,.61,.36,1)",
+              // 더 긴 지속시간 + 넓은 간격 + 부드러운 감속 이징으로 천천히 스며들듯
+              duration: 1050,
+              delay: i * 95,
+              easing: "cubic-bezier(.16,.84,.44,1)",
               fill: "backwards",
             }
           );

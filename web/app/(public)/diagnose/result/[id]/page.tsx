@@ -6,7 +6,14 @@ import type { DiagnosisResult, SectionResult } from "@/lib/services/diagnosis/ty
 import { EU_ITEMS, PACKAGING_ITEMS } from "@/lib/services/diagnosis/generateDiagnosis";
 import ResultActions from "./ResultActions";
 import DownloadPdfButton from "./DownloadPdfButton";
+import PdfSummary from "./PdfSummary";
+import HomeButton from "@/app/HomeButton";
+import { DIAGNOSE_EXAMPLES } from "../../exampleData";
 import styles from "./result.module.css";
+
+// 샘플('샘플 보기')로 생성된 결과 판별 — 예제 데이터의 고유 가상 이메일과 일치하면 샘플.
+// (실고객은 이 더미 이메일을 쓰지 않으므로 DB 플래그 없이 코드로만 구분)
+const SAMPLE_EMAILS = new Set(DIAGNOSE_EXAMPLES.map((e) => e.email.toLowerCase()));
 
 const CheckMark = () => (
   <svg className={styles.mark} viewBox="0 0 20 20" aria-hidden="true">
@@ -80,6 +87,8 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
     data: { user },
   } = await supabase.auth.getUser();
   const isLinkedMember = !!row.member_id;
+  // 샘플 결과면 상담 CTA·회원가입 카드를 숨긴다(실고객 결과에는 그대로 노출).
+  const isSample = SAMPLE_EMAILS.has(String(row.email ?? "").toLowerCase());
 
   // 원본 응답(있으면)으로 EU 7요건·PPWR 항목별 확보/미비 복원
   const answers = (row.checklist_answers ?? null) as Record<string, boolean> | null;
@@ -97,155 +106,17 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
 
   return (
     <main className={styles.page}>
+      <HomeButton />
       <div className={styles.wrap}>
-        {/* TOOLBAR */}
-        <div className={styles.toolbar}>
-          <DownloadPdfButton companyName={row.company_name as string} />
-        </div>
+        {/* TOOLBAR — 샘플 결과에는 PDF 다운로드 버튼도 숨긴다. */}
+        {!isSample && (
+          <div className={styles.toolbar}>
+            <DownloadPdfButton companyName={row.company_name as string} />
+          </div>
+        )}
 
         {/* PDF 요약 — 인쇄 전용 세로 1페이지 (대시보드 카드 레이아웃 · design.md 스타일, 화면에서는 숨김) */}
-        <section className={styles.pdfSummary} aria-hidden="true">
-          {/* 헤더: 타이틀 + 종합 점수 링 */}
-          <header className={styles.pHead}>
-            <div className={styles.pHeadMain}>
-              <p className={styles.pEyebrow}>수출 준비도 진단 · EU</p>
-              <h1 className={styles.pTitle}>{row.company_name as string}의 유럽 수출 준비도</h1>
-            </div>
-            <div className={styles.pScore}>
-              <svg className={styles.pRing} viewBox="0 0 120 120" role="img" aria-label={`종합 ${r.overallScore}점`}>
-                <circle className={styles.pRingTrack} cx="60" cy="60" r="52" />
-                <circle
-                  className={styles.pRingVal}
-                  cx="60"
-                  cy="60"
-                  r="52"
-                  strokeDasharray="326.726"
-                  strokeDashoffset={326.726 * (1 - r.overallScore / 100)}
-                />
-                <text className={styles.pRingNum} x="60" y="61" textAnchor="middle" dominantBaseline="central">
-                  {r.overallScore}
-                </text>
-              </svg>
-              <span className={styles.pBand}>{r.readinessLevel}</span>
-              <span className={styles.pNeed}>
-                컨설팅 필요도 <b>{r.consultingNeed.level}</b>
-              </span>
-            </div>
-          </header>
-
-          {/* KPI 카드 4종 */}
-          <div className={styles.pKpis}>
-            <div className={styles.pCard}>
-              <p className={styles.pKpiLabel}>종합 준비도</p>
-              <div className={styles.pKpiVal}>
-                {r.overallScore}
-                <small>/100</small>
-              </div>
-              <p className={styles.pKpiFoot}>{r.readinessLevel}</p>
-            </div>
-            <div className={styles.pCard}>
-              <p className={styles.pKpiLabel}>EU 필수 요건</p>
-              <div className={styles.pKpiVal}>
-                {r.euStatus.haveCount}
-                <small>/{r.euStatus.total}</small>
-              </div>
-              <p className={styles.pKpiFoot}>{missingCount > 0 ? `${missingCount}개 미비` : "충족"}</p>
-            </div>
-            <div className={styles.pCard}>
-              <p className={styles.pKpiLabel}>포장 규제 PPWR</p>
-              <div className={styles.pKpiVal}>
-                {hasPkgData ? pkgHave : "—"}
-                <small>/4</small>
-              </div>
-              <p className={styles.pKpiFoot}>2026.8 시행</p>
-            </div>
-            <div className={styles.pCard}>
-              <p className={styles.pKpiLabel}>우선 과제</p>
-              <div className={styles.pKpiVal}>
-                {r.priorities.length}
-                <small>건</small>
-              </div>
-              <p className={styles.pKpiFoot}>아래 참조</p>
-            </div>
-          </div>
-
-          {/* 영역별 준비도 (미터 바) */}
-          <h2 className={styles.pSecTitle}>영역별 준비도</h2>
-          <div className={styles.pAxes}>
-            {sections.map((s) => (
-              <div key={s.label} className={styles.pAxisCard}>
-                <div className={styles.pAxisTop}>
-                  <span className={styles.pAxisLabel}>{s.label}</span>
-                  <span className={styles.pAxisNum}>{s.score}</span>
-                </div>
-                <div className={styles.pMeter}>
-                  <span style={{ width: `${s.score}%` }} />
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* EU 요건 상세 + 우선 해결 과제 */}
-          <div className={styles.pGrid2}>
-            <div className={styles.pCard}>
-              <div className={styles.pCardHead}>
-                <h3 className={styles.pCardTitle}>EU 필수 요건</h3>
-                <span className={styles.pChip}>
-                  {r.euStatus.haveCount}/{r.euStatus.total} 확보
-                </span>
-              </div>
-              <div className={styles.pSeg}>
-                {euItems.map((it, i) => (
-                  <span key={i} className={it.ok ? `${styles.pSegCell} ${styles.pSegOn}` : styles.pSegCell} />
-                ))}
-              </div>
-              <ul className={styles.pReqList}>
-                {euItems.map((it) => (
-                  <li key={it.label} className={it.ok ? styles.pReq : `${styles.pReq} ${styles.pReqMiss}`}>
-                    <span className={it.ok ? styles.pReqDot : `${styles.pReqDot} ${styles.pReqDotMiss}`} />
-                    {it.label}
-                    {!it.ok && <span className={styles.pMissTag}>미비</span>}
-                  </li>
-                ))}
-              </ul>
-              {hasPkgData && (
-                <p className={styles.pPpwr}>포장 규제(PPWR) {pkgHave}/4 확보 · 2026.8 시행 대응 필요</p>
-              )}
-            </div>
-            <div className={styles.pCard}>
-              <h3 className={styles.pCardTitle}>우선 해결 과제</h3>
-              {r.priorities.length > 0 ? (
-                <ol className={styles.pPrio}>
-                  {r.priorities.slice(0, 3).map((p, i) => (
-                    <li key={p.label} className={styles.pPrioItem}>
-                      <span className={styles.pRank}>{i + 1}</span>
-                      <div>
-                        <b className={styles.pPrioLabel}>{p.label}</b>
-                        <span className={styles.pPrioNote}>{p.note}</span>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
-              ) : (
-                <p className={styles.pOk}>추가 우선 과제 없음</p>
-              )}
-            </div>
-          </div>
-
-          {/* 액션 플랜 타임라인 */}
-          <div className={`${styles.pCard} ${styles.pTlCard}`}>
-            <h3 className={styles.pCardTitle}>액션 플랜</h3>
-            <ol className={styles.pTimeline}>
-              {r.nextActions.slice(0, 4).map((a, i) => (
-                <li key={i} className={styles.pTlItem}>
-                  <span className={styles.pTlDot}>{String(i + 1).padStart(2, "0")}</span>
-                  <span className={styles.pTlText}>{a}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
-
-        </section>
+        <PdfSummary companyName={row.company_name as string} result={r} answers={answers} />
 
         {/* 화면 표시 콘텐츠 (인쇄 시 숨김) */}
         <div className={styles.screenContent}>
@@ -402,10 +273,10 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
 
         {/* NEXT ACTIONS + CONSULTING CTA */}
         <section className={styles.section}>
-          <div className={styles.close}>
+          <div className={isSample ? `${styles.close} ${styles.closeSolo}` : styles.close}>
             <div className={styles.card}>
               <h2 className={styles.secTitle} style={{ marginTop: 0 }}>
-                다음 액션
+                액션 플랜
               </h2>
               <ul className={styles.actionList}>
                 {r.nextActions.map((a, i) => (
@@ -417,27 +288,24 @@ export default async function ResultPage({ params }: { params: Promise<{ id: str
               </ul>
             </div>
 
-            <div className={styles.noPrint}>
-              <ResultActions
-                diagnosisId={row.id as string}
-                pitch={r.consultingNeed.pitch}
-                showSignup={!user && !isLinkedMember}
-                prefill={{
-                  email: row.email as string,
-                  contactName: row.contact_name as string,
-                  companyName: row.company_name as string,
-                  phone: row.phone as string,
-                }}
-              />
-            </div>
+            {/* 샘플 결과에는 상담 CTA·회원가입 카드를 노출하지 않는다. */}
+            {!isSample && (
+              <div className={styles.noPrint}>
+                <ResultActions
+                  diagnosisId={row.id as string}
+                  pitch={r.consultingNeed.pitch}
+                  showSignup={!user && !isLinkedMember}
+                  prefill={{
+                    email: row.email as string,
+                    contactName: row.contact_name as string,
+                    companyName: row.company_name as string,
+                    phone: row.phone as string,
+                  }}
+                />
+              </div>
+            )}
           </div>
         </section>
-
-        <p className={styles.footLegal}>
-          규칙 기반 자동 진단 결과이며 자기신고 응답을 바탕으로 산출됩니다. 종합 점수는 4개 영역(제품·EU
-          규제·영업·바이어) 평균이며, EU 필수 요건은 법적 판매 요건으로 별도 확인이 필요합니다. · BridgeX 수출
-          준비도 진단
-        </p>
         </div>
       </div>
     </main>

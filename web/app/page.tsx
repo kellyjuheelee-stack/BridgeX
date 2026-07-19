@@ -53,17 +53,6 @@ export default async function Home() {
 
       {/* HERO */}
       <header className={styles.hero}>
-        <video
-          className={styles.heroVideo}
-          src="/assets/hero-bg.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          aria-hidden="true"
-        />
-        <div className={styles.heroScrim} aria-hidden="true" />
         <div className={styles.heroInner}>
           <div className={styles.badge} data-fade>
             <span className={styles.dot}></span> AI + Human 하이브리드 수출 대행
@@ -277,6 +266,25 @@ export default async function Home() {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* deal video banner */}
+          <div className={styles.dealVideo} data-fade>
+            <video
+              src="/assets/handshake-deal.mp4"
+              poster="/assets/handshake-deal-poster.jpg"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+            />
+            <div className={styles.dealOverlay}>
+              <div className={styles.dealCap}>
+                <div className={styles.dealCapEyebrow}>The Goal</div>
+                <h3 data-goal-line>우리의 목표는 하나입니다.</h3>
+              </div>
+            </div>
           </div>
         </div>
       </section>

@@ -15,6 +15,9 @@ export default function PrivacyPage() {
         <a href="/" className={styles.logo}>
           Bridge<span>X</span>
         </a>
+        <a href="/" className={styles.navHome} aria-label="홈으로">
+          홈
+        </a>
       </nav>
       <div className={styles.wrap}>
         <h1 className={styles.title}>개인정보처리방침</h1>

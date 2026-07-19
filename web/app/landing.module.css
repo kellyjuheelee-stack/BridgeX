@@ -544,6 +544,53 @@
   font-weight: 500;
 }
 
+/* deal video banner */
+.dealVideo {
+  position: relative;
+  margin-top: clamp(36px, 5vw, 56px);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.14);
+}
+.dealVideo video {
+  display: block;
+  width: 100%;
+  height: clamp(260px, 42vh, 440px);
+  object-fit: cover;
+}
+.dealOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding: clamp(28px, 6vw, 64px);
+  background: linear-gradient(
+    90deg,
+    rgba(10, 20, 40, 0.78) 0%,
+    rgba(10, 20, 40, 0.42) 52%,
+    rgba(10, 20, 40, 0.08) 100%
+  );
+}
+.dealCap {
+  max-width: 560px;
+}
+.dealCapEyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #9ec9ff;
+  margin-bottom: 12px;
+}
+.dealCap h3 {
+  font-size: clamp(22px, 3vw, 32px);
+  line-height: 1.32;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #fff;
+  text-wrap: balance;
+}
+
 /* cta */
 .ctaCard {
   max-width: 640px;

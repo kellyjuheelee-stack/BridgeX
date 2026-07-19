@@ -16,13 +16,14 @@ interface LeadRow {
   contact_name: string | null;
   email: string | null;
   phone: string | null;
-  product_name: string | null;
+  product_category: string | null;
   target_countries: string[] | null;
   pain_points: string[] | null;
   diagnosis_status: string;
   diagnosis_result: DiagnosisResult | null;
   consulting_stage: string | null;
   consultation_requested: boolean | null;
+  consultation_requested_at: string | null;
   submitted_at: string | null;
 }
 
@@ -70,10 +71,10 @@ function StatusBadge({ status }: { status: string }) {
 
 const th: React.CSSProperties = {
   textAlign: "left",
-  padding: "14px 16px",
+  padding: "12px 12px",
   fontSize: 11,
   fontWeight: 700,
-  letterSpacing: 0.5,
+  letterSpacing: 0.3,
   textTransform: "uppercase",
   color: "#6e6e73",
   background: "#fafafc",
@@ -81,7 +82,7 @@ const th: React.CSSProperties = {
   borderBottom: "1px solid rgba(0,0,0,0.05)",
 };
 const td: React.CSSProperties = {
-  padding: "14px 16px",
+  padding: "11px 12px",
   fontSize: 13,
   whiteSpace: "nowrap",
   borderBottom: "1px solid rgba(0,0,0,0.05)",
@@ -102,11 +103,19 @@ export default async function AdminHome() {
   const { data } = await svc
     .from("export_diagnosis_requests")
     .select(
-      "id, company_name, contact_name, email, phone, product_name, target_countries, pain_points, diagnosis_status, diagnosis_result, consulting_stage, consultation_requested, submitted_at"
+      "id, company_name, contact_name, email, phone, product_category, target_countries, pain_points, diagnosis_status, diagnosis_result, consulting_stage, consultation_requested, consultation_requested_at, submitted_at"
     )
     .order("submitted_at", { ascending: false, nullsFirst: false });
 
-  const rows = (data ?? []) as LeadRow[];
+  const all = (data ?? []) as LeadRow[];
+  // 상담 신청한 리드를 목록 맨 위로 (그 안에서는 신청 시각 최신순)
+  const rows = [...all].sort((a, b) => {
+    const ca = a.consultation_requested ? 1 : 0;
+    const cb = b.consultation_requested ? 1 : 0;
+    if (ca !== cb) return cb - ca;
+    return (b.consultation_requested_at ?? "").localeCompare(a.consultation_requested_at ?? "");
+  });
+  const consultCount = all.filter((r) => r.consultation_requested).length;
 
   return (
     <main
@@ -172,7 +181,7 @@ export default async function AdminHome() {
         </div>
       </nav>
 
-      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "24px clamp(16px,3vw,32px) 60px" }}>
+      <div style={{ maxWidth: 1720, margin: "0 auto", padding: "24px clamp(16px,2.5vw,28px) 60px" }}>
         <div
           style={{
             display: "flex",
@@ -186,7 +195,26 @@ export default async function AdminHome() {
           <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: -0.5, margin: 0 }}>
             수출 가능성 진단 요청
           </h1>
-          <div style={{ fontSize: 14, color: "#6e6e73", fontWeight: 600 }}>총 {rows.length}건</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 14, color: "#6e6e73", fontWeight: 600 }}>
+            {consultCount > 0 && (
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  fontSize: 13,
+                  fontWeight: 700,
+                  padding: "4px 12px",
+                  borderRadius: 999,
+                  background: "rgba(224,120,60,0.14)",
+                  color: "#c05a1e",
+                }}
+              >
+                🔔 상담 신청 {consultCount}건
+              </span>
+            )}
+            <span>총 {rows.length}건</span>
+          </div>
         </div>
 
         <div
@@ -206,7 +234,7 @@ export default async function AdminHome() {
                   <th style={th}>담당자</th>
                   <th style={th}>이메일</th>
                   <th style={th}>전화번호</th>
-                  <th style={th}>대표 제품</th>
+                  <th style={th}>제품 카테고리</th>
                   <th style={th}>목표 국가</th>
                   <th style={th}>가장 어려운 부분</th>
                   <th style={th}>점수</th>
@@ -243,7 +271,13 @@ export default async function AdminHome() {
                       <td style={td}>{r.contact_name || "-"}</td>
                       <td style={{ ...td, color: "#6e6e73" }}>{r.email || "-"}</td>
                       <td style={{ ...td, color: "#6e6e73" }}>{r.phone || "-"}</td>
-                      <td style={td}>{r.product_name || "-"}</td>
+                      <td style={td}>
+                        {r.product_category ? (
+                          <span style={chip}>{r.product_category}</span>
+                        ) : (
+                          "-"
+                        )}
+                      </td>
                       <td style={td}>
                         <div style={{ display: "flex", gap: 4, flexWrap: "wrap", maxWidth: 220, whiteSpace: "normal" }}>
                           {countries.map((c) => (
@@ -283,7 +317,32 @@ export default async function AdminHome() {
                         )}
                       </td>
                       <td style={td}>
-                        <StatusBadge status={r.diagnosis_status} />
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 5 }}>
+                          <StatusBadge status={r.diagnosis_status} />
+                          {r.consultation_requested && (
+                            <span
+                              title={
+                                r.consultation_requested_at
+                                  ? `상담 신청: ${fmtDate(r.consultation_requested_at)}`
+                                  : "상담 신청"
+                              }
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: 4,
+                                fontSize: 11,
+                                fontWeight: 700,
+                                padding: "4px 9px",
+                                borderRadius: 999,
+                                whiteSpace: "nowrap",
+                                background: "#c05a1e",
+                                color: "#fff",
+                              }}
+                            >
+                              🔔 상담 신청
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td style={{ ...td, color: "#6e6e73" }}>{stage ?? "—"}</td>
                     </tr>

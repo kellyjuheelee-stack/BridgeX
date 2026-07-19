@@ -15,6 +15,9 @@ export default function TermsPage() {
         <a href="/" className={styles.logo}>
           Bridge<span>X</span>
         </a>
+        <a href="/" className={styles.navHome} aria-label="홈으로">
+          홈
+        </a>
       </nav>
       <div className={styles.wrap}>
         <h1 className={styles.title}>이용약관</h1>
