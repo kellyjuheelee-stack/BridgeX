@@ -76,6 +76,19 @@
 .navLinkBtn:hover {
   color: var(--blue);
 }
+.navBadge {
+  display: inline-block;
+  margin-left: 5px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--blue-focus);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  vertical-align: middle;
+  transform: translateY(-1px);
+}
 .navCta {
   display: inline-flex;
   align-items: center;
