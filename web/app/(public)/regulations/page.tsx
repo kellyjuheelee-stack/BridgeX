@@ -88,7 +88,7 @@ export default function RegulationsHub() {
 
       <section className={styles.section} style={{ paddingTop: 0 }}>
         <div className={styles.wrap}>
-          <ConsultCta />
+          <ConsultCta heading="우리 브랜드는 규제 준비가 됐을까요?" topic="EU 규제 상담" />
         </div>
       </section>
     </div>

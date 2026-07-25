@@ -5,7 +5,15 @@ import { useState } from "react";
 import { requestRegulationConsultation } from "./actions";
 import styles from "./regulations.module.css";
 
-export default function ConsultCta() {
+interface ConsultCtaProps {
+  heading?: string;
+  topic?: string;
+}
+
+export default function ConsultCta({
+  heading = "우리 브랜드는 규제 준비가 됐을까요?",
+  topic = "EU 규제 상담",
+}: ConsultCtaProps) {
   const [open, setOpen] = useState(false);
   const [done, setDone] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -35,7 +43,7 @@ export default function ConsultCta() {
   return (
     <>
       <div className={styles.ctaBand}>
-        <h2>우리 브랜드는 규제 준비가 됐을까요?</h2>
+        <h2>{heading}</h2>
         <button type="button" className={styles.ctaBtn} onClick={() => setOpen(true)}>
           상담 신청하기 →
         </button>
@@ -76,6 +84,7 @@ export default function ConsultCta() {
               </div>
             ) : (
               <form className={styles.modalForm} onSubmit={onSubmit}>
+                <input type="hidden" name="topic" value={topic} />
                 <h3 id="consult-title">규제 대응 상담 신청</h3>
                 <p className={styles.modalSub}>
                   아래 정보를 남겨주시면 담당자가 연락드립니다.
