@@ -2,6 +2,7 @@
 import Link from "next/link";
 import HomeButton from "@/app/HomeButton";
 import { REGULATIONS } from "./registry";
+import ConsultCta from "./ConsultCta";
 import styles from "./regulations.module.css";
 
 export const metadata = {
@@ -87,15 +88,7 @@ export default function RegulationsHub() {
 
       <section className={styles.section} style={{ paddingTop: 0 }}>
         <div className={styles.wrap}>
-          <div className={styles.ctaBand}>
-            <h2>우리 브랜드는 규제 준비가 됐을까요?</h2>
-            <p>
-              30분 무료 진단으로 EU 수출 준비도와 규제 대응 수준을 확인하세요.
-            </p>
-            <Link href="/diagnose" className={styles.ctaBtn}>
-              무료 수출 준비도 진단하기 →
-            </Link>
-          </div>
+          <ConsultCta />
         </div>
       </section>
     </div>
