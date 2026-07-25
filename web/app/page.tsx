@@ -27,9 +27,10 @@ export default async function Home() {
           Bridge<span>X</span>
         </a>
         <div className={styles.navActions}>
-          <a href="/regulations" className={styles.navLinkBtn}>
-            유럽 규제
-            <span className={styles.navBadge}>NEW</span>
+          <a href="/regulations" className={styles.navReg} aria-label="유럽규제 PPWR 안내">
+            <span className={styles.navRegDot} aria-hidden="true"></span>
+            유럽규제 <b>PPWR</b>
+            <span className={styles.navRegArrow} aria-hidden="true">→</span>
           </a>
           {user ? (
             <>

@@ -1,6 +1,7 @@
 // web/app/(public)/regulations/ppwr/page.tsx — PPWR 상세페이지
 import Link from "next/link";
 import HomeButton from "@/app/HomeButton";
+import ConsultCta from "../ConsultCta";
 import styles from "../regulations.module.css";
 import {
   PPWR_META,
@@ -173,16 +174,7 @@ export default function PpwrPage() {
       {/* CTA */}
       <section className={styles.section} style={{ paddingTop: 0 }}>
         <div className={styles.wrap}>
-          <div className={styles.ctaBand}>
-            <h2>PPWR 대응, 어디서부터 시작해야 할까요?</h2>
-            <p>
-              우리 브랜드의 EU 수출 준비도와 규제 대응 수준을 30분 무료 진단으로
-              확인하세요. 포장 규제를 포함한 실행 로드맵을 제안드립니다.
-            </p>
-            <Link href="/diagnose" className={styles.ctaBtn}>
-              무료 수출 준비도 진단하기 →
-            </Link>
-          </div>
+          <ConsultCta heading="PPWR 대응, 어디서부터 시작해야 할까요?" topic="PPWR 상담" />
         </div>
       </section>
 
