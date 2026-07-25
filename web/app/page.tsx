@@ -27,6 +27,10 @@ export default async function Home() {
           Bridge<span>X</span>
         </a>
         <div className={styles.navActions}>
+          <a href="/regulations" className={styles.navLinkBtn}>
+            유럽 규제
+            <span className={styles.navBadge}>NEW</span>
+          </a>
           {user ? (
             <>
               <a href="/mypage" className={styles.navCta}>
