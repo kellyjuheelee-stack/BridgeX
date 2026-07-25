@@ -76,18 +76,72 @@
 .navLinkBtn:hover {
   color: var(--blue);
 }
-.navBadge {
-  display: inline-block;
-  margin-left: 5px;
-  padding: 1px 6px;
+/* 유럽규제 PPWR 하이라이트 버튼 (애니메이션) */
+.navReg {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 16px;
   border-radius: 999px;
-  background: var(--blue-focus);
+  background: linear-gradient(135deg, #0071e3 0%, #5b3df5 100%);
   color: #fff;
-  font-size: 10px;
+  font-size: 13.5px;
   font-weight: 700;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+  box-shadow: 0 2px 12px rgba(0, 102, 204, 0.35);
+  animation: navRegPulse 2.4s ease-in-out infinite;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.navReg b {
+  font-weight: 800;
   letter-spacing: 0.3px;
-  vertical-align: middle;
-  transform: translateY(-1px);
+}
+.navReg:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(91, 61, 245, 0.5);
+  animation-play-state: paused;
+}
+.navRegArrow {
+  transition: transform 0.18s ease;
+}
+.navReg:hover .navRegArrow {
+  transform: translateX(3px);
+}
+.navRegDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #7bffb0;
+  box-shadow: 0 0 0 0 rgba(123, 255, 176, 0.7);
+  animation: navRegDot 1.6s ease-out infinite;
+}
+@keyframes navRegPulse {
+  0%,
+  100% {
+    box-shadow: 0 2px 12px rgba(0, 102, 204, 0.35);
+  }
+  50% {
+    box-shadow: 0 2px 12px rgba(0, 102, 204, 0.35), 0 0 0 6px rgba(91, 61, 245, 0.14);
+  }
+}
+@keyframes navRegDot {
+  0% {
+    box-shadow: 0 0 0 0 rgba(123, 255, 176, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(123, 255, 176, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(123, 255, 176, 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .navReg,
+  .navRegDot {
+    animation: none;
+  }
 }
 .navCta {
   display: inline-flex;
